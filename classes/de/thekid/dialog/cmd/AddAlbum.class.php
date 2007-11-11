@@ -20,8 +20,7 @@
     'de.thekid.dialog.Update',
     'de.thekid.dialog.io.ImageProcessor',
     'de.thekid.dialog.io.IndexCreator',
-    'de.thekid.dialog.GroupByHourStrategy',
-    'de.thekid.dialog.GroupByDayStrategy',
+    'de.thekid.dialog.GroupingStrategy',
     'img.filter.ConvolveFilter'
   );
 
@@ -141,14 +140,18 @@
     /**
      * Sets how to group images into chapters
      *
-     * @param   string groupBy default "hour"
+     * @param   string method default "hour"
      */
     #[@arg]
-    public function setGroupBy($groupBy= 'hour') {
-      switch ($groupBy) {
-        case 'hour': $this->groupingStrategy= new GroupByHourStrategy(); break;
-        case 'day': $this->groupingStrategy= new GroupByDayStrategy(); break;
-        default: throw new IllegalArgumentException('Unknown grouping method "'.$groupBy.'"');
+    public function setGroupBy($method= 'hour') {
+      try {
+        $this->groupingStrategy= Enum::valueOf(XPClass::forName('de.thekid.dialog.GroupingStrategy'), $method);
+      } catch (IllegalArgumentException $e) {
+        throw new IllegalArgumentException(sprintf(
+          'Unknown grouping method "%s", supported: %s',
+          $method,
+          xp::stringOf(GroupingStrategy::values())
+        ));
       }
       $this->out->writeLine('---> Group by ', $this->groupingStrategy);
     }
@@ -194,6 +197,7 @@
      *
      */
     public function run() {
+    exit;
       $jpegs= new ExtensionEqualsFilter('.jpg');
       $this->topics= array();
     
