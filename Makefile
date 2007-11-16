@@ -4,5 +4,6 @@
 # $Id$
 
 include ../../Mk/common.mk
-include ../../Mk/dist.mk
 
+PROJECT_DEPENDENCIES=xp-rt-5.6.2RC2.xar
+include ../../Mk/dist.mk
