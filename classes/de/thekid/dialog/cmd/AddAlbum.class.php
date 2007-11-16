@@ -11,7 +11,62 @@
   );
 
   /**
-   * Adds albums to dialog
+   * Adds albums to dialog. Will import a complete directory of (original) 
+   * images and assumes the following directory layout:
+   * <pre>
+   *   + [directory]
+   *   |--+ [highlights]
+   *   |  |-- image #1
+   *   |  |-- image #2
+   *   |  |-- ...
+   *   |
+   *   |-- description.txt
+   *   |-- image #1
+   *   |-- image #2
+   *   |-- ...
+   * </pre>
+   * 
+   * It will then follow these rules:
+   * 
+   * <ul>
+   *   <li>The images from the "highlights" subdirectory will be taken for
+   *     the images on the front page. They will be rescaled to 150 x 113
+   *     pixels for this purpose.
+   *   
+   *     If no such directory exists, the script will pick at most 5 images
+   *     from the entire directory's contents per random.
+   *
+   *   </li><li>The entire text from the file description.txt will be used to
+   *     make the text for the front page.
+   *
+   *   </li><li>The directory's name will be used for the album's title.
+   *     Note: This can be overridden by the command line switch "-t"
+   *
+   *   </li><li>The directory's creation date will be used for the album's 
+   *     creation timestamp.
+   *     Note: This can be overridden by the command line switch "-c"
+   *
+   *   </li><li>The images from the directory (file mask: *.JPG) will be taken
+   *     for the images on the subsequent pages. They will be resized to
+   *     150 x 113 pixels for the overview and to 800 x 600 or 600 x 800
+   *     pixels (depending on the picture's orientation) for the larger
+   *     view.
+   *
+   *   </li><li>The images are grouped into chapters. The default setting
+   *     is to create a chapter for every hour and can be overriddent by
+   *     the command line switch "-g".
+   *
+   *   </li><li>The directory's name will be transformed to the album's online
+   *     name by lowercasing all characters in it and replacing any 
+   *     character besides a-z, 0-9 and - by an underscore. Double 
+   *     underscores will be replaced by single ones.
+   *    
+   *     Example: 
+   *     "Steve's birthday 02/28/2005" will become "steves_birthday_02_28_2005"
+   * 
+   *     The online name is used in permalinks.
+   *   </li>
+   * </ul>
    *
    * @purpose  Command
    */
@@ -96,8 +151,9 @@
     }
     
     /**
-     * Sets how to group images into chapters
+     * Sets how to group images into chapters (one of "hour" or "day")
      *
+     * @see     xp://de.thekid.dialog.GroupingStrategy
      * @param   string method default "hour"
      */
     #[@arg]
