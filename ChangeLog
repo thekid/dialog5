@@ -6,6 +6,9 @@ Version ?.?.?, released ????-??-??
 ----------------------------------
 SVN version: ?????
 
+- Migrated all import scripts to command line classes
+  (friebe)
+
 
 Version 2.4.0, released 2007-11-04
 ----------------------------------
