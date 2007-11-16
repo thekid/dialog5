@@ -143,6 +143,7 @@
       
       // Process all images
       for (
+        $images= array(),
         $it= new FilteredIOCollectionIterator(new FileCollection($this->origin->getURI()), $jpegs);
         $it->hasNext();
       ) {
