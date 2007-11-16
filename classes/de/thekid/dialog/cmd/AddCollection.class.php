@@ -12,8 +12,74 @@
   );
 
   /**
-   * Adds collections to dialog
+   * Adds collections to dialog Will import a complete directory with 
+   * subdirectories containing the (original) images and assumes the 
+   * following directory layout:
+   * <pre>
+   *   + [directory]
+   *   |--+ [subdirectory #1]
+   *   |  |--+ [highlights]
+   *   |  |  |-- image #1
+   *   |  |  |-- image #2
+   *   |  |  |-- ...
+   *   |  |
+   *   |  |-- description.txt
+   *   |  |-- title.txt
+   *   |  |-- image #1
+   *   |  |-- image #2
+   *   |  |-- ...
+   *   |
+   *   |--+ [subdirectory #2]
+   *   |  |--+ [highlights]
+   *   |  |  |-- image #1
+   *   |  |  |-- ...
+   *   |  |
+   *   |  |-- description.txt
+   *   |  |-- title.txt
+   *   |  |-- image #1
+   *   |  |-- ...
+   *   |
+   *   |--+ ...
+   *   |-- description.txt
+   * </pre>
+   * 
+   * It will then follow these rules:
+   * 
+   * <ul>
+   *   <li>The entire text from the file description.txt will be used to
+   *     make the text for the front page.
    *
+   *   </li><li>The directory's name will be used for the collection's title.
+   *     Note: This can be overridden by the command line switch "-t"
+   *
+   *   </li><li>The directory's creation date will be used for the 
+   *     collection's creation timestamp.
+   *     Note: This can be overridden by the command line switch "-c"
+   *
+   *   </li><li>For each of the subdirectories in the origin directory,
+   *     an album inside this collection will be created according to the
+   *     rules described inside the AddAlbum command.
+   * 
+   *   </li><li>If a file inside the subdirectory called "title.txt" exists,
+   *     then the text inside will be used as the album's title - the sub-
+   *     directory's name will be used otherwise.
+   *
+   *   </li><li>Any non-directory inside the collection directory will be
+   *     ignored.
+   *
+   *   </li><li>The directory's name will be transformed to the collection's 
+   *     online name by lowercasing all characters in it and replacing any 
+   *     character besides a-z, 0-9 and - by an underscore. Double 
+   *     underscores will be replaced by single ones.
+   *    
+   *     Example: 
+   *     "Philippines Vacation 2006" will become "philippines_vacation_2006"
+   * 
+   *     The online name is used in permalinks.
+   *   </li>
+   * </ul>
+   *
+   * @see      xp://de.thekid.dialog.cmd.AddAlbum
    * @purpose  Command
    */
   class AddCollection extends ImportCommand {
