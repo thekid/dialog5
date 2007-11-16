@@ -6,6 +6,8 @@ Version ?.?.?, released ????-??-??
 ----------------------------------
 SVN version: ?????
 
+Heads up!
+~~~~~~~~~
 - Migrated all import scripts to command line classes
   (friebe)
 
