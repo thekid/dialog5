@@ -11,7 +11,31 @@
   );
 
   /**
-   * Adds single shots ("Featured images") to dialog
+   * Adds single shots ("Featured images") to dialog. Will import a 
+   * single image file.
+   *
+   * Three views of the image are created:
+   * <ol>
+   *   <li>A detailed "wide-screen" view (approximately 16:9)</li>
+   *   <li>A colored version</li>
+   *   <li>A grayscale version</li>
+   * </ol>
+   *
+   * They are rendered (in the default layout) as follows:
+   * <pre>
+   *   .------------------------..-----------.
+   *   |                        ||   color   |
+   *   |                        ||   thumb   |
+   *   |       detailed         |'-----------'
+   *   |        wide            |.-----------.
+   *   |                        || grayscale |
+   *   |                        ||   thumb   |
+   *   '------------------------''-----------'
+   * </pre>
+   *
+   * If a file with the same filename as the origin's but with ".txt" 
+   * extension exists, its complete contents are used as a descriptive
+   * text.
    *
    * @purpose  Command
    */
