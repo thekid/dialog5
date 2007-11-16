@@ -64,6 +64,12 @@ Bugfixes
 - Made frontpage display the text "Home" instead of "Page #0"
   (friebe)
 
+Features
+~~~~~~~~
+- Added links section with buttons to be displayed in lower 
+  right corner to config file
+  (friebe)
+
 
 Version 2.2.0, released 2007-07-10
 ----------------------------------
