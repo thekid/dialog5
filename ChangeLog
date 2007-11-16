@@ -1,0 +1,237 @@
+Dialog ChangeLog
+========================================================================
+$Id$
+
+Version ?.?.?, released ????-??-??
+----------------------------------
+SVN version: ?????
+
+
+Version 2.4.0, released 2007-11-04
+----------------------------------
+SVN version: 9847
+
+Features
+~~~~~~~~
+- Added "By topic" top navigation item
+  (friebe)
+- Added IPTC support:
+  . Captions are used in the breadcrum
+  . Keywords are used to group images by topics
+  (friebe)
+- Added focal length from EXIF data to serialized album data.
+  (friebe)
+
+
+Version 2.3.2, released 2007-10-21
+----------------------------------
+SVN version: 9795
+
+Bugfixes
+~~~~~~~~
+- Replaced <xsl:copy-of select="description"/> with <xsl:apply-templates 
+  select="description"/> and added a template matching "description" that 
+  in return calls xsl:apply-templates, as well.
+  This should make a <description> node _not_ be copied into the result 
+  tree and thus saves some bandwidth and produce more correct HTML.
+  (kiesel)
+  
+
+Version 2.3.1, released 2007-10-07
+----------------------------------
+SVN version: 9751
+
+Features
+~~~~~~~~
+- Added a new view which groups entries by date, one year per page
+  (friebe)
+
+
+Version 2.3.0, released 2007-10-03
+----------------------------------
+SVN version: 9729
+
+Heads up!
+~~~~~~~~~
+- Updated dialog to work with newest XP framework release
+  . Replaced func:datetime implementation by date callbacks
+  . Added xmlns:php="http://php.net/xsl" to all files
+  . Used XSLCallback::invoke wherever direct access to date nodes was made
+  (friebe)
+
+Bugfixes
+~~~~~~~~
+- Made frontpage display the text "Home" instead of "Page #0"
+  (friebe)
+
+
+Version 2.2.0, released 2007-07-10
+----------------------------------
+SVN version: 9472
+
+Heads up!
+~~~~~~~~~
+- Generated more user- and search engine friendly URLs:
+  . entrypoint now is "http://domain.tld/" - no further redirect 
+    to /xml/.../static
+  . pager is now /page/[0..n] instead of /xml/.../static?page[0..x]
+  . /xml/.../collection?%d -> /collection/%d
+  . /xml/.../album?%s -> /album/%s
+  . /xml/.../shots?%s,%d -> /shot/%s,%d
+  Be aware that you will need to have several rewrite rules configured in your
+  environment after receiving this fileset. See doc/installing.txt for examples
+  and instructions.
+  (kiesel)
+
+Features
+~~~~~~~~
+- Supplied nice title for collections
+  (kiesel)
+
+
+Version 2.1.0, released 2007-07-01
+----------------------------------
+SVN version: 9419
+  
+Heads up!
+~~~~~~~~~
+- Changed image size to 800*X (landscape) / 640*X (portrait)
+  (friebe)
+- Changed number of highlights from 4 to 5
+  (friebe)
+  
+Features
+~~~~~~~~
+- Added a link to first highlight from collection overview
+  (friebe)
+
+
+Version 2.0.0, released 2007-01-04
+----------------------------------
+SVN version: 8124
+
+Heads up!
+~~~~~~~~~
+- Migrated to XP5
+  (friebe, kiesel)
+
+
+Version 1.2.2, released 2006-08-14
+----------------------------------
+SVN version: 6948
+
+Bugfixes
+~~~~~~~~
+- Fixed breadcrumbs for items contained inside a collection
+  (friebe)
+
+
+Version 1.2.1, released 2006-08-14
+----------------------------------
+SVN version: 6807
+
+Features
+~~~~~~~~
+- Added command line argument "--group" with which the grouping
+  method can be specified. The grouping method calculates which chapter an
+  image belongs to.
+  At the moment, "hour" and "day" are supporting grouping methods
+  (friebe)
+
+
+Version 1.2.0, released 2006-03-08
+----------------------------------
+SVN version: 6016
+
+Features
+~~~~~~~~
+- Added RSS-feed and auto-detection via <link rel="alternate" 
+  type="application/rss+xml".../>
+  (kiesel, friebe)
+
+
+Version 1.1.3, released 2006-02-28
+----------------------------------
+SVN version: 6009
+
+
+Bug fixes
+~~~~~~~~~
+- Fixed sorting by using SORT_NUMERIC flag
+  This problem occured with albums that were created *before* the
+  UNIX timestamp reached 1.000.000.000
+  (friebe)
+- Fixed sorting when entry's title started with numbers
+  (friebe)
+  
+
+Version 1.1.2, released 2005-11-29
+----------------------------------
+SVN version: 5653
+
+Features
+~~~~~~~~
+- Made importing functionality sharpen all images after scaling them
+  (friebe)
+
+Bug fixes
+~~~~~~~~~
+- Protected importing scripts against fatal errors by using the album/
+  shot`s date as exifdata date when EXIF does not contain a (valid) date
+  (friebe)
+- Changed import to only apply filters if processor target specifies to 
+  do this - sharpening a thumbnail results in somethig a bit too grainy
+  (friebe)
+  
+Version 1.1.1, released 2005-10-30
+----------------------------------
+SVN version: 5559
+
+Features
+~~~~~~~~
+- Added aperture number, expore time, iso speed and if the flash fired 
+  if available for a picture.
+  (friebe)
+- Changed calculation for resized image dimensions by calculating the 
+  maximum required divider to get the whole picture into the wanted 
+  dimensions.Flip the dimensions if the picture's height is bigger than
+  its width.
+  (kiesel)
+- increase picture quality to 90%
+  (kiesel)
+
+
+Version 1.1.0, released 2005-08-08
+----------------------------------
+SVN version: 5088
+
+Features
+~~~~~~~~
+- Added entry collections 
+  (friebe)
+
+
+Version 1.0.1, released 2005-06-15
+----------------------------------
+SVN version: 4828
+
+Bugfixes
+~~~~~~~~
+- Fixed problem with Alt+<Left-Arrow> and Alt+<Right-Arrow> (which are 
+  shortcuts for go back and go forward in most browsers) acting as previous 
+  and next whereas what I wanted is only to have the left arrow and right 
+  arrow (without any other keys pressed) to work for this
+  (friebe)
+- Fixed problem when .dat-files are copied, their modification date is then
+  modified, resulting in unpredictable results the next time the index is
+  regenerated. Therefore, use the date and time stored with the entry
+  (friebe)
+
+Version 1.0.0, released 2005-03-29
+----------------------------------
+SVN version: 4566
+
+Heads up!
+~~~~~~~~~
+- This is the first release ever.
+  (friebe)
