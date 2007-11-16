@@ -48,6 +48,9 @@
       if ($this->albumStorage->exists()) {
         $this->out->writeLine('---> Found existing album');
         $this->album= unserialize(FileUtil::getContents($this->albumStorage));
+
+        // Entries will be regenated from scratch    
+        $album->highlights= $album->chapters= array();
       } else {
         $this->out->writeLine('---> Creating new album');
         $this->album= new Album();
@@ -164,7 +167,7 @@
       ));
 
       // Group images by strategy
-      for ($i= 0, $s= sizeof($images); $i < $s; $i++) {
+      for ($i= 0, $chapter= array(), $s= sizeof($images); $i < $s; $i++) {
         $key= $this->groupingStrategy->groupFor($images[$i]);
         if (!isset($chapter[$key])) {
           $chapter[$key]= $this->album->addChapter(new AlbumChapter($key));
