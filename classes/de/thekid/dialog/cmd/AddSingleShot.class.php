@@ -37,6 +37,10 @@
    * extension exists, its complete contents are used as a descriptive
    * text.
    *
+   * Example: When adding IMG_6100.jpg as featured image, content from a
+   * file by name IMG_6100.txt (in the same directory as the image) will 
+   * be used as description.
+   *
    * @purpose  Command
    */
   class AddSingleShot extends ImportCommand {
