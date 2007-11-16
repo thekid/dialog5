@@ -19,9 +19,8 @@
     protected
       $origin           = NULL,
       $destination      = NULL,
-      $shotStorage     = NULL,
-      $groupingStrategy = NULL,
-      $album            = NULL;
+      $shotStorage      = NULL,
+      $shot             = NULL;
 
     /**
      * Returns processor. Overrides base class getProcessor() method.
