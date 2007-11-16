@@ -54,7 +54,7 @@
       $this->destination= new Folder(self::SHOTS_FOLDER);
       $this->processor->setOutputFolder($this->destination);
       
-      // Check if the album already exists
+      // Check if the shot already exists
       $this->shotStorage= new File(self::DATA_FOLDER.$shotName.'.dat');
       if ($this->shotStorage->exists()) {
         $this->out->writeLine('---> Found existing shot');
@@ -72,8 +72,8 @@
     }
     
     /**
-     * Set album's title. If no title is given and the album did not 
-     * previously exist, uses the origin folder's directory name.
+     * Set shots's title. If no title is given and the shot did not 
+     * previously exist, uses the origin file's name.
      *
      * @param   string title default NULL
      */
@@ -88,8 +88,8 @@
     }
 
     /**
-     * Set album's creation date. If no date is given and the album did not 
-     * previously exist, uses the origin folder's creation date.
+     * Set shots's creation date. If no date is given and the shot did not 
+     * previously exist, uses the origin file's creation date.
      *
      * @param   string date default NULL
      */
