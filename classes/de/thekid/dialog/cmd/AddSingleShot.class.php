@@ -74,7 +74,7 @@
       }
       
       // Normalize name
-      $fileName= substr($origin->getFilename(), 0, strpos($origin->getFilename(), '.'));
+      $fileName= substr($this->origin->getFilename(), 0, strpos($this->origin->getFilename(), '.'));
       $shotName= $this->normalizeName($fileName);
       $this->out->writeLine('===> Adding shot "', $shotName, '" from ', $this->origin);
       
@@ -91,10 +91,11 @@
         $this->out->writeLine('---> Creating new shot');
         $this->shot= new SingleShot();
         $this->shot->setName($shotName);
+        $this->shot->setFileName($this->origin->getFilename());
       }        
 
       // Read the introductory text from description.txt if existant
-      if (is_file($df= $origin->getPath().$fileName.DIRECTORY_SEPARATOR.'.txt')) {
+      if (is_file($df= $this->origin->getPath().DIRECTORY_SEPARATOR.$fileName.'.txt')) {
         $this->shot->setDescription(file_get_contents($df));
       }
     }
@@ -107,8 +108,8 @@
      */
     #[@arg]
     public function setTitle($title= NULL) {
-      if (!$title && !$this->shot->getTitle()) {
-        $this->shot->setTitle($this->origin->dirname);
+      if (!$title || !$this->shot->getTitle()) {
+        $this->shot->setTitle($this->origin->getFilename());
       } else {
         $this->shot->setTitle($title);
       }
@@ -128,7 +129,7 @@
       } else {
         $this->shot->setDate(new Date($date));
       }
-      $this->out->writeLine('---> Created ', $this->shot->getCreatedAt());
+      $this->out->writeLine('---> Created ', $this->shot->getDate());
     }
     
     /**
