@@ -13,6 +13,7 @@
     'io.collections.FileCollection',
     'io.collections.iterate.FilteredIOCollectionIterator',
     'io.collections.iterate.ExtensionEqualsFilter',
+    'io.collections.iterate.AnyOfFilter',
     'img.filter.ConvolveFilter',
     'de.thekid.dialog.Topic',
     'de.thekid.dialog.IEntry',

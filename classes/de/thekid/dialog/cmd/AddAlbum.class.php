@@ -105,7 +105,7 @@
         $this->album= unserialize(FileUtil::getContents($this->albumStorage));
 
         // Entries will be regenated from scratch    
-        $album->highlights= $album->chapters= array();
+        $this->album->highlights= $this->album->chapters= array();
       } else {
         $this->out->writeLine('---> Creating new album');
         $this->album= new Album();
@@ -175,7 +175,10 @@
      *
      */
     protected function doImport() {
-      $jpegs= new ExtensionEqualsFilter('.jpg');
+      $jpegs= new AnyOfFilter(array(
+        new ExtensionEqualsFilter('.jpg'),
+        new ExtensionEqualsFilter('.JPG')
+      ));
       $this->topics= array();
     
       // Create destination directory if not existant
@@ -183,6 +186,7 @@
       
       // Get highlights
       $highlights= new Folder($this->origin->getURI().'highlights');
+      $needsHighlights= self::HIGHLIGHTS_MAX;
       if ($highlights->exists()) {
         for (
           $it= new FilteredIOCollectionIterator(new FileCollection($highlights->getURI()), $jpegs);
