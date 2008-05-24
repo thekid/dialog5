@@ -75,7 +75,7 @@
      * @return  string normalized
      */
     protected function normalizeName($name) {
-      return preg_replace('/[^a-z0-9-]/i', '_', $name);
+      return preg_replace('/[^a-z0-9-]/', '_', strtolower($name));
     }
 
     /**
