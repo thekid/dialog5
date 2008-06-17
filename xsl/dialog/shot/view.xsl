@@ -80,7 +80,7 @@
     </table>
     
     <p>
-      Originally taken on <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(/formresult/selected/image/exifData/dateTime), 'D, d M H:i')"/>
+      Originally taken on <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(/formresult/selected/image/exifData/dateTime/value), 'D, d M H:i')"/>
       with <xsl:value-of select="/formresult/selected/image/exifData/make"/>'s
       <xsl:value-of select="/formresult/selected/image/exifData/model"/>.
 
