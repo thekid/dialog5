@@ -3,7 +3,7 @@
 #
 # $Id$
 
-include ../../Mk/common.mk
+XP_VERSION=5.6.7
 
-PROJECT_DEPENDENCIES=xp-rt-5.6.2RC2.xar
+include ../../Mk/common.mk
 include ../../Mk/dist.mk
