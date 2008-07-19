@@ -6,6 +6,18 @@ Version ?.?.?, released ????-??-??
 ----------------------------------
 SVN version: ?????
 
+
+Version 2.4.1, released 2008-07-19
+----------------------------------
+SVN version: 10295
+
+Bugfixes
+~~~~~~~~
+- Fixed title not being set for single shots
+  (friebe)
+- Fixed bug for images imported with XP4 version raising an exception.
+  (kiesel)
+
 Heads up!
 ~~~~~~~~~
 - Migrated all import scripts to command line classes
