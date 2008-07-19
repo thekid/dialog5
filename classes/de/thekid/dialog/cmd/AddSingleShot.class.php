@@ -108,7 +108,7 @@
      */
     #[@arg]
     public function setTitle($title= NULL) {
-      if (!$title || !$this->shot->getTitle()) {
+      if (!$title && !$this->shot->getTitle()) {
         $this->shot->setTitle($this->origin->getFilename());
       } else {
         $this->shot->setTitle($title);
