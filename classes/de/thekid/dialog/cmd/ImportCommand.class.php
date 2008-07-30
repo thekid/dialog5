@@ -31,11 +31,11 @@
    * @purpose  Command
    */
   abstract class ImportCommand extends Command {
-    const
-      IMAGE_FOLDER      = 'doc_root/albums/',
-      SHOTS_FOLDER      = 'doc_root/shots/',
-      DATA_FOLDER       = 'data/',
-      TOPICS_FOLDER     = 'data/topics/';
+    protected
+      $imageFolder      = NULL,
+      $shotsFolder      = NULL,
+      $dataFolder       = NULL,
+      $topicsFolder     = NULL;
     
     const
       HIGHLIGHTS_MAX    = 5,
@@ -57,6 +57,37 @@
         8,
         0
       ));
+    }
+    
+    /**
+     * Return a folder object composed of a given a base and name.
+     *
+     * @param   io.Folder base
+     * @param   string name
+     * @return  io.Folder
+     * @throws  io.FileNotFoundException
+     */
+    protected function folder(Folder $base, $name) {
+      $composed= $base->getURI().$name;
+      $f= new Folder($composed);
+      if (!$f->exists()) throw new FileNotFoundException('Folder "'.$composed.'" does not exist');
+      return $f;
+    }
+    
+    /**
+     * Set base folder (the folder the dialog software is installed at).
+     *
+     * @param   string base default '.'
+     */
+    #[@arg]
+    public function setBase($base= '.') {
+      with ($b= new Folder($base)); {
+        $this->out->writeLine('---> Using base folder ', $b);
+        $this->imageFolder= $this->folder($b, 'doc_root/albums');
+        $this->shotsFolder= $this->folder($b, 'doc_root/shots');
+        $this->dataFolder= $this->folder($b, 'data');
+        $this->topicsFolder= $this->folder($b, 'data/topics');
+      }
     }
     
     /**
@@ -98,7 +129,7 @@
       foreach ($iptc->getKeywords() as $keyword) {
         $normalized= $this->normalizeName($keyword);
         if (!isset($this->topics[$normalized])) {
-          $topic= new File(self::DATA_FOLDER.'topics/'.$normalized.'.dat');
+          $topic= new File($this->dataFolder.'topics/'.$normalized.'.dat');
           if ($topic->exists()) {
             $this->topics[$normalized]= unserialize(FileUtil::getContents($topic));
             $this->out->writeLine('     >> Found existing topic for ', $keyword);
@@ -130,17 +161,17 @@
       
       // Save topics
       foreach ($this->topics as $normalized => $t) {
-        FileUtil::setContents(new File(self::TOPICS_FOLDER.$normalized.'.dat'), serialize($t));
+        FileUtil::setContents(new File($this->topicsFolder.$normalized.'.dat'), serialize($t));
       }
 
       // Regenerate indexes
-      $index= IndexCreator::forFolder(new Folder(self::DATA_FOLDER));
+      $index= IndexCreator::forFolder(new Folder($this->dataFolder));
       $index->setEntriesPerPage(self::ENTRIES_PER_PAGE);
       $index->regenerate();
 
       // Generate topics
       for (
-        $it= new FilteredIOCollectionIterator(new FileCollection(self::TOPICS_FOLDER), new ExtensionEqualsFilter('.dat'));
+        $it= new FilteredIOCollectionIterator(new FileCollection($this->topicsFolder), new ExtensionEqualsFilter('.dat'));
         $it->hasNext();
       ) {
         $entry= basename($it->next()->getURI());
@@ -149,7 +180,7 @@
       ksort($entries);
       for ($i= 0, $s= sizeof($entries); $i < $s; $i+= self::ENTRIES_PER_PAGE) {
         FileUtil::setContents(
-          new File(self::DATA_FOLDER.'topics_'.($i / self::ENTRIES_PER_PAGE).'.idx'), 
+          new File($this->dataFolder.'topics_'.($i / self::ENTRIES_PER_PAGE).'.idx'), 
           serialize(array(
             'total'   => $s, 
             'perpage' => self::ENTRIES_PER_PAGE,

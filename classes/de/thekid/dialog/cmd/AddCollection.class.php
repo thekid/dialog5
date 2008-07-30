@@ -106,11 +106,11 @@
       $this->out->writeLine('===> Adding collection "', $collectionName, '" from ', $this->origin);
       
       // Create destination folder if not already existant
-      $this->destination= new Folder(self::IMAGE_FOLDER.$collectionName);
+      $this->destination= new Folder($this->imageFolder.$collectionName);
       $this->processor->setOutputFolder($this->destination);
       
       // Check if the collection already exists
-      $this->collectionStorage= new File(self::DATA_FOLDER.$collectionName.'.dat');
+      $this->collectionStorage= new File($this->dataFolder.$collectionName.'.dat');
       if ($this->collectionStorage->exists()) {
         $this->out->writeLine('---> Found existing collection');
         $this->collection= unserialize(FileUtil::getContents($this->collectionStorage));

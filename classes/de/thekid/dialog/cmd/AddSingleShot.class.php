@@ -79,11 +79,11 @@
       $this->out->writeLine('===> Adding shot "', $shotName, '" from ', $this->origin);
       
       // Create destination folder if not already existant
-      $this->destination= new Folder(self::SHOTS_FOLDER);
+      $this->destination= new Folder($this->shotsFolder);
       $this->processor->setOutputFolder($this->destination);
       
       // Check if the shot already exists
-      $this->shotStorage= new File(self::DATA_FOLDER.$shotName.'.dat');
+      $this->shotStorage= new File($this->dataFolder.$shotName.'.dat');
       if ($this->shotStorage->exists()) {
         $this->out->writeLine('---> Found existing shot');
         $this->shot= unserialize(FileUtil::getContents($this->shotStorage));

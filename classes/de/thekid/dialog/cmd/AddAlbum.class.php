@@ -95,11 +95,11 @@
       $this->out->writeLine('===> Adding album "', $albumName, '" from ', $this->origin);
       
       // Create destination folder if not already existant
-      $this->destination= new Folder(self::IMAGE_FOLDER.$albumName);
+      $this->destination= new Folder($this->imageFolder.$albumName);
       $this->processor->setOutputFolder($this->destination);
       
       // Check if the album already exists
-      $this->albumStorage= new File(self::DATA_FOLDER.$albumName.'.dat');
+      $this->albumStorage= new File($this->dataFolder.$albumName.'.dat');
       if ($this->albumStorage->exists()) {
         $this->out->writeLine('---> Found existing album');
         $this->album= unserialize(FileUtil::getContents($this->albumStorage));
