@@ -76,7 +76,9 @@
       $destination      = NULL,
       $albumStorage     = NULL,
       $groupingStrategy = NULL,
-      $album            = NULL;
+      $album            = NULL,
+      $title            = NULL,
+      $createdAt        = NULL;
 
     /**
      * Set origin folder
@@ -89,33 +91,6 @@
       if (!$this->origin->exists()) {
         throw new FileNotFoundException('Folder "'.$folder.'" does not exist');
       }
-      
-      // Normalize name
-      $albumName= $this->normalizeName($this->origin->dirname);
-      $this->out->writeLine('===> Adding album "', $albumName, '" from ', $this->origin);
-      
-      // Create destination folder if not already existant
-      $this->destination= new Folder($this->imageFolder.$albumName);
-      $this->processor->setOutputFolder($this->destination);
-      
-      // Check if the album already exists
-      $this->albumStorage= new File($this->dataFolder.$albumName.'.dat');
-      if ($this->albumStorage->exists()) {
-        $this->out->writeLine('---> Found existing album');
-        $this->album= unserialize(FileUtil::getContents($this->albumStorage));
-
-        // Entries will be regenated from scratch    
-        $this->album->highlights= $this->album->chapters= array();
-      } else {
-        $this->out->writeLine('---> Creating new album');
-        $this->album= new Album();
-        $this->album->setName($albumName);
-      }        
-
-      // Read the introductory text from description.txt if existant
-      if (is_file($df= $this->origin->getURI().'description.txt')) {
-        $this->album->setDescription(file_get_contents($df));
-      }
     }
     
     /**
@@ -126,12 +101,7 @@
      */
     #[@arg]
     public function setTitle($title= NULL) {
-      if (!$title && !$this->album->getTitle()) {
-        $this->album->setTitle($this->origin->dirname);
-      } else {
-        $this->album->setTitle($title);
-      }
-      $this->out->writeLine('---> Title "', $this->album->getTitle(), '"');
+      $this->title= $title;
     }
 
     /**
@@ -142,12 +112,7 @@
      */
     #[@arg]
     public function setCreatedAt($date= NULL) {
-      if (!$date && !$this->album->getCreatedAt()) {
-        $this->album->setCreatedAt(new Date($this->origin->createdAt()));
-      } else {
-        $this->album->setCreatedAt(new Date($date));
-      }
-      $this->out->writeLine('---> Created ', $this->album->getCreatedAt());
+      $this->createdAt= $date;
     }
     
     /**
@@ -180,6 +145,42 @@
         new ExtensionEqualsFilter('.JPG')
       ));
       $this->topics= array();
+      
+      // Normalize name
+      $albumName= $this->normalizeName($this->origin->dirname);
+      $this->out->writeLine('===> Adding album "', $albumName, '" from ', $this->origin);
+      
+      // Create destination folder if not already existant
+      $this->destination= new Folder($this->imageFolder->getURI().$albumName);
+      $this->processor->setOutputFolder($this->destination);
+      
+      // Check if the album already exists
+      $this->albumStorage= new File($this->dataFolder, $albumName.'.dat');
+      if ($this->albumStorage->exists()) {
+        $this->out->writeLine('---> Found existing album');
+        $this->album= unserialize(FileUtil::getContents($this->albumStorage));
+
+        // Entries will be regenated from scratch    
+        $this->album->highlights= $this->album->chapters= array();
+      } else {
+        $this->out->writeLine('---> Creating new album');
+        $this->album= new Album();
+        $this->album->setName($albumName);
+      }
+      
+      if (!$this->album->getCreatedAt()) {
+        $this->album->setCreatedAt(new Date(NULL === $this->createdAt ? $this->origin->createdAt() : $this->createdAt));
+      }
+      if (!$this->album->getTitle()) {
+        $this->album->setTitle(NULL === $this->title ? $this->origin->dirname : $this->title);
+      }
+      $this->out->writeLine('---> Created ', $this->album->getCreatedAt());
+      $this->out->writeLine('---> Title "', $this->album->getTitle(), '"');
+
+      // Read the introductory text from description.txt if existant
+      if (is_file($df= $this->origin->getURI().'description.txt')) {
+        $this->album->setDescription(file_get_contents($df));
+      }
     
       // Create destination directory if not existant
       $this->destination->exists() || $this->destination->create(0755);

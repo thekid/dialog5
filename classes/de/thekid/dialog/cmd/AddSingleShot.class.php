@@ -46,9 +46,10 @@
   class AddSingleShot extends ImportCommand {
     protected
       $origin           = NULL,
-      $destination      = NULL,
       $shotStorage      = NULL,
-      $shot             = NULL;
+      $shot             = NULL,
+      $title            = NULL,
+      $createdAt        = NULL;
 
     /**
      * Returns processor. Overrides base class getProcessor() method.
@@ -72,18 +73,45 @@
       if (!$this->origin->exists()) {
         throw new FileNotFoundException('File "'.$file.'" does not exist');
       }
-      
+    }
+    
+    /**
+     * Set shots's title. If no title is given and the shot did not 
+     * previously exist, uses the origin file's name.
+     *
+     * @param   string title default NULL
+     */
+    #[@arg]
+    public function setTitle($title= NULL) {
+      $this->title= $title;
+    }
+
+    /**
+     * Set shots's creation date. If no date is given and the shot did not 
+     * previously exist, uses the origin file's creation date.
+     *
+     * @param   string date default NULL
+     */
+    #[@arg]
+    public function setCreatedAt($date= NULL) {
+      $this->createdAt= $date;
+    }
+    
+    /**
+     * Import
+     *
+     */
+    protected function doImport() {
+    
       // Normalize name
       $fileName= substr($this->origin->getFilename(), 0, strpos($this->origin->getFilename(), '.'));
       $shotName= $this->normalizeName($fileName);
       $this->out->writeLine('===> Adding shot "', $shotName, '" from ', $this->origin);
       
-      // Create destination folder if not already existant
-      $this->destination= new Folder($this->shotsFolder);
-      $this->processor->setOutputFolder($this->destination);
+      $this->processor->setOutputFolder($this->shotsFolder);
       
       // Check if the shot already exists
-      $this->shotStorage= new File($this->dataFolder.$shotName.'.dat');
+      $this->shotStorage= new File($this->dataFolder, $shotName.'.dat');
       if ($this->shotStorage->exists()) {
         $this->out->writeLine('---> Found existing shot');
         $this->shot= unserialize(FileUtil::getContents($this->shotStorage));
@@ -98,45 +126,16 @@
       if (is_file($df= $this->origin->getPath().DIRECTORY_SEPARATOR.$fileName.'.txt')) {
         $this->shot->setDescription(file_get_contents($df));
       }
-    }
-    
-    /**
-     * Set shots's title. If no title is given and the shot did not 
-     * previously exist, uses the origin file's name.
-     *
-     * @param   string title default NULL
-     */
-    #[@arg]
-    public function setTitle($title= NULL) {
-      if (!$title && !$this->shot->getTitle()) {
-        $this->shot->setTitle($this->origin->getFilename());
-      } else {
-        $this->shot->setTitle($title);
-      }
-      $this->out->writeLine('---> Title "', $this->shot->getTitle(), '"');
-    }
 
-    /**
-     * Set shots's creation date. If no date is given and the shot did not 
-     * previously exist, uses the origin file's creation date.
-     *
-     * @param   string date default NULL
-     */
-    #[@arg]
-    public function setCreatedAt($date= NULL) {
-      if (!$date && !$this->shot->getCreatedAt()) {
-        $this->shot->setDate(new Date($this->origin->createdAt()));
-      } else {
-        $this->shot->setDate(new Date($date));
+      if (!$this->shot->getDate()) {
+        $this->shot->setDate(new Date(NULL === $this->createdAt ? $this->origin->createdAt() : $this->createdAt));
+      }
+      if (!$this->shot->getTitle()) {
+        $this->shot->setTitle(NULL === $this->title ? $this->origin->dirname : $this->title);
       }
       $this->out->writeLine('---> Created ', $this->shot->getDate());
-    }
-    
-    /**
-     * Import
-     *
-     */
-    protected function doImport() {
+      $this->out->writeLine('---> Title "', $this->shot->getTitle(), '"');
+
       $image= $this->processor->albumImageFor($this->origin->getURI());
       $this->processMetaData($image, $this->shot);
       $this->shot->setImage($image);

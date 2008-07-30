@@ -87,7 +87,9 @@
       $origin            = NULL,
       $destination       = NULL,
       $collectionStorage = NULL,
-      $collection        = NULL;
+      $collection        = NULL,
+      $title             = NULL,
+      $createdAt         = NULL;
 
     /**
      * Set origin folder
@@ -100,17 +102,49 @@
       if (!$this->origin->exists()) {
         throw new FileNotFoundException('Folder "'.$folder.'" does not exist');
       }
-      
+    }
+    
+    /**
+     * Set collection's title. If no title is given and the collection did not 
+     * previously exist, uses the origin folder's directory name.
+     *
+     * @param   string title default NULL
+     */
+    #[@arg]
+    public function setTitle($title= NULL) {
+      $this->title= $title;
+    }
+
+    /**
+     * Set collection's creation date. If no date is given and the collection did not 
+     * previously exist, uses the origin folder's creation date.
+     *
+     * @param   string date default NULL
+     */
+    #[@arg]
+    public function setCreatedAt($date= NULL) {
+      $this->createdAt= $date;
+    }
+    
+    /**
+     * Import
+     *
+     */
+    protected function doImport() {
+      $jpegs= new ExtensionEqualsFilter('.jpg');
+      $this->topics= array();
+      $this->groupingStrategy= GroupingStrategy::$HOURS;
+
       // Normalize name
       $collectionName= $this->normalizeName($this->origin->dirname);
       $this->out->writeLine('===> Adding collection "', $collectionName, '" from ', $this->origin);
       
       // Create destination folder if not already existant
-      $this->destination= new Folder($this->imageFolder.$collectionName);
+      $this->destination= new Folder($this->imageFolder->getURI().$collectionName);
       $this->processor->setOutputFolder($this->destination);
       
       // Check if the collection already exists
-      $this->collectionStorage= new File($this->dataFolder.$collectionName.'.dat');
+      $this->collectionStorage= new File($this->dataFolder, $collectionName.'.dat');
       if ($this->collectionStorage->exists()) {
         $this->out->writeLine('---> Found existing collection');
         $this->collection= unserialize(FileUtil::getContents($this->collectionStorage));
@@ -123,53 +157,19 @@
         $this->collection->setName($collectionName);
       }
       
-
       // Read the introductory text from description.txt if existant
       if (is_file($df= $this->origin->getURI().'description.txt')) {
         $this->collection->setDescription(file_get_contents($df));
       }
-    }
-    
-    /**
-     * Set collection's title. If no title is given and the collection did not 
-     * previously exist, uses the origin folder's directory name.
-     *
-     * @param   string title default NULL
-     */
-    #[@arg]
-    public function setTitle($title= NULL) {
-      if (!$title && !$this->collection->getTitle()) {
-        $this->collection->setTitle($this->origin->dirname);
-      } else {
-        $this->collection->setTitle($title);
-      }
-      $this->out->writeLine('---> Title "', $this->collection->getTitle(), '"');
-    }
 
-    /**
-     * Set collection's creation date. If no date is given and the collection did not 
-     * previously exist, uses the origin folder's creation date.
-     *
-     * @param   string date default NULL
-     */
-    #[@arg]
-    public function setCreatedAt($date= NULL) {
-      if (!$date && !$this->collection->getCreatedAt()) {
-        $this->collection->setCreatedAt(new Date($this->origin->createdAt()));
-      } else {
-        $this->collection->setCreatedAt(new Date($date));
+      if (!$this->collection->getCreatedAt()) {
+        $this->collection->setCreatedAt(new Date(NULL === $this->createdAt ? $this->origin->createdAt() : $this->createdAt));
+      }
+      if (!$this->collection->getTitle()) {
+        $this->collection->setTitle(NULL === $this->title ? $this->origin->dirname : $this->title);
       }
       $this->out->writeLine('---> Created ', $this->collection->getCreatedAt());
-    }
-    
-    /**
-     * Import
-     *
-     */
-    protected function doImport() {
-      $jpegs= new ExtensionEqualsFilter('.jpg');
-      $this->topics= array();
-      $this->groupingStrategy= GroupingStrategy::$HOURS;
+      $this->out->writeLine('---> Title "', $this->collection->getTitle(), '"');
 
       // Create destination directory if not existant
       $this->destination->exists() || $this->destination->create(0755);
