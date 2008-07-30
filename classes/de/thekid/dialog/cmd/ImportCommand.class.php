@@ -161,17 +161,17 @@
       
       // Save topics
       foreach ($this->topics as $normalized => $t) {
-        FileUtil::setContents(new File($this->topicsFolder.$normalized.'.dat'), serialize($t));
+        FileUtil::setContents(new File($this->topicsFolder, $normalized.'.dat'), serialize($t));
       }
 
       // Regenerate indexes
-      $index= IndexCreator::forFolder(new Folder($this->dataFolder));
+      $index= IndexCreator::forFolder($this->dataFolder);
       $index->setEntriesPerPage(self::ENTRIES_PER_PAGE);
       $index->regenerate();
 
       // Generate topics
       for (
-        $it= new FilteredIOCollectionIterator(new FileCollection($this->topicsFolder), new ExtensionEqualsFilter('.dat'));
+        $it= new FilteredIOCollectionIterator(new FileCollection($this->topicsFolder->getURI()), new ExtensionEqualsFilter('.dat'));
         $it->hasNext();
       ) {
         $entry= basename($it->next()->getURI());
