@@ -129,7 +129,7 @@
       foreach ($iptc->getKeywords() as $keyword) {
         $normalized= $this->normalizeName($keyword);
         if (!isset($this->topics[$normalized])) {
-          $topic= new File($this->dataFolder.'topics/'.$normalized.'.dat');
+          $topic= new File($this->dataFolder, 'topics/'.$normalized.'.dat');
           if ($topic->exists()) {
             $this->topics[$normalized]= unserialize(FileUtil::getContents($topic));
             $this->out->writeLine('     >> Found existing topic for ', $keyword);
@@ -180,7 +180,7 @@
       ksort($entries);
       for ($i= 0, $s= sizeof($entries); $i < $s; $i+= self::ENTRIES_PER_PAGE) {
         FileUtil::setContents(
-          new File($this->dataFolder.'topics_'.($i / self::ENTRIES_PER_PAGE).'.idx'), 
+          new File($this->dataFolder, 'topics_'.($i / self::ENTRIES_PER_PAGE).'.idx'), 
           serialize(array(
             'total'   => $s, 
             'perpage' => self::ENTRIES_PER_PAGE,
