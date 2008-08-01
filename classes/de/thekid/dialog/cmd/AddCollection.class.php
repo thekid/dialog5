@@ -162,10 +162,10 @@
         $this->collection->setDescription(file_get_contents($df));
       }
 
-      if (!$this->collection->getCreatedAt()) {
+      if (!$this->collection->getCreatedAt() || NULL !== $this->createdAt) {
         $this->collection->setCreatedAt(new Date(NULL === $this->createdAt ? $this->origin->createdAt() : $this->createdAt));
       }
-      if (!$this->collection->getTitle()) {
+      if (!$this->collection->getTitle() || NULL !== $this->title) {
         $this->collection->setTitle(NULL === $this->title ? $this->origin->dirname : $this->title);
       }
       $this->out->writeLine('---> Created ', $this->collection->getCreatedAt());

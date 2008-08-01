@@ -127,10 +127,10 @@
         $this->shot->setDescription(file_get_contents($df));
       }
 
-      if (!$this->shot->getDate()) {
+      if (!$this->shot->getDate() || NULL !== $this->createdAt) {
         $this->shot->setDate(new Date(NULL === $this->createdAt ? $this->origin->createdAt() : $this->createdAt));
       }
-      if (!$this->shot->getTitle()) {
+      if (!$this->shot->getTitle() || NULL !== $this->title) {
         $this->shot->setTitle(NULL === $this->title ? $this->origin->dirname : $this->title);
       }
       $this->out->writeLine('---> Created ', $this->shot->getDate());

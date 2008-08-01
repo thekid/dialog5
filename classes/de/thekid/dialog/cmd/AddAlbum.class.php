@@ -168,10 +168,10 @@
         $this->album->setName($albumName);
       }
       
-      if (!$this->album->getCreatedAt()) {
+      if (!$this->album->getCreatedAt() || NULL !== $this->createdAt) {
         $this->album->setCreatedAt(new Date(NULL === $this->createdAt ? $this->origin->createdAt() : $this->createdAt));
       }
-      if (!$this->album->getTitle()) {
+      if (!$this->album->getTitle() || NULL !== $this->title) {
         $this->album->setTitle(NULL === $this->title ? $this->origin->dirname : $this->title);
       }
       $this->out->writeLine('---> Created ', $this->album->getCreatedAt());
