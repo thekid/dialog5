@@ -76,7 +76,7 @@
     $rdf->addItem(
       $item->getTitle(),
       urlFor($item),
-      $item->getDescription().'<br/><img border="1" src="/shots/thumb.color.'.$item->getName().'.jpg"/>',
+      $item->getDescription().'<br/><img border="1" src="/shots/thumb.color.'.$item->getFileName().'"/>',
       $item->getDate()
     );
   }
