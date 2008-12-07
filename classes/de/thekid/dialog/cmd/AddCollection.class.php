@@ -125,6 +125,26 @@
     public function setCreatedAt($date= NULL) {
       $this->createdAt= $date;
     }
+
+    /**
+     * Sets how to group images into chapters (one of "hour" or "day")
+     *
+     * @see     xp://de.thekid.dialog.GroupingStrategy
+     * @param   string method default "hour"
+     */
+    #[@arg]
+    public function setGroupBy($method= 'hour') {
+      try {
+        $this->groupingStrategy= Enum::valueOf(XPClass::forName('de.thekid.dialog.GroupingStrategy'), $method);
+      } catch (IllegalArgumentException $e) {
+        throw new IllegalArgumentException(sprintf(
+          'Unknown grouping method "%s", supported: %s',
+          $method,
+          xp::stringOf(GroupingStrategy::values())
+        ));
+      }
+      $this->out->writeLine('---> Group by ', $this->groupingStrategy);
+    }
     
     /**
      * Import
@@ -133,7 +153,6 @@
     protected function doImport() {
       $jpegs= new ExtensionEqualsFilter('.jpg');
       $this->topics= array();
-      $this->groupingStrategy= GroupingStrategy::$HOURS;
 
       // Normalize name
       $collectionName= $this->normalizeName($this->origin->dirname);
@@ -183,7 +202,7 @@
         $albumName= $this->normalizeName($entry);
         $this->out->writeLine('     >> Creating album "', $entry, '" (name= "', $albumName, '")');
 
-        $album= $collection->addEntry(new Album());
+        $album= $this->collection->addEntry(new Album());
         $album->setName($this->collection->getName().'/'.$albumName);
 
         // Read the title title.txt if existant, use the directory name otherwise
@@ -200,7 +219,7 @@
 
         // Create destination directory if not existant
         // Point processor at new destination
-        $albumDestination= new Folder($destination->getURI().$albumname);
+        $albumDestination= new Folder($this->destination->getURI().$albumname);
         $albumDestination->exists() || $albumDestination->create(0755);
         $this->processor->setOutputFolder($albumDestination);
 
