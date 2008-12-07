@@ -205,15 +205,15 @@
         $album->setName($this->collection->getName().'/'.$albumName);
 
         // Read the title title.txt if existant, use the directory name otherwise
-        if (is_file($tf= $qualified.TITLE_FILE)) {
+        if (is_file($tf= $qualified.'title.txt')) {
           $album->setTitle(file_get_contents($tf));
         } else {
           $album->setTitle($entry);
         }
-        $this->out->writeLine('     >> Title "', $album->getTitle());
+        $this->out->writeLine('     >> Title "', $album->getTitle(), '"');
 
         // Read the introductory text from description.txt if existant
-        if (is_file($df= $qualified.DESCRIPTION_FILE)) {
+        if (is_file($df= $qualified.'description.txt')) {
           $album->setDescription(file_get_contents($df));
         }
 
