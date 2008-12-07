@@ -6,6 +6,16 @@ Version ?.?.?, released ????-??-??
 ----------------------------------
 SVN version: ?????
 
+Features
+~~~~~~~~
+- Added command line arg -g to AddCollection to support grouping.
+  (friebe)
+
+Bugfixes
+~~~~~~~~
+- Fixed adding collections
+  (friebe)
+
 
 Version 2.4.1, released 2008-07-19
 ----------------------------------
