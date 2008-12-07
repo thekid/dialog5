@@ -160,7 +160,6 @@
       
       // Create destination folder if not already existant
       $this->destination= new Folder($this->imageFolder->getURI().$collectionName);
-      $this->processor->setOutputFolder($this->destination);
       
       // Check if the collection already exists
       $this->collectionStorage= new File($this->dataFolder, $collectionName.'.dat');
@@ -211,6 +210,7 @@
         } else {
           $album->setTitle($entry);
         }
+        $this->out->writeLine('     >> Title "', $album->getTitle());
 
         // Read the introductory text from description.txt if existant
         if (is_file($df= $qualified.DESCRIPTION_FILE)) {
@@ -219,9 +219,10 @@
 
         // Create destination directory if not existant
         // Point processor at new destination
-        $albumDestination= new Folder($this->destination->getURI().$albumname);
+        $albumDestination= new Folder($this->destination->getURI().$albumName);
         $albumDestination->exists() || $albumDestination->create(0755);
         $this->processor->setOutputFolder($albumDestination);
+        $this->out->writeLine('     >> Destination ', $albumDestination);
 
         // Get highlights
         $highlights= new Folder($qualified.'highlights');
