@@ -161,15 +161,10 @@
       $collectionName= $this->normalizeName($this->origin->dirname);
       $this->out->writeLine('===> Adding collection "', $collectionName, '" from ', $this->origin);
       
-      // Create destination folder if not already existant
-      $this->destination= new Folder($this->imageFolder->getURI().$collectionName);
+      // Create destination folders if not already existant
+      $this->imageDestination= new Folder($this->imageFolder->getURI().$collectionName);
+      $this->dataDestination= new Folder($this->dataFolder->getURI().$collectionName);
       
-      // Create collection storage directory, if not already existant
-      $collectionStorageBase= new Folder($this->dataFolder->getURI().DIRECTORY_SEPARATOR.$collectionName);
-      if (!$collectionStorageBase->exists()) {
-        $collectionStorageBase->create(0755);
-      }
-
       // Check if the collection already exists
       $this->collectionStorage= new File($this->dataFolder, $collectionName.'.dat');
       if ($this->collectionStorage->exists()) {
@@ -199,7 +194,8 @@
       $this->out->writeLine('---> Title "', $this->collection->getTitle(), '"');
 
       // Create destination directory if not existant
-      $this->destination->exists() || $this->destination->create(0755);
+      $this->imageDestination->exists() || $this->imageDestination->create(0755);
+      $this->dataDestination->exists() || $this->dataDestination->create(0755);
 
       // Iterate on collection's origin folder
       while ($entry= $this->origin->getEntry()) {
@@ -228,7 +224,7 @@
 
         // Create destination directory if not existant
         // Point processor at new destination
-        $albumDestination= new Folder($this->destination->getURI().$albumName);
+        $albumDestination= new Folder($this->imageDestination->getURI().$albumName);
         $albumDestination->exists() || $albumDestination->create(0755);
         $this->processor->setOutputFolder($albumDestination);
         $this->out->writeLine('     >> Destination ', $albumDestination);
@@ -274,6 +270,7 @@
           '$a, $b', 
           'return $b->exifData->dateTime->compareTo($a->exifData->dateTime);'
         ));
+        $album->setCreatedAt($images[0]->exifData->dateTime);
 
         // Group images by strategy
         for ($i= 0, $chapter= array(), $s= sizeof($images); $i < $s; $i++) {
@@ -286,10 +283,16 @@
         }
 
         // Save album
-        $base= dirname($collectionStorageBase->getURI()).DIRECTORY_SEPARATOR.$album->getName();
+        $base= dirname($this->dataDestination->getURI()).DIRECTORY_SEPARATOR.$album->getName();
         FileUtil::setContents(new File($base.'.dat'), serialize($album));
         FileUtil::setContents(new File($base.'.idx'), serialize($this->collection->getName()));
       }
+      
+      // Sort entries inside collection by creation date
+      usort($this->collection->entries, create_function(
+        '$a, $b', 
+        'return $b->getDate()->compareTo($a->getDate());'
+      ));
     
       // Save collection
       FileUtil::setContents($this->collectionStorage, serialize($this->collection));
