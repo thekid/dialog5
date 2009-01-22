@@ -14,6 +14,7 @@ Features
   (friebe)
 - Made importer ignore mal-formed IPTC data (it already ignored not
   being able to find IPTC data)
+- Added support for Google Analytics tracking of the website
   (kiesel)
 
 Bugfixes
@@ -28,7 +29,10 @@ Bugfixes
   to the import date. Now the date from the first image inside the album
   will be used as the album's date.
   (friebe)
-
+- Fixed adding collections
+  (kiesel)
+- Fixed adding pictures without IPTC data
+  (kiesel)
 
 Version 2.4.1, released 2008-07-19
 ----------------------------------
