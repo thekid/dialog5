@@ -8,12 +8,25 @@ SVN version: ?????
 
 Features
 ~~~~~~~~
+- Changed importing to re-import changed images in origin directory
+  (friebe)
 - Added command line arg -g to AddCollection to support grouping.
   (friebe)
+- Made importer ignore mal-formed IPTC data (it already ignored not
+  being able to find IPTC data)
+  (kiesel)
 
 Bugfixes
 ~~~~~~~~
-- Fixed adding collections
+- Fixed files with an uppercase .JPG extension not being imported inside 
+  collections (only .jpg was recognized).
+  (kiesel)
+- Fixed data folders being created in incorrect place when adding 
+  collections
+  (friebe, kiesel)
+- Fixed date for albums created inside a collection, they were all set
+  to the import date. Now the date from the first image inside the album
+  will be used as the album's date.
   (friebe)
 
 
