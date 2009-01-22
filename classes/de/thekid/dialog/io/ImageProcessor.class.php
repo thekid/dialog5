@@ -215,7 +215,7 @@
         $origin= NULL;
         foreach ($this->targetsFor($in) as $target) {
           $destination= new File($this->outputFolder->getURI().$target->getDestination());
-          if ($destination->exists()) {
+          if ($destination->exists() && !($destination->lastModified() < $in->lastModified())) {
             $this->cat && $this->cat->debugf(
               'Target method %s has been processed before, skipping...',
               $target->getMethod()
