@@ -204,6 +204,8 @@
         $this->cat && $this->cat->debug('Extracting IPTC metadata from', $filename);        
         try {
           $image->setIptcData(IptcData::fromFile($in, NULL));
+        } catch (FormatException $e) {
+          // Ignore, if cannot be read...
         } catch (XPException $e) {
           $this->cat && $this->cat->error($e);
           throw $e;

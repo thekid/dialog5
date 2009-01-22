@@ -151,7 +151,10 @@
      *
      */
     protected function doImport() {
-      $jpegs= new ExtensionEqualsFilter('.jpg');
+      $jpegs= new AnyOfFilter(array(
+        new ExtensionEqualsFilter('.jpg'),
+        new ExtensionEqualsFilter('.JPG')
+      ));
       $this->topics= array();
 
       // Normalize name
@@ -161,6 +164,12 @@
       // Create destination folder if not already existant
       $this->destination= new Folder($this->imageFolder->getURI().$collectionName);
       
+      // Create collection storage directory, if not already existant
+      $collectionStorageBase= new Folder($this->dataFolder->getURI().DIRECTORY_SEPARATOR.$collectionName);
+      if (!$collectionStorageBase->exists()) {
+        $collectionStorageBase->create(0755);
+      }
+
       // Check if the collection already exists
       $this->collectionStorage= new File($this->dataFolder, $collectionName.'.dat');
       if ($this->collectionStorage->exists()) {
@@ -277,7 +286,7 @@
         }
 
         // Save album
-        $base= dirname($this->destination->getURI()).DIRECTORY_SEPARATOR.$album->getName();
+        $base= dirname($collectionStorageBase->getURI()).DIRECTORY_SEPARATOR.$album->getName();
         FileUtil::setContents(new File($base.'.dat'), serialize($album));
         FileUtil::setContents(new File($base.'.idx'), serialize($this->collection->getName()));
       }
