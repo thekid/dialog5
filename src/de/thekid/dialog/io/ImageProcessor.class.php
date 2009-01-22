@@ -133,16 +133,40 @@
      */
     public function resampleToFixed($origin, $dimensions, $color) {
       $this->cat && $this->cat->debug('Resampling image to fixed', implode('x', $dimensions));
+      $resized= Image::create($dimensions[0], $dimensions[1], IMG_TRUECOLOR);
       
-      with ($resized= Image::create($dimensions[0], $dimensions[1], IMG_TRUECOLOR)); {
-        $factor= $origin->getHeight() / $resized->getHeight();
-        $border= intval(($resized->getWidth() - $origin->getWidth() / $factor) / 2);
-        if ($border > 0) {
-          $resized->fill($resized->allocate($color));
-        }
-        $resized->resampleFrom($origin, $border, 0, 0, 0, $resized->getWidth() - $border - $border);
-      }
+      $this->cat && $this->cat->debug('Original dimensions: ', implode('x', $origin->getDimensions()));
+      
+      $fx= $origin->getWidth() / $resized->getWidth();
+      $fy= $origin->getHeight() / $resized->getHeight();
+      $factor= min($fx, $fy);
+      $this->cat && $this->cat->debug('fx=', $fx, 'fy=', $fy, '=> factor=', $factor);
+      
+      // Calculate size of source area
+      $tx= $resized->getWidth() * $factor;
+      $ty= $resized->getHeight() * $factor;
+      
+      $this->cat && $this->cat->debug('Using crop from original of', $tx.'x'.$ty);
 
+      // Calculate offset. In ideal case, this is zero for both dimensions. If
+      // one dimensions does not exactly fit, center the view over the middle
+      // of the source axis.
+      $offsetx= ($origin->getWidth() - $tx) / 2;
+      $offsety= ($origin->getHeight() - $ty) / 2;
+      
+      $this->cat && $this->cat->debug('offsetx=', $offsetx, 'offsety=', $offsety);
+      
+      $resized->resampleFrom(
+        $origin,
+        0,
+        0,
+        $offsetx,
+        $offsety,
+        $resized->getWidth(),   // Image size
+        $resized->getHeight(),   // Image size
+        $origin->getWidth() - ($offsetx * 2),
+        $origin->getHeight() - ($offsety * 2)
+      );
       return $resized;
     }
    

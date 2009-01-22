@@ -29,14 +29,14 @@
         </title>
         <link rel="stylesheet" href="/{/formresult/config/style}.css"/>
 	<link rel="alternate" type="application/rss+xml" title="RSS - {/formresult/config/title}" href="/rss/"/>
-	<xsl:if test="/formresult/config/analyticscode"><![CDATA[
-          <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
-          </script>
-          <script type="text/javascript">
-          _uacct = "]]><xsl:value-of select="/formresult/config/analyticscode"/><![CDATA[";
-          urchinTracker();
-          </script>
-	]]></xsl:if>
+	<xsl:if test="/formresult/config/analyticscode">
+      <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+      </script>
+      <script type="text/javascript">
+      _uacct = "<xsl:value-of select="/formresult/config/analyticscode"/>";
+      urchinTracker();
+      </script>
+	</xsl:if>
         <script language="JavaScript"><![CDATA[
           function handleKey(event) {
             if (event.ctrlKey || event.altKey || event.shiftKey) return false;
