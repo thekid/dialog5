@@ -12,8 +12,6 @@ Features
   (friebe)
 - Added command line arg -g to AddCollection to support grouping.
   (friebe)
-- Made importer ignore mal-formed IPTC data (it already ignored not
-  being able to find IPTC data)
 - Added support for Google Analytics tracking of the website
   (kiesel)
 - Added proposed patch for ImageProcessor to generate thumbs without
