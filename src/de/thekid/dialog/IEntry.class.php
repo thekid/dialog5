@@ -14,7 +14,7 @@
     /**
      * Get date
      *
-     * @return  &util.Date
+     * @return  util.Date
      */
     public function getDate();
   }

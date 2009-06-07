@@ -48,8 +48,8 @@
     /**
      * Returns a IndexCreator for a given folder
      *
-     * @param   &io.Folder folder
-     * @return  &de.thekid.dialog.io.IndexCreator
+     * @param   io.Folder folder
+     * @return  de.thekid.dialog.io.IndexCreator
      */
     public static function forFolder($folder) {
       $i= new IndexCreator();
@@ -144,7 +144,7 @@
     /**
      * Set a trace for debugging
      *
-     * @param   &util.log.LogCategory cat
+     * @param   util.log.LogCategory cat
      */
     public function setTrace($cat) {
       $this->cat= $cat;

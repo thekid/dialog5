@@ -64,7 +64,7 @@
     /**
      * Set CreatedAt
      *
-     * @param   &util.Date createdAt
+     * @param   util.Date createdAt
      */
     public function setCreatedAt($createdAt) {
       $this->createdAt= $createdAt;
@@ -73,7 +73,7 @@
     /**
      * Get CreatedAt
      *
-     * @return  &util.Date
+     * @return  util.Date
      */
     public function getCreatedAt() {
       return $this->createdAt;
@@ -83,7 +83,7 @@
      * Get date
      *
      * @see     xp://de.thekid.dialog.IEntry
-     * @return  &util.Date
+     * @return  util.Date
      */
     public function getDate() {
       return $this->createdAt;
@@ -110,8 +110,8 @@
     /**
      * Add an element to highlights
      *
-     * @param   &de.thekid.dialog.AlbumImage highlight
-     * @return  &de.thekid.dialog.AlbumImage the added highlight
+     * @param   de.thekid.dialog.AlbumImage highlight
+     * @return  de.thekid.dialog.AlbumImage the added highlight
      */
     public function addHighlight($highlight) {
       $this->highlights[]= $highlight;
@@ -123,7 +123,7 @@
      * can not be found.
      *
      * @param   int i
-     * @return  &de.thekid.dialog.AlbumImage
+     * @return  de.thekid.dialog.AlbumImage
      */
     public function highlightAt($i) {
       if (!isset($this->highlights[$i])) return NULL;
@@ -142,8 +142,8 @@
     /**
      * Add an element to chapters
      *
-     * @param   &de.thekid.dialog.AlbumChapter chapter
-     * @return  &de.thekid.dialog.AlbumChapter the added chapter
+     * @param   de.thekid.dialog.AlbumChapter chapter
+     * @return  de.thekid.dialog.AlbumChapter the added chapter
      */
     public function addChapter($chapter) {
       $this->chapters[]= $chapter;
@@ -155,7 +155,7 @@
      * can not be found.
      *
      * @param   int i
-     * @return  &de.thekid.dialog.AlbumChapter
+     * @return  de.thekid.dialog.AlbumChapter
      */
     public function chapterAt($i) {
       if (!isset($this->chapters[$i])) return NULL;

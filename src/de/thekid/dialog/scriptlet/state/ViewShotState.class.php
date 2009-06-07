@@ -16,9 +16,9 @@
     /**
      * Process this state.
      *
-     * @param   &scriptlet.xml.workflow.WorkflowScriptletRequest request
-     * @param   &scriptlet.xml.XMLScriptletResponse response
-     * @param   &scriptlet.xml.workflow.Context context
+     * @param   scriptlet.xml.workflow.WorkflowScriptletRequest request
+     * @param   scriptlet.xml.XMLScriptletResponse response
+     * @param   scriptlet.xml.workflow.Context context
      */
     public function process($request, $response, $context) {
       static $modes= array(

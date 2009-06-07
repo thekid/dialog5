@@ -32,7 +32,7 @@
     /**
      * Constructor
      *
-     * @param   &io.Folder folder
+     * @param   io.Folder folder
      * @param   string pattern regular expression
      * @param   bool recursive default FALSE whether to recurse into subdirectories
      */

@@ -59,7 +59,7 @@
     /**
      * Set createdAt
      *
-     * @param   &lang.Object createdAt
+     * @param   lang.Object createdAt
      */
     public function setCreatedAt($createdAt) {
       $this->createdAt= $createdAt;
@@ -68,7 +68,7 @@
     /**
      * Get createdAt
      *
-     * @return  &lang.Object
+     * @return  lang.Object
      */
     public function getCreatedAt() {
       return $this->createdAt;
@@ -78,7 +78,7 @@
      * Get date
      *
      * @see     xp://de.thekid.dialog.IEntry
-     * @return  &util.Date
+     * @return  util.Date
      */
     public function getDate() {
       return $this->createdAt;
@@ -105,8 +105,8 @@
     /**
      * Add an element to entries
      *
-     * @param   &de.thekid.dialog.IEntry entry
-     * @return  &de.thekid.dialog.IEntry the added entry
+     * @param   de.thekid.dialog.IEntry entry
+     * @return  de.thekid.dialog.IEntry the added entry
      */
     public function addEntry($entry) {
       $this->entries[]= $entry;
@@ -118,7 +118,7 @@
      * can not be found.
      *
      * @param   int i
-     * @return  &de.thekid.dialog.IEntry
+     * @return  de.thekid.dialog.IEntry
      */
     public function entryAt($i) {
       if (!isset($this->entries[$i])) return NULL;

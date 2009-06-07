@@ -62,7 +62,7 @@
     /**
      * Set CreatedAt
      *
-     * @param   &util.Date createdAt
+     * @param   util.Date createdAt
      */
     public function setCreatedAt($createdAt) {
       $this->createdAt= $createdAt;
@@ -71,7 +71,7 @@
     /**
      * Get CreatedAt
      *
-     * @return  &util.Date
+     * @return  util.Date
      */
     public function getCreatedAt() {
       return $this->createdAt;
@@ -81,7 +81,7 @@
      * Get date
      *
      * @see     xp://de.thekid.dialog.IEntry
-     * @return  &util.Date
+     * @return  util.Date
      */
     public function getDate() {
       return $this->createdAt;

@@ -33,9 +33,9 @@
      * Resample a given image to given dimensions. Will always fit the 
      * image into the given dimensions, cutting where necessary
      *
-     * @param   &img.Image origin
+     * @param   img.Image origin
      * @param   int[2] dimensions (0 = X, 1 = Y)
-     * @return  &img.Image
+     * @return  img.Image
      */
     public function resampleToFixedCut($origin, $dimensions) {
       $this->cat && $this->cat->debug('Resampling image to fixed', implode('x', $dimensions));
@@ -54,9 +54,9 @@
     /**
      * Helper method to create detail image from origin image.
      *
-     * @param   &img.Image origin
-     * @param   &img.util.ExifData exifData
-     * @return  &img.Image
+     * @param   img.Image origin
+     * @param   img.util.ExifData exifData
+     * @return  img.Image
      */
     public function detailImageFor($origin, $exifData) {
       return $this->resampleToFixedCut($origin, $this->detailDimensions);
@@ -65,9 +65,9 @@
     /**
      * Helper method to create grayscale from origin image.
      *
-     * @param   &img.Image origin
-     * @param   &img.util.ExifData exifData
-     * @return  &img.Image
+     * @param   img.Image origin
+     * @param   img.util.ExifData exifData
+     * @return  img.Image
      */
     public function grayScaleThumbImageFor($origin, $exifData) {
       $resized= $this->resampleToFixedCut($origin, $this->thumbDimensions);
@@ -78,9 +78,9 @@
     /**
      * Helper method to create grayscale from origin image.
      *
-     * @param   &img.Image origin
-     * @param   &img.util.ExifData exifData
-     * @return  &img.Image
+     * @param   img.Image origin
+     * @param   img.util.ExifData exifData
+     * @return  img.Image
      */
     public function grayScaleFullImageFor($origin, $exifData) {
       $resized= $this->resampleTo($origin, $exifData->isHorizontal(), $this->fullDimensions);
@@ -91,7 +91,7 @@
     /**
      * Retrieve a list of targets to be transformed
      *
-     * @param   &io.File in
+     * @param   io.File in
      * @return  de.thekid.dialog.io.ProcessorTarget[]
      */
     public function targetsFor($in) {

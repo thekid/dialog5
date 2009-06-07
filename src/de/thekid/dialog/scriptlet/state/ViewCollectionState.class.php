@@ -30,8 +30,8 @@
     /**
      * Handler for albums
      *
-     * @param   &de.thekid.dialog.Album album
-     * @return  &xml.Node node
+     * @param   de.thekid.dialog.Album album
+     * @return  xml.Node node
      */
     #[@handles('de.thekid.dialog.Album')]
     public function albumNode($album) {
@@ -51,8 +51,8 @@
     /**
      * Handler for updates
      *
-     * @param   &de.thekid.dialog.Update update
-     * @return  &xml.Node node
+     * @param   de.thekid.dialog.Update update
+     * @return  xml.Node node
      */
     #[@handles('de.thekid.dialog.Update')]
     public function updateNode($update) {
@@ -69,8 +69,8 @@
     /**
      * Handler for single shots
      *
-     * @param   &de.thekid.dialog.SingleShot shot
-     * @return  &xml.Node node
+     * @param   de.thekid.dialog.SingleShot shot
+     * @return  xml.Node node
      */
     #[@handles('de.thekid.dialog.SingleShot')]
     public function shotNode($shot) {
@@ -88,8 +88,8 @@
     /**
      * Handler for entry collections
      *
-     * @param   &de.thekid.dialog.EntryCollection collection
-     * @return  &xml.Node node
+     * @param   de.thekid.dialog.EntryCollection collection
+     * @return  xml.Node node
      */
     #[@handles('de.thekid.dialog.EntryCollection')]
     public function collectionNode($collection) {
@@ -118,9 +118,9 @@
     /**
      * Process this state.
      *
-     * @param   &scriptlet.xml.workflow.WorkflowScriptletRequest request
-     * @param   &scriptlet.xml.XMLScriptletResponse response
-     * @param   &scriptlet.xml.workflow.Context context
+     * @param   scriptlet.xml.workflow.WorkflowScriptletRequest request
+     * @param   scriptlet.xml.XMLScriptletResponse response
+     * @param   scriptlet.xml.workflow.Context context
      */
     public function process($request, $response, $context) {
       $name= $request->getQueryString();

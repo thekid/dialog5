@@ -45,7 +45,7 @@
     /**
      * Add an element to images
      *
-     * @param   &de.thekid.dialog.AlbumImage image
+     * @param   de.thekid.dialog.AlbumImage image
      */
     public function addImage($image) {
       $this->images[]= $image;
@@ -56,7 +56,7 @@
      * can not be found.
      *
      * @param   int i
-     * @return  &de.thekid.dialog.AlbumImage
+     * @return  de.thekid.dialog.AlbumImage
      */
     public function imageAt($i) {
       if (!isset($this->images[$i])) return NULL;

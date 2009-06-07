@@ -100,7 +100,7 @@
     /**
      * Set date
      *
-     * @param   &util.Date date
+     * @param   util.Date date
      */
     public function setDate($date) {
       $this->date= $date;
@@ -109,7 +109,7 @@
     /**
      * Get date
      *
-     * @return  &util.Date
+     * @return  util.Date
      */
     public function getDate() {
       return $this->date;
@@ -118,7 +118,7 @@
     /**
      * Set image
      *
-     * @param   &de.thekid.dialog.AlbumImage image
+     * @param   de.thekid.dialog.AlbumImage image
      */
     public function setImage($image) {
       $this->image= $image;
@@ -127,7 +127,7 @@
     /**
      * Get image
      *
-     * @return  &de.thekid.dialog.AlbumImage
+     * @return  de.thekid.dialog.AlbumImage
      */
     public function getImage() {
       return $this->image;
