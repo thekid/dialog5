@@ -6,6 +6,11 @@ Version ?.?.?, released ????-??-??
 ----------------------------------
 SVN version: ?????
 
+
+Version 2.4.2, released 2009-06-11
+----------------------------------
+SVN version: 11130
+
 Features
 ~~~~~~~~
 - Changed importing to re-import changed images in origin directory
