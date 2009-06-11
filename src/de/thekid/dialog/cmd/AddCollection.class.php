@@ -123,7 +123,7 @@
      */
     #[@arg]
     public function setCreatedAt($date= NULL) {
-      $this->createdAt= $date;
+      $this->createdAt= $date ? new Date($date) : NULL;
     }
 
     /**
@@ -275,13 +275,16 @@
           '$a, $b', 
           'return $b->exifData->dateTime->compareTo($a->exifData->dateTime);'
         ));
-        $album->setCreatedAt($images[0]->exifData->dateTime);
 
         // Group images by strategy
         for ($i= 0, $chapter= array(), $s= sizeof($images); $i < $s; $i++) {
           $key= $this->groupingStrategy->groupFor($images[$i]);
           if (!isset($chapter[$key])) {
             $chapter[$key]= $album->addChapter(new AlbumChapter($key));
+          }
+          if ($images[$i]->exifData->dateTime && !$this->createdAt) {
+            $this->out->writeLine('---> Inferring album creation date from ', $images[$i]);
+            $this->createdAt= $images[$i]->exifData->dateTime;
           }
 
           $chapter[$key]->addImage($images[$i]);
@@ -303,7 +306,10 @@
       if (NULL !== $this->createdAt) {
         $this->collection->setCreatedAt($this->createdAt);
       } else if ($this->collection->entries[0]) {
+        $this->out->writeLine('---> Inferring collection creation date from ', $this->collection->entries[0]);
         $this->collection->setCreatedAt($this->collection->entries[0]->getDate());
+      } else {
+        $this->collection->setCreatedAt(new Date($this->origin->createdAt()));
       }
       $this->out->writeLine('---> Created ', $this->collection->getCreatedAt());
     

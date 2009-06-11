@@ -112,7 +112,7 @@
      */
     #[@arg]
     public function setCreatedAt($date= NULL) {
-      $this->createdAt= $date;
+      $this->createdAt= $date ? new Date($date) : NULL;
     }
     
     /**
@@ -239,16 +239,15 @@
         if (!isset($chapter[$key])) {
           $chapter[$key]= $this->album->addChapter(new AlbumChapter($key));
         }
+        if ($images[$i]->exifData->dateTime && !$this->createdAt) {
+          $this->out->writeLine('---> Inferring album creation date from ', $images[$i]);
+          $this->createdAt= $images[$i]->exifData->dateTime;
+        }
 
         $chapter[$key]->addImage($images[$i]);
       }
 
-      // If not specified: Use first images' creation time as album's
-      if (NULL !== $this->createdAt) {
-        $this->album->setCreatedAt($this->createdAt);
-      } else if ($images[0]) {
-        $this->album->setCreatedAt($images[0]->exifData->dateTime);
-      }
+      $this->album->setCreatedAt($this->createdAt);
       $this->out->writeLine('---> Created ', $this->album->getCreatedAt());
       
       // Save album and topics
