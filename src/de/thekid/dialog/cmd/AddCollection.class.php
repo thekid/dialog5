@@ -187,8 +187,16 @@
       if (!$this->collection->getCreatedAt() || NULL !== $this->createdAt) {
         $this->collection->setCreatedAt(new Date(NULL === $this->createdAt ? $this->origin->createdAt() : $this->createdAt));
       }
-      if (!$this->collection->getTitle() || NULL !== $this->title) {
-        $this->collection->setTitle(NULL === $this->title ? $this->origin->dirname : $this->title);
+      if (NULL !== $this->title) {
+        $this->collection->setTitle($this->title);
+      } else {
+
+        // Read the title title.txt if existant, use the directory name otherwise
+        if (is_file($tf= $this->origin->getURI().'title.txt')) {
+          $this->collection->setTitle(file_get_contents($tf));
+        } else {
+          $this->collection->setTitle($this->origin->dirname);
+        }
       }
       $this->out->writeLine('---> Created ', $this->collection->getCreatedAt());
       $this->out->writeLine('---> Title "', $this->collection->getTitle(), '"');

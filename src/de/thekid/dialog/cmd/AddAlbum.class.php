@@ -171,8 +171,16 @@
       if (!$this->album->getCreatedAt() || NULL !== $this->createdAt) {
         $this->album->setCreatedAt(new Date(NULL === $this->createdAt ? $this->origin->createdAt() : $this->createdAt));
       }
-      if (!$this->album->getTitle() || NULL !== $this->title) {
-        $this->album->setTitle(NULL === $this->title ? $this->origin->dirname : $this->title);
+      if (NULL !== $this->title) {
+        $this->album->setTitle($this->title);
+      } else {
+
+        // Read the title title.txt if existant, use the directory name otherwise
+        if (is_file($tf= $this->origin->getURI().'title.txt')) {
+          $this->album->setTitle(file_get_contents($tf));
+        } else {
+          $this->album->setTitle($this->origin->dirname);
+        }
       }
       $this->out->writeLine('---> Created ', $this->album->getCreatedAt());
       $this->out->writeLine('---> Title "', $this->album->getTitle(), '"');

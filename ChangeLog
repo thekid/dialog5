@@ -13,6 +13,9 @@ SVN version: 11130
 
 Features
 ~~~~~~~~
+- Changed collection and album import scripts to always recognize a
+  title.txt file inside the to-be-imported directories
+  (friebe)
 - Changed importing to re-import changed images in origin directory
   (friebe)
 - Added command line arg -g to AddCollection to support grouping.
