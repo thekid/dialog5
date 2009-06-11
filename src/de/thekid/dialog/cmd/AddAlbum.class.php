@@ -168,21 +168,18 @@
         $this->album->setName($albumName);
       }
       
-      if (!$this->album->getCreatedAt() || NULL !== $this->createdAt) {
-        $this->album->setCreatedAt(new Date(NULL === $this->createdAt ? $this->origin->createdAt() : $this->createdAt));
-      }
+      // If not specified: Read the title from title.txt if existant, use the 
+      // directory name otherwise
       if (NULL !== $this->title) {
         $this->album->setTitle($this->title);
       } else {
 
-        // Read the title title.txt if existant, use the directory name otherwise
         if (is_file($tf= $this->origin->getURI().'title.txt')) {
           $this->album->setTitle(file_get_contents($tf));
         } else {
           $this->album->setTitle($this->origin->dirname);
         }
       }
-      $this->out->writeLine('---> Created ', $this->album->getCreatedAt());
       $this->out->writeLine('---> Title "', $this->album->getTitle(), '"');
 
       // Read the introductory text from description.txt if existant
@@ -245,6 +242,14 @@
 
         $chapter[$key]->addImage($images[$i]);
       }
+
+      // If not specified: Use first images' creation time as album's
+      if (NULL !== $this->createdAt) {
+        $this->album->setCreatedAt($this->createdAt);
+      } else if ($images[0]) {
+        $this->album->setCreatedAt($images[0]->exifData->dateTime);
+      }
+      $this->out->writeLine('---> Created ', $this->album->getCreatedAt());
       
       // Save album and topics
       FileUtil::setContents($this->albumStorage, serialize($this->album));

@@ -9,10 +9,13 @@ SVN version: ?????
 
 Version 2.4.2, released 2009-06-11
 ----------------------------------
-SVN version: 11130
+SVN version: 11135
 
 Features
 ~~~~~~~~
+- Changed collection and album import scripts to use first item's date
+  as their creation date if not specified otherwise
+  (friebe)
 - Changed collection and album import scripts to always recognize a
   title.txt file inside the to-be-imported directories
   (friebe)

@@ -184,21 +184,18 @@
         $this->collection->setDescription(file_get_contents($df));
       }
 
-      if (!$this->collection->getCreatedAt() || NULL !== $this->createdAt) {
-        $this->collection->setCreatedAt(new Date(NULL === $this->createdAt ? $this->origin->createdAt() : $this->createdAt));
-      }
+      // If not specified: Read the title from title.txt if existant, use the 
+      // directory name otherwise
       if (NULL !== $this->title) {
         $this->collection->setTitle($this->title);
       } else {
 
-        // Read the title title.txt if existant, use the directory name otherwise
         if (is_file($tf= $this->origin->getURI().'title.txt')) {
           $this->collection->setTitle(file_get_contents($tf));
         } else {
           $this->collection->setTitle($this->origin->dirname);
         }
       }
-      $this->out->writeLine('---> Created ', $this->collection->getCreatedAt());
       $this->out->writeLine('---> Title "', $this->collection->getTitle(), '"');
 
       // Create destination directory if not existant
@@ -301,6 +298,14 @@
         '$a, $b', 
         'return $b->getDate()->compareTo($a->getDate());'
       ));
+      
+      // If not specified: Use first album' creation time as collections's
+      if (NULL !== $this->createdAt) {
+        $this->collection->setCreatedAt($this->createdAt);
+      } else if ($this->collection->entries[0]) {
+        $this->collection->setCreatedAt($this->collection->entries[0]->getDate());
+      }
+      $this->out->writeLine('---> Created ', $this->collection->getCreatedAt());
     
       // Save collection
       FileUtil::setContents($this->collectionStorage, serialize($this->collection));
