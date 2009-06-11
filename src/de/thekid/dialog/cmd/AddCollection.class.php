@@ -282,9 +282,9 @@
           if (!isset($chapter[$key])) {
             $chapter[$key]= $album->addChapter(new AlbumChapter($key));
           }
-          if ($images[$i]->exifData->dateTime && !$this->createdAt) {
+          if ($images[$i]->exifData->dateTime && !$album->getCreatedAt()) {
             $this->out->writeLine('---> Inferring album creation date from ', $images[$i]);
-            $this->createdAt= $images[$i]->exifData->dateTime;
+            $album->setCreatedAt($images[$i]->exifData->dateTime);
           }
 
           $chapter[$key]->addImage($images[$i]);
