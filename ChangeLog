@@ -6,6 +6,12 @@ Version ?.?.?, released ????-??-??
 ----------------------------------
 SVN version: ?????
 
+Features
+~~~~~~~~
+- Added image strip feature. An image strip is like an album but thought
+  for less images that are shown in full size one below the other.
+  (friebe)
+
 
 Version 2.4.2, released 2009-06-11
 ----------------------------------
