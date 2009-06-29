@@ -160,7 +160,7 @@
   </xsl:template>
 
   <!--
-   ! Template for albums
+   ! Template for image strips
    !
    ! @purpose  Specialized entry template
    !-->
@@ -193,7 +193,7 @@
     </table>
     <p>
       This image strip contains <xsl:value-of select="@num_images"/> images -
-      <a href="{func:linkAlbum(@name)}">See more</a>
+      <a href="{func:linkImageStrip(@name)}">See more</a>
     </p>
     <br/><br clear="all"/>
   </xsl:template>
