@@ -12,6 +12,7 @@
     'de.thekid.dialog.Album',
     'de.thekid.dialog.Update',
     'de.thekid.dialog.SingleShot',
+    'de.thekid.dialog.ImageStrip',
     'de.thekid.dialog.EntryCollection',
     'util.log.Traceable'
   );
