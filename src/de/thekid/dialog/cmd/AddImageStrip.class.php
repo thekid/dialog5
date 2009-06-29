@@ -124,7 +124,7 @@
         $this->imageStrip= unserialize(FileUtil::getContents($this->imageStripStorage));
 
         // Entries will be regenated from scratch    
-        $this->imageStrip->highlights= $this->imageStrip->chapters= array();
+        $this->imageStrip->images= array();
       } else {
         $this->out->writeLine('---> Creating new image strip');
         $this->imageStrip= new ImageStrip();
