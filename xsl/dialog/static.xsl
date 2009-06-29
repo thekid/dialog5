@@ -160,6 +160,45 @@
   </xsl:template>
 
   <!--
+   ! Template for albums
+   !
+   ! @purpose  Specialized entry template
+   !-->
+  <xsl:template match="entry[@type = 'de.thekid.dialog.ImageStrip']">
+    <div class="datebox">
+      <h2><xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(created/value), 'd')"/></h2> 
+      <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(created/value), 'M Y')"/>
+    </div>
+    <h2>
+      <a href="{func:linkImageStrip(@name)}">
+        <xsl:value-of select="@title"/>
+      </a>
+    </h2>
+    <p align="justify">
+      <xsl:apply-templates select="description"/>
+      <br clear="all"/>
+    </p>
+
+    <h4>Images</h4>
+    <table class="highlights" border="0">
+      <tr>
+        <xsl:for-each select="images/image">
+          <td>
+            <a href="{func:linkImageStrip(../../@name)}#{position()- 1}">
+              <img width="150" height="113" border="0" src="/albums/{../../@name}/thumb.{name}"/>
+            </a>
+          </td>
+        </xsl:for-each>
+      </tr>
+    </table>
+    <p>
+      This image strip contains <xsl:value-of select="@num_images"/> images -
+      <a href="{func:linkAlbum(@name)}">See more</a>
+    </p>
+    <br/><br clear="all"/>
+  </xsl:template>
+
+  <!--
    ! Template for collections 
    !
    ! @purpose  Specialized entry template
