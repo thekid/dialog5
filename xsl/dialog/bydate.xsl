@@ -104,6 +104,24 @@
   </xsl:template>
 
   <!--
+   ! Template for image strips
+   !
+   ! @purpose  Specialized entry template
+   !-->
+  <xsl:template match="entry[@type = 'de.thekid.dialog.ImageStrip']">
+    <h3>
+      <a href="{func:linkImageStrip(@name)}">
+        <xsl:value-of select="@title"/>
+      </a>
+      (Image strip with <xsl:value-of select="@num_images"/> images)
+    </h3>
+    <p align="justify">
+      <xsl:apply-templates select="description"/>
+      <br clear="all"/>
+    </p>
+  </xsl:template>
+
+  <!--
    ! Template for collections 
    !
    ! @purpose  Specialized entry template
@@ -130,6 +148,12 @@
   <xsl:template match="entry[@type = 'de.thekid.dialog.SingleShot']" mode="highlights">
     <a href="{func:linkShot(@name, 0)}">
       <img width="150" height="113" border="0" src="/shots/thumb.color.{highlight}"/>
+    </a>
+  </xsl:template>
+
+  <xsl:template match="entry[@type = 'de.thekid.dialog.ImageStrip']" mode="highlights">
+    <a href="{func:linkImageStrip(@name)}#0">
+      <img width="150" height="113" border="0" src="/albums/{@name}/thumb.{highlight}"/>
     </a>
   </xsl:template>
 
