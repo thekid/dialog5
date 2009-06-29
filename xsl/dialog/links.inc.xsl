@@ -40,6 +40,14 @@
       <xsl:value-of select="concat('/collection/', $name)"/>
     </func:result>
   </func:function>
+
+  <func:function name="func:linkImageStrip">
+    <xsl:param name="name"/>
+    
+    <func:result>
+      <xsl:value-of select="concat('/xml/', $__product, '.', $__lang, '/imagestrip?', $name)"/>
+    </func:result>
+  </func:function>
   
   <func:function name="func:linkChapter">
     <xsl:param name="album"/>
