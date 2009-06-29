@@ -83,6 +83,24 @@
     }
 
     /**
+     * Handler for image strips
+     *
+     * @param   de.thekid.dialog.ImageStrip imageStrip
+     * @return  xml.Node node
+     */
+    #[@handles('de.thekid.dialog.ImageStrip')]
+    public function imageStripNode($imageStrip) {
+      $child= new Node('entry', NULL, array(
+        'name'          => $imageStrip->getName(),
+        'title'         => $imageStrip->getTitle(),
+        'num_images'    => $imageStrip->numImages(),
+      ));
+      $child->addChild(Node::fromObject($imageStrip->createdAt, 'date'));
+      $child->addChild(new Node('highlight', $imageStrip->imageAt(0)->getName()));
+      return $child;
+    }
+
+    /**
      * Handler for entry collections
      *
      * @param   de.thekid.dialog.EntryCollection collection
