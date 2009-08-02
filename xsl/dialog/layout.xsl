@@ -41,7 +41,7 @@
           } catch(err) {}
           </script>      
         </xsl:if>
-        <script language="JavaScript"><![CDATA[
+        <script type="text/javascript"><![CDATA[
           function handleKey(event) {
             if (event.ctrlKey || event.altKey || event.shiftKey) return false;
 
