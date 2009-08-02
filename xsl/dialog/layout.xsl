@@ -28,15 +28,19 @@
           <xsl:call-template name="page-title"/>
         </title>
         <link rel="stylesheet" href="/{/formresult/config/style}.css"/>
-	<link rel="alternate" type="application/rss+xml" title="RSS - {/formresult/config/title}" href="/rss/"/>
-	<xsl:if test="/formresult/config/analyticscode">
-      <script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
-      </script>
-      <script type="text/javascript">
-      _uacct = "<xsl:value-of select="/formresult/config/analyticscode"/>";
-      urchinTracker();
-      </script>
-	</xsl:if>
+      	<link rel="alternate" type="application/rss+xml" title="RSS - {/formresult/config/title}" href="/rss/"/>
+        <xsl:if test="/formresult/config/analyticscode">
+          <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+          try {
+            var pageTracker = _gat._getTracker("<xsl:value-of select="/formresult/config/analyticscode"/>");
+            pageTracker._trackPageview();
+          } catch(err) {}
+          </script>      
+        </xsl:if>
         <script language="JavaScript"><![CDATA[
           function handleKey(event) {
             if (event.ctrlKey || event.altKey || event.shiftKey) return false;
