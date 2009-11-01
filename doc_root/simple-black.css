@@ -25,7 +25,7 @@ tr#header {
   color: white;
 }
 .footer {
-  background-color: black;
+  background-color: #202021; 
 }
 .footer small {
   color: #eeeeee;
@@ -64,14 +64,34 @@ table.collection_list td {
 table.chapter img {
   border-color:  #424542;
 }
-td#image img {
-  border-color: #f4f4f4;
-}
 table.bydate_list {
   color: #eeeeee;
 }
 
+/* Image display */
+td.image .display {
+  border: 1px solid #f4f4f4;
+}
+td.image .opaqueborder {
+  width: 100%; 
+  height: 100%; 
+  border: 10px solid #f4f4f4; 
+  -ms-box-sizing: border-box; 
+  -webkit-box-sizing: border-box; 
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; 
+  opacity: 0.5; 
+  filter: alpha(opacity= 50);
+  -moz-opacity: .50;
+  -khtml-opacity: 0.5;
+}
+
 /* Single shot */
+div.singleshot {
+  width: 619; 
+  height: 347;
+  border: 1px solid #f4f4f4;
+}
 img.singleshot {
   border-color: #f4f4f4;
 }
