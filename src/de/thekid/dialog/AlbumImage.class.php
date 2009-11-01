@@ -15,6 +15,8 @@
   class AlbumImage extends Object {
     public
       $name       = '',
+      $width      = 0,
+      $height     = 0,
       $exifData   = NULL,
       $iptcData   = NULL;
 
@@ -43,6 +45,42 @@
      */
     public function getName() {
       return $this->name;
+    }
+
+    /**
+     * Set width
+     *
+     * @param   int width
+     */
+    public function setWidth($width) {
+      $this->width= $width;
+    }
+
+    /**
+     * Get width
+     *
+     * @return  int
+     */
+    public function getWidth() {
+      return $this->width;
+    }
+
+    /**
+     * Set height
+     *
+     * @param   int height
+     */
+    public function setHeight($height) {
+      $this->height= $height;
+    }
+
+    /**
+     * Get height
+     *
+     * @return  int
+     */
+    public function getHeight() {
+      return $this->height;
     }
 
     /**
@@ -88,8 +126,10 @@
      */
     public function toString() {
       return sprintf(
-        '%s(%s) <%s/%s>',
+        '%s(%d x %d %s) <%s/%s>',
         $this->getClassName(),
+        $this->width,
+        $this->height,
         $this->name,
         str_replace("\n", "\n  ", xp::stringOf($this->exifData)),
         str_replace("\n", "\n  ", xp::stringOf($this->iptcData))
