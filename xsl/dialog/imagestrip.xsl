@@ -69,7 +69,9 @@
         <tr>
           <td class="image" align="center">
             <a name="{position() - 1}">
-              <img border="0" src="/albums/{/formresult/imagestrip/@name}/{name}"/>
+              <div class="display" style="background-image: url(/albums/{/formresult/imagestrip/@name}/{name}); width: {width}px; height: {height}px">
+                <div class="opaqueborder"/>
+              </div>
             </a>
           </td>
         </tr>

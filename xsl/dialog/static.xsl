@@ -134,8 +134,10 @@
     </p>
     <table border="0">
       <tr>
-        <td rowspan="3">
-          <img class="singleshot" border="0" src="/shots/detail.{@filename}" width="619" height="347"/>
+        <td class="image" rowspan="3">
+          <div class="display" style="background-image: url(/shots/detail.{@filename}); width: 619px; height: 347px">
+            <div class="opaqueborder"/>
+          </div>
         </td>
         <td valign="top">
           <a href="{func:linkShot(@name, 0)}">

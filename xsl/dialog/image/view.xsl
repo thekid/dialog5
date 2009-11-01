@@ -110,7 +110,7 @@
     <!-- Selected image -->
     <table border="0" width="800">
       <tr>
-        <td id="image" align="center">
+        <td class="image" align="center">
           <a>
             <xsl:if test="/formresult/selected/next != ''">
               <xsl:attribute name="href"><xsl:value-of select="func:linkImage(
@@ -120,7 +120,9 @@
                 /formresult/selected/next/number
               )"/></xsl:attribute>
             </xsl:if>
-            <img border="0" src="/albums/{/formresult/album/@name}/{/formresult/selected/name}"/>
+            <div class="display" style="background-image: url(/albums/{/formresult/album/@name}/{/formresult/selected/name}); width: {/formresult/selected/width}px; height: {/formresult/selected/height}px">
+              <div class="opaqueborder"/>
+            </div>
           </a>
         </td>
       </tr>

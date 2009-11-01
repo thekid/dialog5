@@ -73,8 +73,10 @@
     <!-- Selected image -->
     <table width="800" border="0">
       <tr>
-        <td id="image" align="center">
-          <img border="0" src="/shots/{/formresult/selected/@mode}.{/formresult/selected/fileName}"/>
+        <td class="image" align="center">
+          <div class="display" style="background-image: url(/shots/{/formresult/selected/@mode}.{/formresult/selected/fileName}); width: {/formresult/selected/image/width}px; height: {/formresult/selected/image/height}px">
+            <div class="opaqueborder"/>
+          </div>
         </td>
       </tr>
     </table>
