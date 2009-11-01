@@ -6,6 +6,9 @@
     and sharpening of the selected images to save bandwidth and web server CPU 
     time, it's skinnable, doesn't require a database and is easy to set up. 
   </description>
+  <release id="2.5.0">
+    <date>2009-11-01</date>
+  </release>
   <release id="2.4.2">
     <date>2009-06-11</date>
   </release>
