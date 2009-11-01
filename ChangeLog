@@ -6,8 +6,28 @@ Version ?.?.?, released ????-??-??
 ----------------------------------
 SVN version: ?????
 
+
+Version 2.5.0, released 2009-11-01
+----------------------------------
+SVN version: 11594
+
+Heads up!
+~~~~~~~~~
+- Changed importers to aggregate image dimensions. Layout features rely
+  on this, so you need to migrate your data as follows:
+  [dialog] $ xpcli de.thekid.dialog.cmd.AggregateImageSizes .
+  (friebe)
+- Changed image display to use a div with a background image instead of
+  an "img"-tag to make inner borders possible. To style your image, use
+  the selector ".image .display" instead of "#image img" in your CSS!
+  (friebe)
+ 
+
 Features
 ~~~~~~~~
+- Added image width and height to AlbumImage so it can be used in the
+  formresult
+  (friebe)
 - Added image strip feature. An image strip is like an album but thought
   for less images that are shown in full size one below the other.
   (friebe)
