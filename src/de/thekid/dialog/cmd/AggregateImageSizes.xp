@@ -1,0 +1,163 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+package de.thekid.dialog.cmd;
+
+import io.Folder;
+import io.File;
+import io.streams.Streams;
+import io.collections.FileCollection;
+import io.collections.iterate.*;
+import de.thekid.dialog.IEntry;
+import de.thekid.dialog.Album;
+import de.thekid.dialog.SingleShot;
+import de.thekid.dialog.EntryCollection;
+import de.thekid.dialog.Update;
+import de.thekid.dialog.ImageStrip;
+import de.thekid.dialog.Topic;
+import de.thekid.dialog.AlbumImage;
+import img.util.ImageInfo;
+import util.collections.HashTable;
+
+import native standard.unserialize;
+import native standard.serialize;
+
+/**
+ * Aggregates image sizes
+ *
+ */
+public class AggregateImageSizes extends util.cmd.Command {
+  protected IOCollectionIterator $albumDataFiles;
+  protected Folder $base;
+  protected static var $handlers= new HashTable<XPClass, lang.reflect.Method>();
+  
+  static {
+    foreach ($method in self::class.getMethods()) {
+      if (!$method.hasAnnotation('handles')) continue;
+      self::$handlers[XPClass::forName($method.getAnnotation('handles'))]= $method;
+    }
+  }
+
+  /**
+   * Set base directory
+   *
+   */
+  [@arg(position= 0)]
+  public void setBase(string $dir) {
+    $this.base= new Folder($dir);
+    $this.albumDataFiles= new FilteredIOCollectionIterator(
+      new FileCollection(new Folder($this.base, 'data')),
+      new ExtensionEqualsFilter('.dat'),
+      true
+    );
+  }
+  
+  /**
+   * Aggregate dimensions
+   *
+   */
+  protected void aggregateDimensions(AlbumImage $image, File $file) {
+    try {
+      $info= ImageInfo::fromFile($file);
+      $image.setWidth($info.getWidth());
+      $image.setHeight($info.getHeight());
+      $this.out.write('.');
+    } catch (img.ImagingException $e) {
+      $this.err.writeLine($file, ' ~ ', $e);
+      $this.out.write('E');
+    }
+  }
+  
+  /**
+   * Processes an album
+   *
+   */
+  [@handles('de.thekid.dialog.Album')]
+  public void processAlbum(IEntry $entry) {
+    $albumFolder= new Folder($this.base, 'doc_root/albums/' ~ $entry.getName());
+    foreach ($highlight in $entry.highlights) {
+      $this.aggregateDimensions($highlight, new File($albumFolder, $highlight.getName()));
+    }
+    foreach ($chapter in $entry.chapters) {
+      foreach ($image in $chapter.images) {
+        $this.aggregateDimensions($image, new File($albumFolder, $image.getName()));
+      }
+    }
+  }
+
+  /**
+   * Processes a single shot
+   *
+   */
+  [@handles('de.thekid.dialog.SingleShot')]
+  public void processSingleShot(IEntry $entry) {
+    $this.aggregateDimensions($entry.getImage(), new File(new Folder($this.base, 'doc_root/shots'), 'color.' ~ $entry.getFileName()));
+  }
+
+  /**
+   * Processes an entry collection - that is, calls handle() for all entries 
+   * inside the collection
+   *
+   */
+  [@handles('de.thekid.dialog.EntryCollection')]
+  public void processEntryCollection(IEntry $entry) {
+    foreach ($element in $entry.entries) {
+      $this.handle($element);
+    }
+  }
+
+  [@handles('de.thekid.dialog.ImageStrip')]
+  public void processImageStrip(IEntry $entry) {
+    $albumFolder= new Folder($this.base, 'doc_root/albums/' ~ $entry.getName());
+    foreach ($image in $entry.images) {
+      $this.aggregateDimensions($image, new File($albumFolder, $image.getName()));
+    }
+  }
+
+  /**
+   * Handles updates. Intentionally empty, an update does not contain an image
+   *
+   */
+  [@handles('de.thekid.dialog.Update')]
+  public void processUpdate(IEntry $entry) { }
+
+  /**
+   * Handles topics. Intentionally empty, all topic images belong to one of the above
+   *
+   */
+  [@handles('de.thekid.dialog.Topic')]
+  public void processTopic(IEntry $entry) { }
+  
+  /**
+   * Handles a given entry
+   *
+   */
+  protected void handle(IEntry $entry) {
+    self::$handlers[$entry.getClass()].invoke($this, [$entry]);
+  }
+
+  /**
+   * Entry point method
+   *
+   */
+  public void run() {
+    $this.out.writeLine('===> Albums from ', $this.albumDataFiles);
+    foreach ($dataFile in $this.albumDataFiles) {
+      $this.out.writeLine('- ', $dataFile);
+      
+      // Read
+      $entry= unserialize(Streams::readAll($dataFile.getInputStream())) as IEntry;
+      $this.out.write('  ', $entry.getClassName(), ' [');
+      
+      // Process
+      $this.handle($entry);
+      
+      // Write
+      $dataFile.getOutputStream().write(serialize($entry));
+      
+      $this.out.writeLine(']');
+    }
+  }
+}
