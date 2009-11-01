@@ -168,8 +168,8 @@
    !-->
   <xsl:template match="entry[@type = 'de.thekid.dialog.ImageStrip']">
     <div class="datebox">
-      <h2><xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(created/value), 'd')"/></h2> 
-      <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(created/value), 'M Y')"/>
+      <h2><xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(date/value), 'd')"/></h2> 
+      <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(date/value), 'M Y')"/>
     </div>
     <h2>
       <a href="{func:linkImageStrip(@name)}">

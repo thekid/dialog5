@@ -99,7 +99,7 @@
         'num_images'    => $imageStrip->numImages(),
       ));
       $child->addChild(new Node('description', new PCData($imageStrip->getDescription())));
-      $child->addChild(Node::fromObject($imageStrip->date, 'date'));
+      $child->addChild(Node::fromObject($imageStrip->createdAt, 'date'));
       $child->addChild(Node::fromArray($imageStrip->images, 'images'));
       return $child;
     }
