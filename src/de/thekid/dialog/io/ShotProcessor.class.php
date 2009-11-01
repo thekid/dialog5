@@ -96,11 +96,11 @@
      */
     public function targetsFor($in) {
       return array(
-        new ProcessorTarget('detailImageFor', 'detail.'.$in->getFilename(), TRUE),
-        new ProcessorTarget('fullImageFor', 'color.'.$in->getFilename(), TRUE),
-        new ProcessorTarget('grayScaleFullImageFor', 'gray.'.$in->getFilename(), TRUE),
-        new ProcessorTarget('thumbImageFor', 'thumb.color.'.$in->getFilename(), FALSE),
-        new ProcessorTarget('grayScaleThumbImageFor', 'thumb.gray.'.$in->getFilename(), FALSE)
+        new ProcessorTarget('detailImageFor', 'detail.'.$in->getFilename(), TRUE, FALSE),
+        new ProcessorTarget('fullImageFor', 'color.'.$in->getFilename(), TRUE, TRUE),
+        new ProcessorTarget('grayScaleFullImageFor', 'gray.'.$in->getFilename(), TRUE, FALSE),
+        new ProcessorTarget('thumbImageFor', 'thumb.color.'.$in->getFilename(), FALSE, FALSE),
+        new ProcessorTarget('grayScaleThumbImageFor', 'thumb.gray.'.$in->getFilename(), FALSE, FALSE)
       );
     }
   }

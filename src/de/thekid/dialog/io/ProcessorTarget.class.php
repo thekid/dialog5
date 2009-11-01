@@ -12,9 +12,10 @@
    */
   class ProcessorTarget extends Object {
     public
-      $method       = '',
-      $destination  = '',
-      $applyFilters = TRUE;
+      $method           = '',
+      $destination      = '',
+      $applyFilters     = TRUE,
+      $inferDimensions  = FALSE;
 
     /**
      * Constructor
@@ -23,10 +24,11 @@
      * @param   string destination
      * @param   bool applyFilters default TRUE
      */
-    public function __construct($method, $destination, $applyFilters= TRUE) {
+    public function __construct($method, $destination, $applyFilters= TRUE, $inferDimensions= FALSE) {
       $this->method= $method;
       $this->destination= $destination;
       $this->applyFilters= $applyFilters;
+      $this->inferDimensions= $inferDimensions;
     }
 
     /**
@@ -81,6 +83,24 @@
      */
     public function getApplyFilters() {
       return $this->applyFilters;
+    }
+
+    /**
+     * Set whether to infer dimensions from this target
+     *
+     * @param   bool inferDimensions
+     */
+    public function setInferDimensions($inferDimensions) {
+      $this->inferDimensions= $inferDimensions;
+    }
+
+    /**
+     * Get whether to infer dimensions from this target
+     *
+     * @return  bool
+     */
+    public function getInferDimensions() {
+      return $this->inferDimensions;
     }
   }
 ?>

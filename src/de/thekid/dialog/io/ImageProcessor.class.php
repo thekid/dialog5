@@ -11,6 +11,7 @@
     'io.Folder',
     'img.util.ExifData',
     'img.util.IptcData',
+    'img.util.ImageInfo',
     'img.Image',
     'img.Color',
     'img.io.StreamReader',
@@ -200,8 +201,8 @@
      */
     public function targetsFor($in) {
       return array(
-        new ProcessorTarget('thumbImageFor', 'thumb.'.$in->getFilename(), FALSE),
-        new ProcessorTarget('fullImageFor', $in->getFilename(), TRUE)
+        new ProcessorTarget('thumbImageFor', 'thumb.'.$in->getFilename(), FALSE, FALSE),
+        new ProcessorTarget('fullImageFor', $in->getFilename(), TRUE, TRUE)
       );
     }
           
@@ -237,6 +238,7 @@
 
         // Go over targets
         $origin= NULL;
+        $dimensionsSet= FALSE;
         foreach ($this->targetsFor($in) as $target) {
           $destination= new File($this->outputFolder->getURI().$target->getDestination());
           if ($destination->exists() && !($destination->lastModified() < $in->lastModified())) {
@@ -244,6 +246,11 @@
               'Target method %s has been processed before, skipping...',
               $target->getMethod()
             );
+            if ($target->getInferDimensions()) {
+              $info= ImageInfo::fromFile($destination);
+              $image->setWidth($info->getWidth());
+              $image->setHeight($info->getHeight());
+            }
             continue;
           }
           
@@ -260,6 +267,13 @@
           
           // Transform
           $transformed= $this->{$target->getMethod()}($origin, $image->exifData);
+          
+          // Infer dimensions
+          if ($target->getInferDimensions()) {
+            $image->setWidth($transformed->getWidth());
+            $image->setHeight($transformed->getHeight());
+            $dimensionsSet= TRUE;
+          }
           
           // Apply post-transform filters if specified by the target
           if ($target->getApplyFilters()) {
@@ -291,6 +305,7 @@
         // Clean up
         delete($origin);
       }
+      
       return $image;
     }
     
