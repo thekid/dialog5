@@ -1,0 +1,85 @@
+/* This class is part of the XP framework
+ *
+ * $Id$
+ */
+
+package de.thekid.dialog;
+
+import util.Date;
+
+/**
+ * Represents an update to an album
+ *
+ * @test     xp://de.thekid.dialog.unittest.UpdateTest
+ * @see      xp://de.thekid.dialog.Album
+ */
+public class Update implements IEntry {
+  public string $albumName    = '';
+  public string $title        = '';
+  public string $description  = '';
+  public Date $date           = null;
+
+  /**
+   * Set albumName
+   *
+   */
+  public void setAlbumName(string $albumName) {
+    $this.albumName= $albumName;
+  }
+
+  /**
+   * Get albumName
+   *
+   */
+  public string getAlbumName() {
+    return $this.albumName;
+  }
+
+  /**
+   * Set title
+   *
+   */
+  public void setTitle(string $title) {
+    $this.title= $title;
+  }
+
+  /**
+   * Get title
+   *
+   */
+  public string getTitle() {
+    return $this.title;
+  }
+
+  /**
+   * Set description
+   *
+   */
+  public void setDescription(string $description) {
+    $this.description= $description;
+  }
+
+  /**
+   * Get description
+   *
+   */
+  public string getDescription() {
+    return $this.description;
+  }
+
+  /**
+   * Set date
+   *
+   */
+  public void setDate(Date $date) {
+    $this.date= $date;
+  }
+
+  /**
+   * Get date
+   *
+   */
+  public Date getDate() {
+    return $this.date;
+  }
+} 

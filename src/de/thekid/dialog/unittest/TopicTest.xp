@@ -1,0 +1,195 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+package de.thekid.dialog.unittest;
+
+import unittest.TestCase;
+import de.thekid.dialog.Topic;
+import de.thekid.dialog.AlbumImage;
+import util.Date;
+
+/**
+ * Tests the collection class
+ *
+ * @see      xp://de.thekid.dialog.Topic
+ */
+public class TopicTest extends TestCase {
+  protected Topic $fixture;
+
+  /**
+   * Sets up this test case
+   *
+   */
+  public void setUp() {
+    $this.fixture= new Topic();
+  }
+
+  /**
+   * Tests name accessors
+   *
+   */
+  [@test]
+  public void nameAccessors() {
+    $this.fixture.setName('name');
+    $this.assertEquals('name', $this.fixture.getName());
+  }
+
+  /**
+   * Tests title accessors
+   *
+   */
+  [@test]
+  public void titleAccessors() {
+    $this.fixture.setTitle('Title');
+    $this.assertEquals('Title', $this.fixture.getTitle());
+  }
+
+  /**
+   * Tests description accessors
+   *
+   */
+  [@test]
+  public void descriptionAccessors() {
+    $this.fixture.setDescription('Description');
+    $this.assertEquals('Description', $this.fixture.getDescription());
+  }
+
+  /**
+   * Tests createdAt accessors
+   *
+   */
+  [@test]
+  public void createdAtAccessors() {
+    $date= Date::now();
+    $this.fixture.setCreatedAt($date);
+    $this.assertEquals($date, $this.fixture.getCreatedAt());
+  }
+
+  /**
+   * Tests getDate() method
+   *
+   */
+  [@test]
+  public void getDate() {
+    $date= Date::now();
+    $this.fixture.setCreatedAt($date);
+    $this.assertEquals($date, $this.fixture.getDate());
+  }
+
+  /**
+   * Tests imagesFrom() method
+   *
+   */
+  [@test]
+  public void imagesFromNonExistantAlbum() {
+    $this.assertEquals([], $this.fixture.imagesFrom('album.1'));
+  }
+
+  /**
+   * Tests addImage() and imagesFrom() methods
+   *
+   */
+  [@test]
+  public void addImage() {
+    $img1= new AlbumImage('image.1');
+    $img2= new AlbumImage('image.2');
+    $this.fixture.addImage($img1, 'album.1');
+    $this.fixture.addImage($img2, 'album.1');
+    $this.assertEquals([$img1, $img2], $this.fixture.imagesFrom('album.1'));
+  }
+
+  /**
+   * Tests addImage() and imagesFrom() methods
+   *
+   */
+  [@test]
+  public void addImageDoesNotAllowDuplicates() {
+    $img= new AlbumImage('image.1');
+    $this.fixture.addImage($img, 'album.1');
+    $this.fixture.addImage($img, 'album.1');
+    $this.assertEquals([$img], $this.fixture.imagesFrom('album.1'));
+  }
+
+  /**
+   * Tests addImage() and imagesFrom() methods
+   *
+   */
+  [@test]
+  public void imagesFromDifferentAlbums() {
+    $img1= new AlbumImage('image.1');
+    $img2= new AlbumImage('image.2');
+    $this.fixture.addImage($img1, 'album.1');
+    $this.fixture.addImage($img2, 'album.2');
+    $this.assertEquals([$img1], $this.fixture.imagesFrom('album.1'));
+    $this.assertEquals([$img2], $this.fixture.imagesFrom('album.2'));
+  }
+
+  /**
+   * Tests origins() method
+   *
+   */
+  [@test]
+  public void originsInitiallyEmpty() {
+    $this.assertEquals([], $this.fixture.origins());
+  }
+
+  /**
+   * Tests origins() method
+   *
+   */
+  [@test]
+  public void singleOrigin() {
+    $this.fixture.addImage(new AlbumImage('image.1'), 'album.1');
+    $this.fixture.addImage(new AlbumImage('image.2'), 'album.1');
+    $this.assertEquals(['album.1'], $this.fixture.origins());
+  }
+
+  /**
+   * Tests origins() method
+   *
+   */
+  [@test]
+  public void multipleOrigins() {
+    $this.fixture.addImage(new AlbumImage('image.1'), 'album.1');
+    $this.fixture.addImage(new AlbumImage('image.2'), 'album.2');
+    $this.fixture.addImage(new AlbumImage('image.3'), 'album.2');
+    $this.assertEquals(['album.1', 'album.2'], $this.fixture.origins());
+  }
+
+  /**
+   * Tests featuredImages() method
+   *
+   */
+  [@test]
+  public void featuredImagesInitiallyEmpty() {
+    $this.assertEquals([:], $this.fixture.featuredImages());
+  }
+
+  /**
+   * Tests featuredImages() method
+   *
+   */
+  [@test]
+  public void featuredImagesFromSingleAlbum() {
+    $img1= new AlbumImage('image.1');
+    $img2= new AlbumImage('image.2');
+    $this.fixture.addImage($img1, 'album.1');
+    $this.fixture.addImage($img2, 'album.1');
+    $this.assertEquals(['album.1' : $img1], $this.fixture.featuredImages());
+  }
+
+  /**
+   * Tests featuredImages() method
+   *
+   */
+  [@test]
+  public void featuredImagesFromMultipleAlbums() {
+    $img1= new AlbumImage('image.1');
+    $img2= new AlbumImage('image.2');
+    $this.fixture.addImage($img1, 'album.1');
+    $this.fixture.addImage($img2, 'album.2');
+    $this.assertEquals(['album.1' : $img1, 'album.2' : $img2], $this.fixture.featuredImages());
+  }
+}

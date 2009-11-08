@@ -1,0 +1,124 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+package de.thekid.dialog.unittest;
+
+import unittest.TestCase;
+import de.thekid.dialog.AlbumImage;
+import de.thekid.dialog.ImageStrip;
+
+/**
+ * Tests the image strip class
+ *
+ * @see      xp://de.thekid.dialog.ImageStrip
+ */
+public class ImageStripTest extends TestCase {
+  protected ImageStrip $fixture;
+
+  /**
+   * Sets up this test case
+   *
+   */
+  public void setUp() {
+    $this.fixture= new ImageStrip(null);
+  }
+
+  /**
+   * Tests name accessors
+   *
+   */
+  [@test]
+  public void nameAccessors() {
+    $this.fixture.setName('name');
+    $this.assertEquals('name', $this.fixture.getName());
+  }
+
+  /**
+   * Tests addImage() method
+   *
+   */
+  [@test]
+  public void addingAnImageReturnsIt() {
+    $img= new AlbumImage('image.1');
+    $this.assertEquals($img, $this.fixture.addImage($img));
+  }
+
+  /**
+   * Tests withImage() method
+   *
+   */
+  [@test]
+  public void withImageReturnsChapter() {
+    $this.assertEquals($this.fixture, $this.fixture.withImage(new AlbumImage('image.1')));
+  }
+
+  /**
+   * Tests numImages() method
+   *
+   */
+  [@test]
+  public void noImagesInitially() {
+    $this.assertEquals(0, $this.fixture.numImages());
+  }
+
+  /**
+   * Tests numImages() and addImage() methods
+   *
+   */
+  [@test]
+  public void addingAnImage() {
+    $this.fixture.addImage(new AlbumImage('image.1'));
+    $this.assertEquals(1, $this.fixture.numImages());
+  }
+
+  /**
+   * Tests numImages() and addImage() methods
+   *
+   */
+  [@test]
+  public void addingImages() {
+    $this.fixture.addImage(new AlbumImage('image.1'));
+    $this.fixture.addImage(new AlbumImage('image.2'));
+    $this.assertEquals(2, $this.fixture.numImages());
+  }
+
+  /**
+   * Tests imageAt() method
+   *
+   */
+  [@test]
+  public void noImagesInitiallyAtZero() {
+    $this.assertNull($this.fixture.imageAt(0));
+  }
+
+  /**
+   * Tests imageAt() method
+   *
+   */
+  [@test]
+  public void imageAtZero() {
+    $img= $this.fixture.addImage(new AlbumImage('image.1'));
+    $this.assertEquals($img, $this.fixture.imageAt(0));
+  }
+
+  /**
+   * Tests imageAt() method
+   *
+   */
+  [@test]
+  public void imageAtOne() {
+    $this.fixture.addImage(new AlbumImage('image.1'));
+    $this.assertNull($this.fixture.imageAt(1));
+  }
+
+  /**
+   * Tests imageAt() method
+   *
+   */
+  [@test]
+  public void imageAtNegativeOne() {
+    $this.assertNull($this.fixture.imageAt(-1));
+  }
+}

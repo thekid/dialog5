@@ -1,0 +1,80 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+package de.thekid.dialog.unittest;
+
+import unittest.TestCase;
+import de.thekid.dialog.AlbumImage;
+import img.util.ExifData;
+import img.util.IptcData;
+
+/**
+ * Tests the image class
+ *
+ * @see      xp://de.thekid.dialog.AlbumImage
+ */
+public class AlbumImageTest extends TestCase {
+  protected AlbumImage $fixture;
+
+  /**
+   * Sets up this test case
+   *
+   */
+  public void setUp() {
+    $this.fixture= new AlbumImage(null);
+  }
+
+  /**
+   * Tests name accessors
+   *
+   */
+  [@test]
+  public void nameAccessors() {
+    $this.fixture.setName('name');
+    $this.assertEquals('name', $this.fixture.getName());
+  }
+
+  /**
+   * Tests width accessors
+   *
+   */
+  [@test]
+  public void widthAccessors() {
+    $this.fixture.setWidth(800);
+    $this.assertEquals(800, $this.fixture.getWidth());
+  }
+
+  /**
+   * Tests height accessors
+   *
+   */
+  [@test]
+  public void heightAccessors() {
+    $this.fixture.setHeight(533);
+    $this.assertEquals(533, $this.fixture.getHeight());
+  }
+
+  /**
+   * Tests exifData accessors
+   *
+   */
+  [@test]
+  public void exifDataAccessors() {
+    $exif= new ExifData();
+    $this.fixture.setExifData($exif);
+    $this.assertEquals($exif, $this.fixture.getExifData());
+  }
+
+  /**
+   * Tests iptcData accessors
+   *
+   */
+  [@test]
+  public void iptcDataAccessors() {
+    $iptc= new IptcData();
+    $this.fixture.setIptcData($iptc);
+    $this.assertEquals($iptc, $this.fixture.getIptcData());
+  }
+}

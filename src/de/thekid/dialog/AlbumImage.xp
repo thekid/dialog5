@@ -1,0 +1,131 @@
+/* This class is part of the XP framework
+ *
+ * $Id$
+ */
+
+package de.thekid.dialog;
+
+import img.util.ExifData;
+import img.util.IptcData;
+
+import native standard.sprintf;
+import native standard.str_replace;
+
+/**
+ * Represents a single image within an album.
+ *
+ * @test     xp://de.thekid.dialog.unittest.AlbumImageTest
+ * @see      xp://de.thekid.dialog.Album
+ */
+public class AlbumImage {
+  public string $name       = '';
+  public int $width         = 0;
+  public int $height        = 0;
+  public ExifData $exifData = null;
+  public IptcData $iptcData = null;
+
+  /**
+   * Constructor
+   *
+   */
+  public __construct(string $name) {
+    $this.name= $name;
+  }
+
+  /**
+   * Set name
+   *
+   */
+  public void setName(string $name) {
+    $this.name= $name;
+  }
+
+  /**
+   * Get name
+   *
+   */
+  public string getName() {
+    return $this.name;
+  }
+
+  /**
+   * Set width
+   *
+   */
+  public void setWidth(int $width) {
+    $this.width= $width;
+  }
+
+  /**
+   * Get width
+   *
+   */
+  public int getWidth() {
+    return $this.width;
+  }
+
+  /**
+   * Set height
+   *
+   */
+  public void setHeight(int $height) {
+    $this.height= $height;
+  }
+
+  /**
+   * Get height
+   *
+   */
+  public int getHeight() {
+    return $this.height;
+  }
+
+  /**
+   * Set exifData
+   *
+   */
+  public void setExifData(ExifData $exifData= null) {
+    $this.exifData= $exifData;
+  }
+
+  /**
+   * Get exifData
+   *
+   */
+  public ExifData getExifData() {
+    return $this.exifData;
+  }
+
+  /**
+   * Set IptcData
+   *
+   */
+  public void setIptcData(IptcData $iptcData= NULL) {
+    $this.iptcData= $iptcData;
+  }
+
+  /**
+   * Get IptcData
+   *
+   */
+  public IptcData getIptcData() {
+    return $this.iptcData;
+  }
+
+  /**
+   * Retrieve a string representation
+   *
+   * @return  string
+   */
+  public string toString() {
+    return sprintf(
+      '%s(%d x %d %s) <%s/%s>',
+      $this.getClassName(),
+      $this.width,
+      $this.height,
+      $this.name,
+      str_replace("\n", "\n  ", xp::stringOf($this.exifData)),
+      str_replace("\n", "\n  ", xp::stringOf($this.iptcData))
+    );
+  }
+}

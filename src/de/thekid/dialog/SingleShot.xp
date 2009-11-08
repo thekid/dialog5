@@ -1,0 +1,129 @@
+/* This class is part of the XP framework
+ *
+ * $Id$
+ */
+
+package de.thekid.dialog;
+
+import util.Date;
+
+/**
+ * Represents an single shot
+ *
+ * @test     xp://de.thekid.dialog.unittest.SingleShotTest
+ * @see      xp://de.thekid.dialog.IEntry
+ */
+public class SingleShot implements IEntry {
+  public string $name         = '';
+  public string $fileName     = '';
+  public string $title        = '';
+  public string $description  = '';
+  public Date $date           = null;
+  public AlbumImage $image    = null;
+
+  /**
+   * Set name
+   *
+   */
+  public void setName(string $name) {
+    $this.name= $name;
+  }
+
+  /**
+   * Get name
+   *
+   */
+  public string getName() {
+    return $this.name;
+  }
+
+  /**
+   * Set fileName
+   *
+   */
+  public void setFileName(string $fileName) {
+    $this.fileName= $fileName;
+  }
+
+  /**
+   * Get fileName
+   *
+   */
+  public string getFileName() {
+    return $this.fileName;
+  }
+
+  /**
+   * Set title
+   *
+   */
+  public void setTitle(string $title) {
+    $this.title= $title;
+  }
+
+  /**
+   * Get title
+   *
+   */
+  public string getTitle() {
+    return $this.title;
+  }
+
+  /**
+   * Set description
+   *
+   */
+  public void setDescription(string $description) {
+    $this.description= $description;
+  }
+
+  /**
+   * Get description
+   *
+   */
+  public string getDescription() {
+    return $this.description;
+  }
+
+  /**
+   * Set date
+   *
+   */
+  public void setDate(Date $date) {
+    $this.date= $date;
+  }
+
+  /**
+   * Get date
+   *
+   */
+  public Date getDate() {
+    return $this.date;
+  }
+
+  /**
+   * Set image
+   *
+   */
+  public void setImage(AlbumImage $image) {
+    $this.image= $image;
+  }
+
+  /**
+   * Get image
+   *
+   */
+  public AlbumImage getImage() {
+    return $this.image;
+  }
+
+  /**
+   * Find an image
+   *
+   * @return  array
+   */
+  public var imageUrn(string $name) {
+    if ($this.image.getName() === $name) return ['id' : 0];
+    return null;
+  }
+} 

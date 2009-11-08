@@ -1,0 +1,167 @@
+/* This class is part of the XP framework
+ *
+ * $Id$
+ */
+
+package de.thekid.dialog;
+
+import util.Date;
+
+import native standard.sprintf;
+import native standard.array_keys;
+
+/**
+ * Represents a topic.
+ *
+ * @test     xp://de.thekid.dialog.unittest.TopicTest
+ */
+public class Topic implements IEntry {
+  public string $name         = '';
+  public string $title        = '';
+  public Date $createdAt      = null;
+  public string $description  = '';
+  public var $images          = [:];
+
+  /**
+   * Set name
+   *
+   */
+  public void setName(string $name) {
+    $this.name= $name;
+  }
+
+  /**
+   * Get name
+   *
+   */
+  public string getName() {
+    return $this.name;
+  }
+
+  /**
+   * Set title
+   *
+   */
+  public void setTitle(string $title) {
+    $this.title= $title;
+  }
+
+  /**
+   * Get title
+   *
+   */
+  public string getTitle() {
+    return $this.title;
+  }
+
+  /**
+   * Set createdAt
+   *
+   */
+  public void setCreatedAt(Date $createdAt) {
+    $this.createdAt= $createdAt;
+  }
+
+  /**
+   * Get createdAt
+   *
+   */
+  public Date getCreatedAt() {
+    return $this.createdAt;
+  }
+
+  /**
+   * Get date
+   *
+   * @see     xp://de.thekid.dialog.IEntry
+   */
+  public Date getDate() {
+    return $this.createdAt;
+  }
+
+  /**
+   * Set description
+   *
+   */
+  public void setDescription(string $description) {
+    $this.description= $description;
+  }
+
+  /**
+   * Get description
+   *
+   */
+  public string getDescription() {
+    return $this.description;
+  }
+
+  /**
+   * Add an element to images
+   *
+   * @param   image
+   * @param   origin origin album
+   */
+  public void addImage(AlbumImage $image, string $origin) {
+    if (isset($this.images[$origin])) {    // Check for duplicates
+      foreach ($existing in $this.images[$origin]) {
+        if ($existing.getName() === $image.getName()) return;
+      }
+    } else {
+      $this.images[$origin]= [];
+    }
+    $this.images[$origin][]= $image;
+  }
+
+  /**
+   * Get images from a certain album
+   *
+   */
+  public AlbumImage[] imagesFrom(string $origin) {
+    if (!isset($this.images[$origin])) return [];
+    return $this.images[$origin];
+  }
+
+  /**
+   * Get featured images.
+   *
+   * @return  array<string, de.thekid.dialog.AlbumImage>
+   */
+  public var featuredImages() {
+    $r= [:];
+    foreach ($origin in $this.origins()) {
+      $r[$origin]= $this.images[$origin][0];
+    }
+    return $r;
+  }
+
+  /**
+   * Get origins.
+   *
+   * @return  string[]
+   */
+  public string[] origins() {
+    return array_keys($this.images);
+  }
+
+  /**
+   * Retrieve a string representation
+   *
+   * @return  string
+   */
+  public string toString() {
+    return sprintf(
+      "%s(%s)@{\n" ~
+      "  [title        ] %s\n" ~
+      "  [description  ] %s\n" ~ 
+      "  [createdAt    ] %s\n" ~ 
+      "  [images       ] {\n%s  }\n" ~
+      "}",
+      $this.getClassName(),
+      $this.name,
+      $this.title,
+      $this.description,
+      xp::stringOf($this.createdAt),
+      xp::stringOf($this.images)
+    );
+  }
+} 

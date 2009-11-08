@@ -1,0 +1,238 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+package de.thekid.dialog;
+
+import img.util.ExifData;
+import img.util.IptcData;
+import util.Date;
+
+import native standard.sprintf;
+
+/**
+ * Represents a single album.
+ *
+ * @test     xp://de.thekid.dialog.unittest.AlbumTest
+ */
+public class Album implements IEntry {
+  public string $name             = '';
+  public string $title            = '';
+  public string $description      = '';
+  public Date $createdAt          = null;
+  public AlbumImage[] $highlights = [];
+  public AlbumChapter[] $chapters = [];
+
+  /**
+   * Set Name
+   *
+   */
+  public void setName(string $name) {
+    $this.name= $name;
+  }
+
+  /**
+   * Get Name
+   *
+   */
+  public string getName() {
+    return $this.name;
+  }
+
+  /**
+   * Set Title
+   *
+   */
+  public void setTitle(string $title) {
+    $this.title= $title;
+  }
+
+  /**
+   * Get Title
+   *
+   * @return  string
+   */
+  public string getTitle() {
+    return $this.title;
+  }
+
+  /**
+   * Set CreatedAt
+   *
+   */
+  public void setCreatedAt(Date $createdAt) {
+    $this.createdAt= $createdAt;
+  }
+
+  /**
+   * Get CreatedAt
+   *
+   */
+  public Date getCreatedAt() {
+    return $this.createdAt;
+  }
+
+  /**
+   * Get date
+   *
+   * @see     xp://de.thekid.dialog.IEntry
+   */
+  public Date getDate() {
+    return $this.createdAt;
+  }
+
+  /**
+   * Set Description
+   *
+   */
+  public void setDescription(string $description) {
+    $this.description= $description;
+  }
+
+  /**
+   * Get Description
+   *
+   */
+  public string getDescription() {
+    return $this.description;
+  }
+
+  /**
+   * Add an element to highlights
+   *
+   */
+  public AlbumImage addHighlight(AlbumImage $highlight) {
+    $this.highlights[]= $highlight;
+    return $highlight;
+  }
+
+
+  /**
+   * Add an element to highlights and return this album.
+   *
+   */
+  public self withHighlight(AlbumImage $highlight) {
+    $this.highlights[]= $highlight;
+    return $this;
+  }
+  /**
+   * Get one highlight element by position. Returns NULL if the element 
+   * can not be found.
+   *
+   */
+  public AlbumImage highlightAt(int $i) {
+    if (!isset($this.highlights[$i])) return null;
+    return $this.highlights[$i];
+  }
+
+  /**
+   * Get number of highlights
+   *
+   * @return  int
+   */
+  public int numHighlights() {
+    return $this.highlights.length;
+  }
+
+  /**
+   * Add an element to chapters
+   *
+   */
+  public AlbumChapter addChapter(AlbumChapter $chapter) {
+    $this.chapters[]= $chapter;
+    return $chapter;
+  }
+
+  /**
+   * Add an element to chapters and return this album
+   *
+   */
+  public self withChapter(AlbumChapter $chapter) {
+    $this.chapters[]= $chapter;
+    return $this;
+  }
+
+  /**
+   * Get one chapter element by position. Returns NULL if the element 
+   * can not be found.
+   *
+   */
+  public AlbumChapter chapterAt(int $i) {
+    if (!isset($this.chapters[$i])) return null;
+    return $this.chapters[$i];
+  }
+
+  /**
+   * Get number of chapters
+   *
+   */
+  public int numChapters() {
+    return $this.chapters.length;
+  }
+
+  /**
+   * Get number of images (highlights excluded)
+   *
+   * @return  int
+   */
+  public int numImages() {
+    $r= 0;
+    foreach ($chapter in $this.chapters) {
+      $r+= $chapter.numImages();
+    }
+    return $r;
+  }
+
+  /**
+   * Find an image
+   *
+   */
+  public var imageUrn(string $name) {
+    for ($i= 0, $s= $this.highlights.length; $i < $s; $i++) {
+      if ($name === $this.highlights[$i].getName()) {
+        return ['type' : 'h', 'chapter' : 0, 'id' : $i];
+      }
+    }
+
+    for ($i= 0, $s= $this.chapters.length; $i < $s; $i++) {
+      for ($j= 0, $t= $this.chapters[$i].images.length; $j < $t; $j++) {
+        if ($name === $this.chapters[$i].images[$j].getName()) {
+          return ['type' : 'i', 'chapter' : $i, 'id' : $j];
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Retrieve a string representation
+   *
+   */
+  public string toString() {
+    $hs= '';
+    for ($i= 0, $s= $this.highlights.length; $i < $s; $i++) {
+      $hs ~= '  ' ~ $this.highlights[$i].toString() ~ "\n";
+    }
+    $cs= '';
+    for ($i= 0, $s= $this.chapters.length; $i < $s; $i++) {
+      $cs ~= '  ' ~ $this.chapters[$i].toString() ~ "\n";
+    }
+    return sprintf(
+      "%s(%s)@{\n" ~
+      "  [title        ] %s\n" ~ 
+      "  [description  ] %s\n" ~ 
+      "  [createdAt    ] %s\n" ~ 
+      "  [highlights   ] {\n%s  }\n" ~
+      "  [chapters     ] {\n%s  }\n" ~
+      "}",
+      $this.getClassName(),
+      $this.name,
+      $this.title,
+      $this.description,
+      xp::stringOf($this.createdAt),
+      $hs,
+      $cs
+    );
+  }
+}

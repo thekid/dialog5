@@ -1,0 +1,144 @@
+/* This class is part of the XP framework
+ *
+ * $Id$
+ */
+
+package de.thekid.dialog;
+
+import util.Date;
+
+/**
+ * Represents a collection of any IEntry objects
+ *
+ * @test     xp://de.thekid.dialog.unittest.EntryCollectionTest
+ * @see      xp://de.thekid.dialog.IEntry
+ */
+public class EntryCollection implements IEntry {
+  public string $name         = '';
+  public string $title        = '';
+  public Date $createdAt      = null;
+  public string $description  = '';
+  public IEntry[] $entries    = [];
+
+  /**
+   * Set name
+   *
+   */
+  public void setName(string $name) {
+    $this.name= $name;
+  }
+
+  /**
+   * Get name
+   *
+   */
+  public string getName() {
+    return $this.name;
+  }
+
+  /**
+   * Set title
+   *
+   */
+  public void setTitle(string $title) {
+    $this.title= $title;
+  }
+
+  /**
+   * Get title
+   *
+   */
+  public string getTitle() {
+    return $this.title;
+  }
+
+  /**
+   * Set createdAt
+   *
+   */
+  public void setCreatedAt(Date $createdAt) {
+    $this.createdAt= $createdAt;
+  }
+
+  /**
+   * Get createdAt
+   *
+   */
+  public Date getCreatedAt() {
+    return $this.createdAt;
+  }
+
+  /**
+   * Get date
+   *
+   * @see     xp://de.thekid.dialog.IEntry
+   */
+  public Date getDate() {
+    return $this.createdAt;
+  }
+
+  /**
+   * Set description
+   *
+   */
+  public void setDescription(string $description) {
+    $this.description= $description;
+  }
+
+  /**
+   * Get description
+   *
+   */
+  public string getDescription() {
+    return $this.description;
+  }
+
+  /**
+   * Add an element to entries
+   *
+   * @return  the added entry
+   */
+  public IEntry addEntry(IEntry $entry) {
+    $this.entries[]= $entry;
+    return $entry;
+  }
+
+  /**
+   * Add an element to entries and return this collection
+   *
+   * @return  the added entry
+   */
+  public self withEntry(IEntry $entry) {
+    $this.entries[]= $entry;
+    return $this;
+  }
+
+  /**
+   * Get one entry element by position. Returns NULL if the element 
+   * can not be found.
+   *
+   */
+  public IEntry entryAt(int $i) {
+    if (!isset($this.entries[$i])) return null;
+    return $this.entries[$i];
+  }
+
+  /**
+   * Get number of entries
+   *
+   */
+  public int numEntries() {
+    return $this.entries.length;
+  }
+
+  /**
+   * Find an image
+   *
+   */
+  public var imageUrn(string $name) {
+    foreach ($entry in $this.entries) {
+      if (null !== ($urn= $entry.imageUrn($name))) return $urn;
+    }
+    return null;
+  }
+} 

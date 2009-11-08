@@ -1,0 +1,36 @@
+/* This class is part of the XP framework
+ *
+ * $Id$
+ */
+
+package de.thekid.dialog;
+
+/**
+ * Grouping strategy enumeration
+ *
+ */
+abstract enum GroupingStrategy {
+  hour {
+    public string groupFor(AlbumImage $image) {
+      if (null === $image.exifData) {
+        throw new IllegalArgumentException('Cannot determine group for ' ~ $image.toString());
+      }
+      return $image.exifData.dateTime.toString('Y-m-d H');
+    }
+  },
+  day {
+    public string groupFor(AlbumImage $image) {
+      if (null === $image.exifData) {
+        throw new IllegalArgumentException('Cannot determine group for ' ~ $image.toString());
+      }
+      return $image.exifData.dateTime.toString('Y-m-d');
+    }
+  };
+
+  /**
+   * Returns group for a given album image.
+   *
+   * @return  string unique group identifier
+   */
+  public abstract string groupFor(AlbumImage $image);
+}

@@ -1,9 +1,11 @@
-##
-# Makefile for dialog
-#
-# $Id$
+VERSION?=$(shell cat VERSION)
 
-XP_VERSION=5.6.7
+dist:
+	cd src && xar cvf ../dialog-$(VERSION).xar .
+	cd .. && zip -r dialog-$(VERSION).zip dialog/dialog-$(VERSION).xar dialog/xsl dialog/doc_root dialog/etc dialog/data -x \*.svn\* -x .cvsignore
 
-include ../../Mk/common.mk
-include ../../Mk/dist.mk
+clean:
+	-rm ../dialog-*.zip dialog-*.xar
+
+release:
+	scp ../dialog-$(VERSION).zip xpdoku@xp-forge.net:/home/httpd/xp.php3.de/doc_root/downloads/projects/www/
