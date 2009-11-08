@@ -31,6 +31,15 @@ public class Topic implements IEntry {
   }
 
   /**
+   * Set name
+   *
+   */
+  public self withName(string $name) {
+    $this.name= $name;
+    return $this;
+  }
+
+  /**
    * Get name
    *
    */
@@ -47,6 +56,15 @@ public class Topic implements IEntry {
   }
 
   /**
+   * Set title
+   *
+   */
+  public self withTitle(string $title) {
+    $this.title= $title;
+    return $this;
+  }
+
+  /**
    * Get title
    *
    */
@@ -60,6 +78,15 @@ public class Topic implements IEntry {
    */
   public void setCreatedAt(Date $createdAt) {
     $this.createdAt= $createdAt;
+  }
+
+  /**
+   * Set createdAt
+   *
+   */
+  public self withCreatedAt(Date $createdAt) {
+    $this.createdAt= $createdAt;
+    return $this;
   }
 
   /**
@@ -85,6 +112,15 @@ public class Topic implements IEntry {
    */
   public void setDescription(string $description) {
     $this.description= $description;
+  }
+
+  /**
+   * Set description
+   *
+   */
+  public self withDescription(string $description) {
+    $this.description= $description;
+    return $this;
   }
 
   /**

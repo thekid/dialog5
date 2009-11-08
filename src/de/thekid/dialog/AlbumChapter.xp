@@ -35,6 +35,15 @@ public class AlbumChapter {
   }
 
   /**
+   * Set name
+   *
+   */
+  public self withName(string $name) {
+    $this.name= $name;
+    return $this;
+  }
+
+  /**
    * Get name
    *
    */

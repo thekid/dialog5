@@ -33,6 +33,15 @@ public class Album implements IEntry {
   }
 
   /**
+   * Set Name
+   *
+   */
+  public self withName(string $name) {
+    $this.name= $name;
+    return $this;
+  }
+
+  /**
    * Get Name
    *
    */
@@ -46,6 +55,15 @@ public class Album implements IEntry {
    */
   public void setTitle(string $title) {
     $this.title= $title;
+  }
+
+  /**
+   * Set Title
+   *
+   */
+  public self withTitle(string $title) {
+    $this.title= $title;
+    return $this;
   }
 
   /**
@@ -63,6 +81,15 @@ public class Album implements IEntry {
    */
   public void setCreatedAt(Date $createdAt) {
     $this.createdAt= $createdAt;
+  }
+
+  /**
+   * Set CreatedAt
+   *
+   */
+  public self withCreatedAt(Date $createdAt) {
+    $this.createdAt= $createdAt;
+    return $this;
   }
 
   /**
@@ -88,6 +115,15 @@ public class Album implements IEntry {
    */
   public void setDescription(string $description) {
     $this.description= $description;
+  }
+
+  /**
+   * Set Description
+   *
+   */
+  public self withDescription(string $description) {
+    $this.description= $description;
+    return $this;
   }
 
   /**

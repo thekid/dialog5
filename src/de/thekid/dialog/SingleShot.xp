@@ -30,6 +30,15 @@ public class SingleShot implements IEntry {
   }
 
   /**
+   * Set name
+   *
+   */
+  public self withName(string $name) {
+    $this.name= $name;
+    return $this;
+  }
+
+  /**
    * Get name
    *
    */
@@ -43,6 +52,15 @@ public class SingleShot implements IEntry {
    */
   public void setFileName(string $fileName) {
     $this.fileName= $fileName;
+  }
+
+  /**
+   * Set fileName
+   *
+   */
+  public self withFileName(string $fileName) {
+    $this.fileName= $fileName;
+    return $this;
   }
 
   /**
@@ -62,6 +80,15 @@ public class SingleShot implements IEntry {
   }
 
   /**
+   * Set title
+   *
+   */
+  public self withTitle(string $title) {
+    $this.title= $title;
+    return $this;
+  }
+
+  /**
    * Get title
    *
    */
@@ -75,6 +102,15 @@ public class SingleShot implements IEntry {
    */
   public void setDescription(string $description) {
     $this.description= $description;
+  }
+
+  /**
+   * Set description
+   *
+   */
+  public self withDescription(string $description) {
+    $this.description= $description;
+    return $this;
   }
 
   /**
@@ -94,6 +130,15 @@ public class SingleShot implements IEntry {
   }
 
   /**
+   * Set date
+   *
+   */
+  public self withDate(Date $date) {
+    $this.date= $date;
+    return $this;
+  }
+
+  /**
    * Get date
    *
    */
@@ -107,6 +152,15 @@ public class SingleShot implements IEntry {
    */
   public void setImage(AlbumImage $image) {
     $this.image= $image;
+  }
+
+  /**
+   * Set image
+   *
+   */
+  public self withImage(AlbumImage $image) {
+    $this.image= $image;
+    return $this;
   }
 
   /**

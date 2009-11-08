@@ -28,6 +28,15 @@ public class Update implements IEntry {
   }
 
   /**
+   * Set albumName
+   *
+   */
+  public self withAlbumName(string $albumName) {
+    $this.albumName= $albumName;
+    return $this;
+  }
+
+  /**
    * Get albumName
    *
    */
@@ -41,6 +50,15 @@ public class Update implements IEntry {
    */
   public void setTitle(string $title) {
     $this.title= $title;
+  }
+
+  /**
+   * Set title
+   *
+   */
+  public self withTitle(string $title) {
+    $this.title= $title;
+    return $this;
   }
 
   /**
@@ -60,6 +78,15 @@ public class Update implements IEntry {
   }
 
   /**
+   * Set description
+   *
+   */
+  public self withDescription(string $description) {
+    $this.description= $description;
+    return $this;
+  }
+
+  /**
    * Get description
    *
    */
@@ -73,6 +100,15 @@ public class Update implements IEntry {
    */
   public void setDate(Date $date) {
     $this.date= $date;
+  }
+
+  /**
+   * Set date
+   *
+   */
+  public self withDate(Date $date) {
+    $this.date= $date;
+    return $this;
   }
 
   /**

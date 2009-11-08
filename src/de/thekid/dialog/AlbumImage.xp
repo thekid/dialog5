@@ -41,6 +41,15 @@ public class AlbumImage {
   }
 
   /**
+   * Set name
+   *
+   */
+  public self withName(string $name) {
+    $this.name= $name;
+    return $this;
+  }
+
+  /**
    * Get name
    *
    */
@@ -54,6 +63,15 @@ public class AlbumImage {
    */
   public void setWidth(int $width) {
     $this.width= $width;
+  }
+
+  /**
+   * Set width
+   *
+   */
+  public self withWidth(int $width) {
+    $this.width= $width;
+    return $this;
   }
 
   /**
@@ -73,6 +91,15 @@ public class AlbumImage {
   }
 
   /**
+   * Set height
+   *
+   */
+  public self withHeight(int $height) {
+    $this.height= $height;
+    return $this;
+  }
+
+  /**
    * Get height
    *
    */
@@ -89,6 +116,15 @@ public class AlbumImage {
   }
 
   /**
+   * Set exifData
+   *
+   */
+  public self withExifData(ExifData $exifData= null) {
+    $this.exifData= $exifData;
+    return $this;
+  }
+
+  /**
    * Get exifData
    *
    */
@@ -102,6 +138,15 @@ public class AlbumImage {
    */
   public void setIptcData(IptcData $iptcData= NULL) {
     $this.iptcData= $iptcData;
+  }
+
+  /**
+   * Set IptcData
+   *
+   */
+  public self withIptcData(IptcData $iptcData= NULL) {
+    $this.iptcData= $iptcData;
+    return $this;
   }
 
   /**
