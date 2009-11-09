@@ -1,0 +1,190 @@
+/* This file is part of the XP framework
+ *
+ * $Id$
+ */
+
+package de.thekid.dialog.cmd;
+
+import util.cmd.Command;
+import util.Date;
+import io.Folder;
+import io.File;
+import io.FileUtil;
+import io.FileNotFoundException;
+import io.collections.FileCollection;
+import io.collections.iterate.FilteredIOCollectionIterator;
+import io.collections.iterate.ExtensionEqualsFilter;
+import io.collections.iterate.AnyOfFilter;
+import img.filter.ConvolveFilter;
+import img.filter.Kernel;
+import de.thekid.dialog.Topic;
+import de.thekid.dialog.IEntry;
+import de.thekid.dialog.AlbumImage;
+import de.thekid.dialog.io.ImageProcessor;
+import de.thekid.dialog.io.IndexCreator;
+
+import native standard.unserialize;
+import native standard.serialize;
+import native standard.ksort;
+import native standard.array_slice;
+import native standard.array_keys;
+import native standard.basename;
+import native standard.strtolower;
+import native standard.sizeof;
+import native pcre.preg_replace;
+
+/**
+ * Base class for importing entries into dialog.
+ *
+ * @see      xp://de.thekid.dialog.cmd.AddAlbum
+ * @see      xp://de.thekid.dialog.cmd.AddSingleShot
+ * @see      xp://de.thekid.dialog.cmd.AddCollection
+ * @purpose  Command
+ */
+public abstract class ImportCommand extends Command {
+  protected Folder $imageFolder       = null;
+  protected Folder $shotsFolder       = null;
+  protected Folder $dataFolder        = null;
+  protected Folder $topicsFolder      = null;
+  protected int $HIGHLIGHTS_MAX       = 5;
+  protected int $ENTRIES_PER_PAGE     = 5;
+  protected ImageProcessor $processor = null;
+  protected var $topics               = [:];
+
+  /**
+   * Constructor - initializes image processor.
+   *
+   */
+  public __construct() {
+    $this.processor= $this.getProcessor();
+    $this.processor.fullDimensions= [800, 600];
+    $this.processor.addFilter(new ConvolveFilter(
+      new Kernel('[[-1, -1, -1], [-1, 16, -1], [-1, -1, -1]]'),
+      8,
+      0
+    ));
+  }
+
+  /**
+   * Return a folder object composed of a given a base and name, ensuring
+   * it exists.
+   *
+   */
+  protected void folder(Folder $base, string $name) throws FileNotFoundException {
+    $f= new Folder($base, $name);
+    if (!$f.exists()) throw new FileNotFoundException($f.toString() ~ ' does not exist');
+    return $f;
+  }
+
+  /**
+   * Set base folder (the folder the dialog software is installed at).
+   *
+   */
+  [@arg]
+  public void setBase(string $base= '.') {
+    $b= new Folder($base);
+    $this.out.writeLine('---> Using base folder ', $b);
+    $this.imageFolder= $this.folder($b, 'doc_root/albums');
+    $this.shotsFolder= $this.folder($b, 'doc_root/shots');
+    $this.dataFolder= $this.folder($b, 'data');
+    $this.topicsFolder= $this.folder($b, 'data/topics');
+  }
+
+  /**
+   * Returns processor
+   *
+   */
+  protected ImageProcessor getProcessor() {
+    return new ImageProcessor();
+  }
+
+  /**
+   * Normalize name to create a URL-friendly representation
+   *
+   */
+  protected string normalizeName(string $name) {
+    return preg_replace('/[^a-z0-9-]/', '_', strtolower($name));
+  }
+
+  /**
+   * Process meta data
+   *
+   */
+  protected void processMetaData(AlbumImage $image, IEntry $origin) {
+
+    // Ensure image date is always present, fall back to origin date
+    // if necessary
+    if (!$image.exifData.dateTime) {
+      $image.exifData.dateTime= $origin.getDate();
+    }
+
+    // Extract topics form IPTC keywords if available
+    if (!($iptc= $image.getIptcData())) return;
+
+    foreach ($keyword in $iptc.getKeywords()) {
+      $normalized= $this.normalizeName($keyword);
+      if (!isset($this.topics[$normalized])) {
+        $topic= new File($this.dataFolder, 'topics/' ~ $normalized ~ '.dat');
+        if ($topic.exists()) {
+          $this.topics[$normalized]= unserialize(FileUtil::getContents($topic));
+          $this.out.writeLine('     >> Found existing topic for ', $keyword);
+        } else {
+          $this.out.writeLine('     >> Creating new topic for ', $keyword);
+          $this.topics[$normalized]= new Topic();
+          $this.topics[$normalized].setName($normalized);
+          $this.topics[$normalized].setTitle($keyword);
+          $this.topics[$normalized].setCreatedAt($origin.getDate());
+        }
+      }
+      $this.topics[$normalized].addImage($image, $origin.getName());
+    }
+  }
+
+  /**
+   * Import
+   *
+   */
+  protected abstract void doImport();
+
+  /**
+   * Main runner method
+   *
+   */
+  public void run() {
+    $this.out.writeLine('===> Starting import at ', new Date().toString('r'));
+    $this.doImport();
+
+    // Save topics
+    foreach ($id in array_keys($this.topics)) {
+      FileUtil::setContents(new File($this.topicsFolder, $id ~ '.dat'), serialize($this.topics[$id]));
+    }
+
+    // Regenerate indexes
+    $index= IndexCreator::forFolder($this.dataFolder);
+    $index.setEntriesPerPage($this.ENTRIES_PER_PAGE);
+    $index.regenerate();
+
+    // Generate topics
+    $entries= [:];
+    for (
+      $it= new FilteredIOCollectionIterator(new FileCollection($this.topicsFolder.getURI()), new ExtensionEqualsFilter('.dat'));
+      $it.hasNext();
+    ) {
+      $entry= basename($it.next().getURI());
+      $entries[$entry]= 'topics/' ~ basename($entry, '.dat');
+    }
+    ksort($entries);
+    for ($i= 0, $s= sizeof($entries); $i < $s; $i+= $this.ENTRIES_PER_PAGE) {
+      FileUtil::setContents(
+        new File($this.dataFolder, 'topics_' ~ ($i / $this.ENTRIES_PER_PAGE) ~ '.idx'), 
+        serialize([
+          'total'   : $s, 
+          'perpage' : $this.ENTRIES_PER_PAGE,
+          'entries' : array_slice($entries, $i, $this.ENTRIES_PER_PAGE)
+        ])
+      );
+    }
+
+    $this.out.writeLine('===> Finished at ', new Date().toString('r'));
+  }
+}
