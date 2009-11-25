@@ -24,10 +24,9 @@ public class GroupingStrategyTest extends TestCase {
    *
    */
   public void setUp() throws AssertionFailedError, PrerequisitesNotMetError {
-    $exif= new img.util.ExifData();
-    $exif.setDateTime(new util.Date('1977-12-14 11:45:00'));
-    $this.image= new AlbumImage($this.name);
-    $this.image.setExifData($exif);
+    $this.image= new AlbumImage($this.name).withExifData(new img.util.ExifData()
+      .withDateTime(new util.Date('1977-12-14 11:45:00'))
+    );
   }
 
   /**
