@@ -13,7 +13,6 @@ import native standard.sscanf;
 /**
  * Handles /xml/static
  *
- * @purpose  State
  */
 public class StaticState extends AbstractDialogState {
   public var $nodeHandlers = [:];
@@ -33,8 +32,6 @@ public class StaticState extends AbstractDialogState {
   /**
    * Handler for albums
    *
-   * @param   de.thekid.dialog.Album album
-   * @return  xml.Node node
    */
   [@handles('de.thekid.dialog.Album')]
   public xml.Node albumNode(de.thekid.dialog.Album? $album) {
@@ -54,8 +51,6 @@ public class StaticState extends AbstractDialogState {
   /**
    * Handler for updates
    *
-   * @param   de.thekid.dialog.Update update
-   * @return  xml.Node node
    */
   [@handles('de.thekid.dialog.Update')]
   public xml.Node updateNode(de.thekid.dialog.Update? $update) {
@@ -72,8 +67,6 @@ public class StaticState extends AbstractDialogState {
   /**
    * Handler for single shots
    *
-   * @param   de.thekid.dialog.SingleShot shot
-   * @return  xml.Node node
    */
   [@handles('de.thekid.dialog.SingleShot')]
   public xml.Node shotNode(de.thekid.dialog.SingleShot? $shot) {
@@ -91,8 +84,6 @@ public class StaticState extends AbstractDialogState {
   /**
    * Handler for image strips
    *
-   * @param   de.thekid.dialog.ImageStrip imageStrip
-   * @return  xml.Node node
    */
   [@handles('de.thekid.dialog.ImageStrip')]
   public xml.Node imageStripNode(de.thekid.dialog.ImageStrip? $imageStrip) {
@@ -110,8 +101,6 @@ public class StaticState extends AbstractDialogState {
   /**
    * Handler for entry collections
    *
-   * @param   de.thekid.dialog.EntryCollection collection
-   * @return  xml.Node node
    */
   [@handles('de.thekid.dialog.EntryCollection')]
   public xml.Node collectionNode(de.thekid.dialog.EntryCollection? $collection) {
@@ -140,9 +129,6 @@ public class StaticState extends AbstractDialogState {
   /**
    * Process this state.
    *
-   * @param   scriptlet.xml.workflow.WorkflowScriptletRequest request
-   * @param   scriptlet.xml.XMLScriptletResponse response
-   * @param   scriptlet.xml.workflow.Context context
    */
   public void process(scriptlet.xml.workflow.WorkflowScriptletRequest? $request, scriptlet.xml.XMLScriptletResponse? $response, scriptlet.xml.workflow.Context? $context) {
     if (sscanf($request.getQueryString(), 'page%d', $page) < 1) $page= 0;
