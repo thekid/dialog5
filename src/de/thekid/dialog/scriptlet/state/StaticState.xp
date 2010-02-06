@@ -1,0 +1,172 @@
+/* This class is part of the XP framework
+ *
+ * $Id: StaticState.class.php 11602 2009-11-01 19:32:48Z friebe $ 
+ */
+
+package de.thekid.dialog.scriptlet.state;
+
+import de.thekid.dialog.scriptlet.AbstractDialogState;
+import xml.Node;
+import xml.PCData;
+import native standard.sscanf;
+
+/**
+ * Handles /xml/static
+ *
+ * @purpose  State
+ */
+public class StaticState extends AbstractDialogState {
+  public var $nodeHandlers = [:];
+
+  /**
+   * Constructor
+   *
+   */
+  public __construct() {
+    foreach ($method in $this.getClass().getMethods()) {
+      $method.hasAnnotation('handles') && (
+        $this.nodeHandlers[$method.getAnnotation('handles')]= $method
+      );
+    }
+  }
+  
+  /**
+   * Handler for albums
+   *
+   * @param   de.thekid.dialog.Album album
+   * @return  xml.Node node
+   */
+  [@handles('de.thekid.dialog.Album')]
+  public xml.Node albumNode(de.thekid.dialog.Album? $album) {
+    $child= new Node('entry', null, [
+      'name'          : $album.getName(),
+      'title'         : $album.getTitle(),
+      'num_images'    : $album.numImages(),
+      'num_chapters'  : $album.numChapters()
+    ]);
+    $child.addChild(new Node('description', new PCData($album.getDescription())));
+    $child.addChild(Node::fromObject($album.createdAt, 'created'));
+    $child.addChild(Node::fromArray($album.highlights, 'highlights'));
+    
+    return $child;
+  }
+
+  /**
+   * Handler for updates
+   *
+   * @param   de.thekid.dialog.Update update
+   * @return  xml.Node node
+   */
+  [@handles('de.thekid.dialog.Update')]
+  public xml.Node updateNode(de.thekid.dialog.Update? $update) {
+    $child= new Node('entry', null, [
+      'album'         : $update.getAlbumName(),
+      'title'         : $update.getTitle()
+    ]);
+    $child.addChild(new Node('description', new PCData($update.getDescription())));
+    $child.addChild(Node::fromObject($update.date, 'date'));
+    
+    return $child;
+  }
+
+  /**
+   * Handler for single shots
+   *
+   * @param   de.thekid.dialog.SingleShot shot
+   * @return  xml.Node node
+   */
+  [@handles('de.thekid.dialog.SingleShot')]
+  public xml.Node shotNode(de.thekid.dialog.SingleShot? $shot) {
+    $child= new Node('entry', null, [
+      'name'      : $shot.getName(),
+      'filename'  : $shot.getFileName(),
+      'title'     : $shot.getTitle()
+    ]);
+    $child.addChild(new Node('description', new PCData($shot.getDescription())));
+    $child.addChild(Node::fromObject($shot.date, 'date'));
+    
+    return $child;
+  }
+
+  /**
+   * Handler for image strips
+   *
+   * @param   de.thekid.dialog.ImageStrip imageStrip
+   * @return  xml.Node node
+   */
+  [@handles('de.thekid.dialog.ImageStrip')]
+  public xml.Node imageStripNode(de.thekid.dialog.ImageStrip? $imageStrip) {
+    $child= new Node('entry', null, [
+      'name'          : $imageStrip.getName(),
+      'title'         : $imageStrip.getTitle(),
+      'num_images'    : $imageStrip.numImages(),
+    ]);
+    $child.addChild(new Node('description', new PCData($imageStrip.getDescription())));
+    $child.addChild(Node::fromObject($imageStrip.createdAt, 'date'));
+    $child.addChild(Node::fromArray($imageStrip.images, 'images'));
+    return $child;
+  }
+
+  /**
+   * Handler for entry collections
+   *
+   * @param   de.thekid.dialog.EntryCollection collection
+   * @return  xml.Node node
+   */
+  [@handles('de.thekid.dialog.EntryCollection')]
+  public xml.Node collectionNode(de.thekid.dialog.EntryCollection? $collection) {
+    $numEntries= $collection.numEntries();
+    $node= new Node('entry', null, [
+      'name'          : $collection.getName(),
+      'title'         : $collection.getTitle(),
+      'num_entries'   : $numEntries
+    ]);
+    $node.addChild(new Node('description', new PCData($collection.getDescription())));
+    $node.addChild(Node::fromObject($collection.createdAt, 'created'));
+    
+    for ($i= 0; $i < $numEntries; $i++) {
+      $entry= $collection.entryAt($i);
+      if (!isset($this.nodeHandlers[$entry.getClassName()])) {
+        throw(new FormatException('Index contains unknown element "' ~ $entry.getClassName() ~ '"'));
+      }
+      
+      $child= $node.addChild($this.nodeHandlers[$entry.getClassName()].invoke($this, [$entry]));
+      $child.setAttribute('type', $entry.getClassName());
+    }
+    
+    return $node;
+  }
+
+  /**
+   * Process this state.
+   *
+   * @param   scriptlet.xml.workflow.WorkflowScriptletRequest request
+   * @param   scriptlet.xml.XMLScriptletResponse response
+   * @param   scriptlet.xml.workflow.Context context
+   */
+  public void process(scriptlet.xml.workflow.WorkflowScriptletRequest? $request, scriptlet.xml.XMLScriptletResponse? $response, scriptlet.xml.workflow.Context? $context) {
+    if (sscanf($request.getQueryString(), 'page%d', $page) < 1) $page= 0;
+    $index= $this.getIndexPage($page);
+    
+    // Add paging information
+    $response.addFormResult(new Node('pager', null, [
+      'offset'  : $page,
+      'total'   : $index['total'],
+      'perpage' : $index['perpage']
+    ]));
+    
+    // Add entries from index
+    $node= $response.addFormResult(new Node('entries'));
+    foreach ($name in $index['entries']) {
+      $entry= $this.getEntryFor($name);
+      if (!isset($this.nodeHandlers[$entry.getClassName()])) {
+        throw new FormatException('Index contains unknown element "' ~ $entry.getClassName() ~ '"');
+      }
+
+      if ($child= $this.nodeHandlers[$entry.getClassName()].invoke($this, [$entry])) {
+        $node.addChild($child).setAttribute('type', $entry.getClassName());
+      }
+    }
+  }
+}
+
