@@ -1,0 +1,100 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+package de.thekid.dialog.io;
+
+
+/**
+ * Represents a target
+ *
+ * @see      xp://de.thekid.dialog.io.ImageProcessor
+ * @purpose  Utility class for ImageProcessor
+ */
+public class ProcessorTarget extends Object {
+  public string $method;
+  public string $destination;
+  public bool $applyFilters = true;
+  public bool $inferDimensions = false;
+
+  /**
+   * Constructor
+   *
+   * @param   method
+   * @param   destination
+   * @param   applyFilters default TRUE
+   * @param   inferDimensions default TRUE
+   */
+  public __construct(string $method, string $destination, bool $applyFilters= true, bool $inferDimensions= false) {
+    $this.method= $method;
+    $this.destination= $destination;
+    $this.applyFilters= $applyFilters;
+    $this.inferDimensions= $inferDimensions;
+  }
+
+  /**
+   * Set method
+   *
+   */
+  public void setMethod(string $method) {
+    $this.method= $method;
+  }
+
+  /**
+   * Get method
+   *
+   * @return  string
+   */
+  public string getMethod() {
+    return $this.method;
+  }
+
+  /**
+   * Set destination
+   *
+   */
+  public void setDestination(string $destination) {
+    $this.destination= $destination;
+  }
+
+  /**
+   * Get destination
+   *
+   */
+  public string getDestination() {
+    return $this.destination;
+  }
+
+  /**
+   * Set whether to apply filters on this target
+   *
+   */
+  public void setApplyFilters(bool $applyFilters) {
+    $this.applyFilters= $applyFilters;
+  }
+
+  /**
+   * Get whether to apply filters on this target
+   *
+   */
+  public bool getApplyFilters() {
+    return $this.applyFilters;
+  }
+
+  /**
+   * Set whether to infer dimensions from this target
+   *
+   */
+  public void setInferDimensions(bool $inferDimensions) {
+    $this.inferDimensions= $inferDimensions;
+  }
+
+  /**
+   * Get whether to infer dimensions from this target
+   *
+   */
+  public bool getInferDimensions() {
+    return $this.inferDimensions;
+  }
+}
