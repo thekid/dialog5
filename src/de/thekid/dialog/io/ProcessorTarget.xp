@@ -5,14 +5,13 @@
 
 package de.thekid.dialog.io;
 
-
 /**
  * Represents a target
  *
  * @see      xp://de.thekid.dialog.io.ImageProcessor
  * @purpose  Utility class for ImageProcessor
  */
-public class ProcessorTarget extends Object {
+public class ProcessorTarget {
   public string $method;
   public string $destination;
   public bool $applyFilters = true;
