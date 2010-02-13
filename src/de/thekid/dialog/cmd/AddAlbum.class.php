@@ -7,7 +7,8 @@
   uses(
     'de.thekid.dialog.cmd.ImportCommand',
     'de.thekid.dialog.GroupingStrategy',
-    'de.thekid.dialog.Album'
+    'de.thekid.dialog.Album',
+    'de.thekid.dialog.AlbumChapter'
   );
 
   /**
