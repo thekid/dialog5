@@ -162,6 +162,31 @@
   </xsl:template>
 
   <!--
+   ! Function that draws the image strip images, max. 5 in a row
+   !
+   !-->
+  <func:function name="func:stripimages">
+    <xsl:param name="entries"/>
+    <xsl:param name="i" select="1"/>
+    <xsl:param name="max" select="5"/>
+    
+    <func:result>
+      <tr>
+        <xsl:for-each select="exsl:node-set($entries)[position() &gt;= $i and position() &lt; $i + $max]">
+          <td>
+            <a href="{func:linkImageStrip(../../@name)}#{position()- 1}">
+              <img width="150" height="113" border="0" src="/albums/{../../@name}/thumb.{name}"/>
+            </a>
+          </td>
+        </xsl:for-each>
+      </tr>
+      <xsl:if test="$i &lt; count(exsl:node-set($entries))">
+        <xsl:copy-of select="func:stripimages(exsl:node-set($entries), $i + $max)"/>
+      </xsl:if>
+    </func:result>  
+  </func:function>
+
+  <!--
    ! Template for image strips
    !
    ! @purpose  Specialized entry template
@@ -184,13 +209,7 @@
     <h4>Images</h4>
     <table class="highlights" border="0">
       <tr>
-        <xsl:for-each select="images/image">
-          <td>
-            <a href="{func:linkImageStrip(../../@name)}#{position()- 1}">
-              <img width="150" height="113" border="0" src="/albums/{../../@name}/thumb.{name}"/>
-            </a>
-          </td>
-        </xsl:for-each>
+        <xsl:copy-of select="func:stripimages(exsl:node-set(images/image))"/>
       </tr>
     </table>
     <p>
