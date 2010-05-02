@@ -95,7 +95,7 @@
         'title'         => $imageStrip->getTitle(),
         'num_images'    => $imageStrip->numImages(),
       ));
-      $child->addChild(Node::fromObject($imageStrip->createdAt, 'date'));
+      $child->addChild(Node::fromObject($imageStrip->createdAt, 'created'));
       $child->addChild(new Node('highlight', $imageStrip->imageAt(0)->getName()));
       return $child;
     }
