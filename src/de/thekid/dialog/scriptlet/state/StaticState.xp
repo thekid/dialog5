@@ -15,115 +15,86 @@ import native standard.sscanf;
  *
  */
 public class StaticState extends AbstractDialogState {
-  public var $nodeHandlers = [:];
-
-  /**
-   * Constructor
-   *
-   */
-  public __construct() {
-    foreach ($method in $this.getClass().getMethods()) {
-      $method.hasAnnotation('handles') && (
-        $this.nodeHandlers[$method.getAnnotation('handles')]= $method
-      );
-    }
-  }
+  protected static [string:NodeHandler] $nodeHandlers = [:];
   
-  /**
-   * Handler for albums
-   *
-   */
-  [@handles('de.thekid.dialog.Album')]
-  public xml.Node albumNode(de.thekid.dialog.Album? $album) {
-    $child= new Node('entry', null, [
-      'name'          : $album.getName(),
-      'title'         : $album.getTitle(),
-      'num_images'    : $album.numImages(),
-      'num_chapters'  : $album.numChapters()
-    ]);
-    $child.addChild(new Node('description', new PCData($album.getDescription())));
-    $child.addChild(Node::fromObject($album.createdAt, 'created'));
-    $child.addChild(Node::fromArray($album.highlights, 'highlights'));
-    
-    return $child;
-  }
+  static {
+    self::$nodeHandlers['de.thekid.dialog.Album']= new NodeHandler() {
+      public xml.Node nodeFor(de.thekid.dialog.Album? $album, [string:NodeHandler] $nodeHandlers) {
+        $child= new Node('entry', null, [
+          'name'          : $album.getName(),
+          'title'         : $album.getTitle(),
+          'num_images'    : $album.numImages(),
+          'num_chapters'  : $album.numChapters()
+        ]);
+        $child.addChild(new Node('description', new PCData($album.getDescription())));
+        $child.addChild(Node::fromObject($album.createdAt, 'created'));
+        $child.addChild(Node::fromArray($album.highlights, 'highlights'));
 
-  /**
-   * Handler for updates
-   *
-   */
-  [@handles('de.thekid.dialog.Update')]
-  public xml.Node updateNode(de.thekid.dialog.Update? $update) {
-    $child= new Node('entry', null, [
-      'album'         : $update.getAlbumName(),
-      'title'         : $update.getTitle()
-    ]);
-    $child.addChild(new Node('description', new PCData($update.getDescription())));
-    $child.addChild(Node::fromObject($update.date, 'date'));
-    
-    return $child;
-  }
-
-  /**
-   * Handler for single shots
-   *
-   */
-  [@handles('de.thekid.dialog.SingleShot')]
-  public xml.Node shotNode(de.thekid.dialog.SingleShot? $shot) {
-    $child= new Node('entry', null, [
-      'name'      : $shot.getName(),
-      'filename'  : $shot.getFileName(),
-      'title'     : $shot.getTitle()
-    ]);
-    $child.addChild(new Node('description', new PCData($shot.getDescription())));
-    $child.addChild(Node::fromObject($shot.date, 'date'));
-    
-    return $child;
-  }
-
-  /**
-   * Handler for image strips
-   *
-   */
-  [@handles('de.thekid.dialog.ImageStrip')]
-  public xml.Node imageStripNode(de.thekid.dialog.ImageStrip? $imageStrip) {
-    $child= new Node('entry', null, [
-      'name'          : $imageStrip.getName(),
-      'title'         : $imageStrip.getTitle(),
-      'num_images'    : $imageStrip.numImages(),
-    ]);
-    $child.addChild(new Node('description', new PCData($imageStrip.getDescription())));
-    $child.addChild(Node::fromObject($imageStrip.createdAt, 'date'));
-    $child.addChild(Node::fromArray($imageStrip.images, 'images'));
-    return $child;
-  }
-
-  /**
-   * Handler for entry collections
-   *
-   */
-  [@handles('de.thekid.dialog.EntryCollection')]
-  public xml.Node collectionNode(de.thekid.dialog.EntryCollection? $collection) {
-    $numEntries= $collection.numEntries();
-    $node= new Node('entry', null, [
-      'name'          : $collection.getName(),
-      'title'         : $collection.getTitle(),
-      'num_entries'   : $numEntries
-    ]);
-    $node.addChild(new Node('description', new PCData($collection.getDescription())));
-    $node.addChild(Node::fromObject($collection.createdAt, 'created'));
-    
-    for ($i= 0; $i < $numEntries; $i++) {
-      $entry= $collection.entryAt($i);
-      if (!isset($this.nodeHandlers[$entry.getClassName()])) {
-        throw(new FormatException('Index contains unknown element "' ~ $entry.getClassName() ~ '"'));
+        return $child;
       }
-      
-      $child= $node.addChild($this.nodeHandlers[$entry.getClassName()].invoke($this, [$entry]));
-      $child.setAttribute('type', $entry.getClassName());
-    }
-    
-    return $node;
+    };
+    self::$nodeHandlers['de.thekid.dialog.Update']= new NodeHandler() {
+      public xml.Node nodeFor(de.thekid.dialog.Update? $update, [string:NodeHandler] $nodeHandlers) {
+        $child= new Node('entry', null, [
+          'album'         : $update.getAlbumName(),
+          'title'         : $update.getTitle()
+        ]);
+        $child.addChild(new Node('description', new PCData($update.getDescription())));
+        $child.addChild(Node::fromObject($update.date, 'date'));
+
+        return $child;
+      }
+    };
+    self::$nodeHandlers['de.thekid.dialog.SingleShot']= new NodeHandler() {
+      public xml.Node nodeFor(de.thekid.dialog.SingleShot? $shot, [string:NodeHandler] $nodeHandlers) {
+        $child= new Node('entry', null, [
+          'name'      : $shot.getName(),
+          'filename'  : $shot.getFileName(),
+          'title'     : $shot.getTitle()
+        ]);
+        $child.addChild(new Node('description', new PCData($shot.getDescription())));
+        $child.addChild(Node::fromObject($shot.date, 'date'));
+
+        return $child;
+      }
+    };
+    self::$nodeHandlers['de.thekid.dialog.ImageStrip']= new NodeHandler() {
+      public xml.Node nodeFor(de.thekid.dialog.ImageStrip? $imageStrip, [string:NodeHandler] $nodeHandlers) {
+        $child= new Node('entry', null, [
+          'name'          : $imageStrip.getName(),
+          'title'         : $imageStrip.getTitle(),
+          'num_images'    : $imageStrip.numImages(),
+        ]);
+        $child.addChild(new Node('description', new PCData($imageStrip.getDescription())));
+        $child.addChild(Node::fromObject($imageStrip.createdAt, 'date'));
+        $child.addChild(Node::fromArray($imageStrip.images, 'images'));
+        return $child;
+      }
+    };
+    self::$nodeHandlers['de.thekid.dialog.EntryCollection']= new NodeHandler() {
+      public xml.Node nodeFor(de.thekid.dialog.EntryCollection? $collection, [string:NodeHandler] $nodeHandlers) {
+        $numEntries= $collection.numEntries();
+        $node= new Node('entry', null, [
+          'name'          : $collection.getName(),
+          'title'         : $collection.getTitle(),
+          'num_entries'   : $numEntries
+        ]);
+        $node.addChild(new Node('description', new PCData($collection.getDescription())));
+        $node.addChild(Node::fromObject($collection.createdAt, 'created'));
+
+        for ($i= 0; $i < $numEntries; $i++) {
+          $entry= $collection.entryAt($i);
+          if (!isset($nodeHandlers[$entry.getClassName()])) {
+            throw new FormatException('Collection index contains unknown element "' ~ $entry.getClassName() ~ '"');
+          }
+
+          $child= $node.addChild($nodeHandlers[$entry.getClassName()].nodeFor($entry));
+          $child.setAttribute('type', $entry.getClassName());
+        }
+
+        return $node;
+      }
+    };
   }
 
   /**
@@ -145,14 +116,12 @@ public class StaticState extends AbstractDialogState {
     $node= $response.addFormResult(new Node('entries'));
     foreach ($name in $index['entries']) {
       $entry= $this.getEntryFor($name);
-      if (!isset($this.nodeHandlers[$entry.getClassName()])) {
+      if (!isset(self::$nodeHandlers[$entry.getClassName()])) {
         throw new FormatException('Index contains unknown element "' ~ $entry.getClassName() ~ '"');
       }
 
-      if ($child= $this.nodeHandlers[$entry.getClassName()].invoke($this, [$entry])) {
-        $node.addChild($child).setAttribute('type', $entry.getClassName());
-      }
+      $child= $node.addChild(self::$nodeHandlers[$entry.getClassName()].nodeFor($entry, self::$nodeHandlers));
+      $child.setAttribute('type', $entry.getClassName());
     }
   }
 }
-
