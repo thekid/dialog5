@@ -6,6 +6,8 @@
 package de.thekid.dialog.scriptlet.state;
 
 import de.thekid.dialog.scriptlet.AbstractDialogState;
+import de.thekid.dialog.Topic;
+import de.thekid.dialog.AlbumImage;
 import xml.Node;
 import xml.PCData;
 
@@ -16,85 +18,68 @@ import native standard.krsort;
  *
  */
 public class TopicState extends AbstractDialogState {
-  protected var $nodeHandlers = [:];
+  protected static [string:NodeHandler] $nodeHandlers = [:];
 
-  /**
-   * Constructor
-   *
-   */
-  public __construct() {
-    for ($c= $this.getClass(), $m= $c.getMethods(), $i= 0, $s= $m.length; $i < $s; $i++) {
-      $m[$i].hasAnnotation('handles') && (
-        $this.nodeHandlers[$m[$i].getAnnotation('handles')]= $m[$i]
-      );
-    }
-  }
+  static {
+    self::$nodeHandlers['de.thekid.dialog.Album']= new NodeHandler() {
+      public xml.Node nodeFor(de.thekid.dialog.Album? $album, [string:NodeHandler] $nodeHandlers) {
+        $child= new Node('entry', null, [
+          'name'          : $album.getName(),
+          'title'         : $album.getTitle(),
+          'num_images'    : $album.numImages(),
+          'num_chapters'  : $album.numChapters()
+        ]);
+        $child.addChild(Node::fromObject($album.createdAt, 'created'));
 
-  /**
-   * Handler for albums
-   *
-   * @param   de.thekid.dialog.Album album
-   * @return  xml.Node node
-   */
-  [@handles('de.thekid.dialog.Album')]
-  public Node albumNode(de.thekid.dialog.Album? $album) {
-    $child= new Node('entry', null, [
-      'name'          : $album.getName(),
-      'title'         : $album.getTitle(),
-      'num_images'    : $album.numImages(),
-      'num_chapters'  : $album.numChapters()
-    ]);
-    $child.addChild(Node::fromObject($album.createdAt, 'created'));
-    return $child;
-  }
+        return $child;
+      }
+    };
+    self::$nodeHandlers['de.thekid.dialog.Update']= new NodeHandler() {
+      public xml.Node nodeFor(de.thekid.dialog.Update? $update, [string:NodeHandler] $nodeHandlers) {
+        $child= new Node('entry', null, [
+          'album'         : $update.getAlbumName(),
+          'title'         : $update.getTitle()
+        ]);
+        $child.addChild(Node::fromObject($update.date, 'created'));
 
-  /**
-   * Handler for updates
-   *
-   * @param   de.thekid.dialog.Update update
-   * @return  xml.Node node
-   */
-  [@handles('de.thekid.dialog.Update')]
-  public Node updateNode(de.thekid.dialog.Update? $update) {
-    $child= new Node('entry', null, [
-      'album'         : $update.getAlbumName(),
-      'title'         : $update.getTitle()
-    ]);
-    $child.addChild(Node::fromObject($update.date, 'created'));
-    return $child;
-  }
+        return $child;
+      }
+    };
+    self::$nodeHandlers['de.thekid.dialog.SingleShot']= new NodeHandler() {
+      public xml.Node nodeFor(de.thekid.dialog.SingleShot? $shot, [string:NodeHandler] $nodeHandlers) {
+        $child= new Node('entry', null, [
+          'name'      : $shot.getName(),
+          'title'     : $shot.getTitle()
+        ]);
+        $child.addChild(Node::fromObject($shot.date, 'created'));
 
-  /**
-   * Handler for single shots
-   *
-   * @param   de.thekid.dialog.SingleShot shot
-   * @return  xml.Node node
-   */
-  [@handles('de.thekid.dialog.SingleShot')]
-  public Node shotNode(de.thekid.dialog.SingleShot? $shot) {
-    $child= new Node('entry', null, [
-      'name'      : $shot.getName(),
-      'title'     : $shot.getTitle()
-    ]);
-    $child.addChild(Node::fromObject($shot.date, 'created'));
-    return $child;
-  }
+        return $child;
+      }
+    };
+    self::$nodeHandlers['de.thekid.dialog.ImageStrip']= new NodeHandler() {
+      public xml.Node nodeFor(de.thekid.dialog.ImageStrip? $imageStrip, [string:NodeHandler] $nodeHandlers) {
+        $child= new Node('entry', null, [
+          'name'          : $imageStrip.getName(),
+          'title'         : $imageStrip.getTitle(),
+          'num_images'    : $imageStrip.numImages(),
+        ]);
+        $child.addChild(Node::fromObject($imageStrip.createdAt, 'date'));
 
-  /**
-   * Handler for entry collections
-   *
-   * @param   de.thekid.dialog.EntryCollection collection
-   * @return  xml.Node node
-   */
-  [@handles('de.thekid.dialog.EntryCollection')]
-  public Node collectionNode(de.thekid.dialog.EntryCollection? $collection) {
-    $node= new Node('entry', null, [
-      'name'          : $collection.getName(),
-      'title'         : $collection.getTitle(),
-      'num_entries'   : $collection.numEntries()
-    ]);
-    $node.addChild(Node::fromObject($collection.createdAt, 'created'));
-    return $node;
+        return $child;
+      }
+    };
+    self::$nodeHandlers['de.thekid.dialog.EntryCollection']= new NodeHandler() {
+      public xml.Node nodeFor(de.thekid.dialog.EntryCollection? $collection, [string:NodeHandler] $nodeHandlers) {
+        $node= new Node('entry', null, [
+          'name'          : $collection.getName(),
+          'title'         : $collection.getTitle(),
+          'num_entries'   : $collection.numEntries()
+        ]);
+        $node.addChild(Node::fromObject($collection.createdAt, 'created'));
+
+        return $node;
+      }
+    };
   }
 
   /**
@@ -103,23 +88,23 @@ public class TopicState extends AbstractDialogState {
    */
   public void process(scriptlet.xml.workflow.WorkflowScriptletRequest? $request, scriptlet.xml.XMLScriptletResponse? $response, scriptlet.xml.workflow.Context? $context) {
     $name= $request.getQueryString();
-    $topic= $this.getEntryFor('topics/' ~ $name);
+    $topic= $this.getEntryFor('topics/' ~ $name) as Topic;
 
     $t= $response.addFormResult(new Node('topic', null, [
-      'name'       : $topic.getName(),
-      'title'      : $topic.getTitle()
+      'name'  : $topic.getName(),
+      'title' : $topic.getTitle()
     ]));
     $t.addChild(Node::fromObject($topic.getCreatedAt(), 'created'));
 
     // Add origins
-    $origins= [:];
+    $origins= new [string:Node]{:};
     foreach ($name in $topic.origins()) {
       $entry= $this.getEntryFor($name);
-      if (!isset($this.nodeHandlers[$entry.getClassName()])) {
+      if (!isset(self::$nodeHandlers[$entry.getClassName()])) {
         throw new FormatException('Index contains unknown element "' ~ $entry.getClassName() ~ '"');
       }
 
-      if ($child= $this.nodeHandlers[$entry.getClassName()].invoke($this, [$entry])) {
+      if ($child= self::$nodeHandlers[$entry.getClassName()].nodeFor($entry, self::$nodeHandlers)) {
         $y= $entry.getDate().toString('Y');
         if (!isset($origins[$y])) {
           $origins[$y]= new Node('year', null, ['num' : $y]);
