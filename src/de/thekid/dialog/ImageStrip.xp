@@ -179,6 +179,17 @@ public class ImageStrip implements IEntry {
   }
 
   /**
+   * Find an image
+   *
+   */
+  public var imageUrn(string $name) {
+    foreach ($id, $image in $this.images) {
+      if ($image.name === $name) return ['id' : $id];
+    }
+    return null;
+  }
+
+  /**
    * Retrieve a string representation
    *
    * @return  string
