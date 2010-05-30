@@ -93,6 +93,23 @@
       $node->addChild(Node::fromObject($collection->created, 'created'));
       return $node;
     }
+
+    /**
+     * Handler for entry collections
+     *
+     * @param   de.thekid.dialog.ImageStrip strip
+     * @return  xml.Node node
+     */
+    #[@handles('de.thekid.dialog.ImageStrip')]
+    public function stripNode($strip) {
+      $node= new Node('entry', NULL, array(
+        'name'          => $strip->getName(),
+        'title'         => $strip->getTitle(),
+        'num_images'    => $strip->numImages()
+      ));
+      $node->addChild(Node::fromObject($strip->createdAt, 'created'));
+      return $node;
+    }
     
     /**
      * Process this state.

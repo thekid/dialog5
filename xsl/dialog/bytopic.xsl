@@ -56,6 +56,10 @@
     <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{name}"/>
   </xsl:template>
 
+  <xsl:template match="image[@origin-class = 'de.thekid.dialog.ImageStrip']">
+    <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{name}"/>
+  </xsl:template>
+
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.SingleShot']">
     <img width="150" height="113" border="0" src="/shots/thumb.color.{name}"/>
   </xsl:template>
@@ -125,6 +129,17 @@
    !-->
   <xsl:template match="entry[@type = 'de.thekid.dialog.EntryCollection']">
     <a title="Collection of {@num_entries}" href="{func:linkCollection(@name)}">
+      <xsl:value-of select="@title"/>
+    </a>
+  </xsl:template>
+
+  <!--
+   ! Template for collections 
+   !
+   ! @purpose  Specialized entry template
+   !-->
+  <xsl:template match="entry[@type = 'de.thekid.dialog.ImageStrip']">
+    <a title="Image strip with {@num_images} images" href="{func:linkImageStrip(@name)}">
       <xsl:value-of select="@title"/>
     </a>
   </xsl:template>
