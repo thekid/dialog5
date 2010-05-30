@@ -1,0 +1,37 @@
+/* This class is part of the XP framework
+ *
+ * $Id$
+ */
+
+package de.thekid.dialog.scriptlet.state;
+
+import de.thekid.dialog.scriptlet.AbstractDialogState;
+import xml.Node;
+import xml.PCData;
+
+/**
+ * Handles /xml/imagestrip
+ *
+ */
+public class ImagestripState extends AbstractDialogState {
+
+  /**
+   * Process this state.
+   *
+   */
+  public void process(scriptlet.xml.workflow.WorkflowScriptletRequest? $request, scriptlet.xml.XMLScriptletResponse? $response, scriptlet.xml.workflow.Context? $context) {
+    $name= $request.getQueryString();
+
+    with ($imageStrip= $this.getEntryFor($name) as de.thekid.dialog.ImageStrip) {
+      $child= $response.addFormResult(new Node('imagestrip', null, [
+        'name'       : $imageStrip.getName(),
+        'title'      : $imageStrip.getTitle(),
+        'num_images' : $imageStrip.numImages(),
+        'page'       : $this.getDisplayPageFor($name)
+      ]));
+      $child.addChild(new Node('description', new PCData($imageStrip.getDescription())));
+      $child.addChild(Node::fromObject($imageStrip.createdAt, 'created'));
+      $child.addChild(Node::fromArray($imageStrip.images, 'images'));
+    }
+  }
+}
