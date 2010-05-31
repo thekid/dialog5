@@ -27,8 +27,8 @@ public class TopicGenerationTest extends ImportTest {
    * Creates a new import command
    *
    */
-  protected ImportCommand newImporter(AlbumImage[] $images) {
-    return new ImportCommand($images) {
+  protected ImportCommand newImporter(Album $album) {
+    return new ImportCommand($album) {
       protected Album $album;
       
       public __construct(Album $album) {
