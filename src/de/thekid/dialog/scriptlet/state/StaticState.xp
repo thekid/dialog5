@@ -102,7 +102,8 @@ public class StaticState extends AbstractDialogState {
    *
    */
   public void process(scriptlet.xml.workflow.WorkflowScriptletRequest? $request, scriptlet.xml.XMLScriptletResponse? $response, scriptlet.xml.workflow.Context? $context) {
-    if (sscanf($request.getQueryString(), 'page%d', $page) < 1) $page= 0;
+    $page= 0;
+    sscanf($request.getQueryString(), 'page%d', $page);
     $index= $this.getIndexPage($page);
     
     // Add paging information
