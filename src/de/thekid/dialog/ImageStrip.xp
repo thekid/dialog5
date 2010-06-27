@@ -199,11 +199,6 @@ public class ImageStrip implements IEntry {
     foreach ($id, $image in $this.images) {
       $is~= '    ' ~ str_replace("\n", "\n  ", $this.images[$id].toString()) ~ "\n";
     }
-    return sprintf(
-      "%s(%s) {\n%s  }",
-      $this.getClassName(),
-      $this.name,
-      $is
-    );
+    return sprintf("%s(%s) {\n%s  }", $this.getClassName(), $this.name, $is);
   }
 }
