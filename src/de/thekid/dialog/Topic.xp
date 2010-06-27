@@ -16,11 +16,11 @@ import native standard.array_keys;
  * @test     xp://de.thekid.dialog.unittest.TopicTest
  */
 public class Topic implements IEntry {
-  public string $name         = '';
-  public string $title        = '';
-  public Date $createdAt      = null;
-  public string $description  = '';
-  public var $images          = [:];
+  public string $name                   = '';
+  public string $title                  = '';
+  public Date $createdAt                = null;
+  public string $description            = '';
+  public [string:AlbumImage[]] $images  = [:];
 
   /**
    * Set name
@@ -160,9 +160,8 @@ public class Topic implements IEntry {
   /**
    * Get featured images.
    *
-   * @return  array<string, de.thekid.dialog.AlbumImage>
    */
-  public var featuredImages() {
+  public [string:AlbumImage] featuredImages() {
     $r= [:];
     foreach ($origin in $this.origins()) {
       $r[$origin]= $this.images[$origin][0];
@@ -173,7 +172,6 @@ public class Topic implements IEntry {
   /**
    * Get origins.
    *
-   * @return  string[]
    */
   public string[] origins() {
     return array_keys($this.images);
@@ -182,7 +180,6 @@ public class Topic implements IEntry {
   /**
    * Retrieve a string representation
    *
-   * @return  string
    */
   public string toString() {
     return sprintf(
