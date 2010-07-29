@@ -1,0 +1,160 @@
+/* This class is part of the XP framework
+ *
+ * $Id$
+ */
+
+package de.thekid.dialog.io;
+
+import io.Folder;
+import io.File;
+import io.FileUtil;
+import io.Folder;
+import util.log.Traceable;
+import util.log.LogCategory;
+import de.thekid.dialog.IEntry;
+import de.thekid.dialog.Album;
+import de.thekid.dialog.Update;
+import de.thekid.dialog.SingleShot;
+import de.thekid.dialog.ImageStrip;
+import de.thekid.dialog.EntryCollection;
+
+import native standard.serialize;
+import native standard.unserialize;
+import native standard.basename;
+import native standard.krsort;
+import native standard.array_keys;
+import native standard.array_slice;
+import native standard.intval;
+import native standard.floor;
+import native standard.sizeof;
+import native standard.sscanf;
+
+/**
+ * Creates indexes
+ *
+ */
+public class IndexCreator implements Traceable {
+  public LogCategory $cat= null;
+  public Folder $folder= null;
+  public int $entriesPerPage= 5;
+
+  /**
+   * Set entriesPerPage
+   *
+   */
+  public void setEntriesPerPage(int $entriesPerPage) {
+    $this.entriesPerPage= $entriesPerPage;
+  }
+
+  /**
+   * Get entriesPerPage
+   *
+   */
+  public int getEntriesPerPage() {
+    return $this.entriesPerPage;
+  }
+
+  /**
+   * Returns a IndexCreator for a given folder
+   *
+   */
+  public static self forFolder(Folder $folder) {
+    $i= new IndexCreator();
+    $i.folder= $folder;
+    return $i;
+  }
+
+  /**
+   * Regenerate
+   *
+   * @return  TRUE on success, FALSE otherwise
+   */
+  public void regenerate() throws io.IOException {
+    $entries= [:];
+    for ($i= new FilteredFolderIterator($this.folder, '/\.dat$/'); $i.hasNext(); ) {
+      $entry= $i.next();
+      $file= new File($entry);
+      $data= unserialize(FileUtil::getContents($file)) as IEntry;
+
+      $date= $data.getDate();
+      $this.cat && $this.cat.debugf(
+        '--> %s "%s" @ %s', 
+        xp::typeOf($data),
+        $entry,
+        xp::stringOf($date)
+      );
+      $entries[$date.toString('YmdHis-') ~ basename($entry)]= basename($entry, '.dat');
+      delete($data);
+    }
+    $this.folder.close();
+    krsort($entries);
+
+    // ...by pages. The index "page_0" can be used for the home page
+    for ($i= 0, $s= sizeof($entries); $i < $s; $i+= $this.entriesPerPage) {
+      $this.cat && $this.cat.debugf(
+        '--> Generating index for album #%d - #%d', 
+        $i, 
+        $i+ $this.entriesPerPage
+      );
+
+      FileUtil::setContents(
+        new File($this.folder.getURI() ~ 'page_' ~ ($i / $this.entriesPerPage) ~ '.idx'), 
+        serialize([
+          'total'   : $s, 
+          'perpage' : $this.entriesPerPage,
+          'entries' : array_slice($entries, $i, $this.entriesPerPage)
+        ])
+      );
+    }
+
+    // ...by album name, for album -> page lookup
+    foreach ($i, $key in array_keys($entries) as [int:string]) {
+      $page= intval(floor($i / $this.entriesPerPage));
+      $this.cat && $this.cat.debugf(
+        '--> Element %s is on page %d',
+        $entries[$key],
+        $page
+      );
+
+      FileUtil::setContents(
+        new File($this.folder.getURI() ~ $entries[$key] ~ '.idx'), 
+        serialize($page)
+      );
+    }
+
+    // ...by years
+    $bydate= [:];
+    foreach ($key in array_keys($entries) as [int:string]) {
+      $year= $month= 0;
+      sscanf($key, '%4d%2d', $year, $month);
+      isset($bydate[$year]) || $bydate[$year]= [:];
+      isset($bydate[$year][$month]) || $bydate[$year][$month]= [];
+      $bydate[$year][$month][]= $entries[$key];
+    }
+    foreach ($year, $bymonth in $bydate) {
+      $this.cat && $this.cat.debugf(
+        '--> For %s: %s',
+        $year,
+        xp::stringOf($bymonth)
+      );
+      FileUtil::setContents(
+        new File($this.folder.getURI() ~ 'bydate_' ~ $year ~ '.idx'), 
+        serialize($bymonth)
+      );
+    }
+    FileUtil::setContents(
+      new File($this.folder.getURI() ~ 'bydate.idx'), 
+      serialize(array_keys($bydate))
+    );
+
+    return true;
+  }
+
+  /**
+   * Set a trace for debugging
+   *
+   */
+  public void setTrace(LogCategory? $cat) {
+    $this.cat= $cat;
+  }
+} 
