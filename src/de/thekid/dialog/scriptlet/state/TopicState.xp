@@ -7,7 +7,6 @@ package de.thekid.dialog.scriptlet.state;
 
 import de.thekid.dialog.scriptlet.AbstractDialogState;
 import de.thekid.dialog.Topic;
-import de.thekid.dialog.AlbumImage;
 import xml.Node;
 import xml.PCData;
 
