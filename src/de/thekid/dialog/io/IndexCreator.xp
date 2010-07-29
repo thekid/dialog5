@@ -69,7 +69,7 @@ public class IndexCreator implements Traceable {
    *
    * @return  TRUE on success, FALSE otherwise
    */
-  public void regenerate() throws io.IOException {
+  public bool regenerate() throws io.IOException {
     $entries= [:];
     for ($i= new FilteredFolderIterator($this.folder, '/\.dat$/'); $i.hasNext(); ) {
       $entry= $i.next();
