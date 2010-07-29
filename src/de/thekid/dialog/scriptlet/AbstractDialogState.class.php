@@ -30,7 +30,7 @@
      * Returns index
      *
      * @param   int i default 0 page number
-     * @return  string[]
+     * @return  [string:var]
      */
     public function getIndexPage($i= 0) {
       return unserialize(FileUtil::getContents(new File($this->dataLocation.'page_'.$i.'.idx')));
