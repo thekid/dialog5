@@ -15,11 +15,11 @@ import native standard.sscanf;
  *
  */
 public class StaticState extends AbstractDialogState {
-  protected static [string:NodeHandler] $nodeHandlers = [:];
+  protected static [:NodeHandler] $nodeHandlers = [:];
   
   static {
     self::$nodeHandlers['de.thekid.dialog.Album']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.Album? $album, [string:NodeHandler] $nodeHandlers) {
+      public xml.Node nodeFor(de.thekid.dialog.Album? $album, [:NodeHandler] $nodeHandlers) {
         $child= new Node('entry', null, [
           'name'          : $album.getName(),
           'title'         : $album.getTitle(),
@@ -34,7 +34,7 @@ public class StaticState extends AbstractDialogState {
       }
     };
     self::$nodeHandlers['de.thekid.dialog.Update']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.Update? $update, [string:NodeHandler] $nodeHandlers) {
+      public xml.Node nodeFor(de.thekid.dialog.Update? $update, [:NodeHandler] $nodeHandlers) {
         $child= new Node('entry', null, [
           'album'         : $update.getAlbumName(),
           'title'         : $update.getTitle()
@@ -46,7 +46,7 @@ public class StaticState extends AbstractDialogState {
       }
     };
     self::$nodeHandlers['de.thekid.dialog.SingleShot']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.SingleShot? $shot, [string:NodeHandler] $nodeHandlers) {
+      public xml.Node nodeFor(de.thekid.dialog.SingleShot? $shot, [:NodeHandler] $nodeHandlers) {
         $child= new Node('entry', null, [
           'name'      : $shot.getName(),
           'filename'  : $shot.getFileName(),
@@ -59,7 +59,7 @@ public class StaticState extends AbstractDialogState {
       }
     };
     self::$nodeHandlers['de.thekid.dialog.ImageStrip']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.ImageStrip? $imageStrip, [string:NodeHandler] $nodeHandlers) {
+      public xml.Node nodeFor(de.thekid.dialog.ImageStrip? $imageStrip, [:NodeHandler] $nodeHandlers) {
         $child= new Node('entry', null, [
           'name'          : $imageStrip.getName(),
           'title'         : $imageStrip.getTitle(),
@@ -72,7 +72,7 @@ public class StaticState extends AbstractDialogState {
       }
     };
     self::$nodeHandlers['de.thekid.dialog.EntryCollection']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.EntryCollection? $collection, [string:NodeHandler] $nodeHandlers) {
+      public xml.Node nodeFor(de.thekid.dialog.EntryCollection? $collection, [:NodeHandler] $nodeHandlers) {
         $numEntries= $collection.numEntries();
         $node= new Node('entry', null, [
           'name'          : $collection.getName(),
@@ -115,7 +115,7 @@ public class StaticState extends AbstractDialogState {
     
     // Add entries from index
     $node= $response.addFormResult(new Node('entries'));
-    foreach ($name in $index['entries']) {
+    foreach ($name in $index['entries'] as string[]?) {
       $entry= $this.getEntryFor($name);
       if (!isset(self::$nodeHandlers[$entry.getClassName()])) {
         throw new FormatException('Index contains unknown element "' ~ $entry.getClassName() ~ '"');

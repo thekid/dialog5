@@ -17,11 +17,11 @@ import native standard.krsort;
  *
  */
 public class TopicState extends AbstractDialogState {
-  protected static [string:NodeHandler] $nodeHandlers = [:];
+  protected static [:NodeHandler] $nodeHandlers = [:];
 
   static {
     self::$nodeHandlers['de.thekid.dialog.Album']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.Album? $album, [string:NodeHandler] $nodeHandlers) {
+      public xml.Node nodeFor(de.thekid.dialog.Album? $album, [:NodeHandler] $nodeHandlers) {
         $child= new Node('entry', null, [
           'name'          : $album.getName(),
           'title'         : $album.getTitle(),
@@ -34,7 +34,7 @@ public class TopicState extends AbstractDialogState {
       }
     };
     self::$nodeHandlers['de.thekid.dialog.Update']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.Update? $update, [string:NodeHandler] $nodeHandlers) {
+      public xml.Node nodeFor(de.thekid.dialog.Update? $update, [:NodeHandler] $nodeHandlers) {
         $child= new Node('entry', null, [
           'album'         : $update.getAlbumName(),
           'title'         : $update.getTitle()
@@ -45,7 +45,7 @@ public class TopicState extends AbstractDialogState {
       }
     };
     self::$nodeHandlers['de.thekid.dialog.SingleShot']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.SingleShot? $shot, [string:NodeHandler] $nodeHandlers) {
+      public xml.Node nodeFor(de.thekid.dialog.SingleShot? $shot, [:NodeHandler] $nodeHandlers) {
         $child= new Node('entry', null, [
           'name'      : $shot.getName(),
           'title'     : $shot.getTitle()
@@ -56,7 +56,7 @@ public class TopicState extends AbstractDialogState {
       }
     };
     self::$nodeHandlers['de.thekid.dialog.ImageStrip']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.ImageStrip? $imageStrip, [string:NodeHandler] $nodeHandlers) {
+      public xml.Node nodeFor(de.thekid.dialog.ImageStrip? $imageStrip, [:NodeHandler] $nodeHandlers) {
         $child= new Node('entry', null, [
           'name'          : $imageStrip.getName(),
           'title'         : $imageStrip.getTitle(),
@@ -68,7 +68,7 @@ public class TopicState extends AbstractDialogState {
       }
     };
     self::$nodeHandlers['de.thekid.dialog.EntryCollection']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.EntryCollection? $collection, [string:NodeHandler] $nodeHandlers) {
+      public xml.Node nodeFor(de.thekid.dialog.EntryCollection? $collection, [:NodeHandler] $nodeHandlers) {
         $node= new Node('entry', null, [
           'name'          : $collection.getName(),
           'title'         : $collection.getTitle(),
@@ -96,7 +96,7 @@ public class TopicState extends AbstractDialogState {
     $t.addChild(Node::fromObject($topic.getCreatedAt(), 'created'));
 
     // Add origins
-    $origins= new [string:Node]{:};
+    $origins= new [:Node]{:};
     foreach ($name in $topic.origins()) {
       $entry= $this.getEntryFor($name);
       if (!isset(self::$nodeHandlers[$entry.getClassName()])) {
@@ -117,7 +117,7 @@ public class TopicState extends AbstractDialogState {
             'origin-class'  : $entry.getClassName()
           ]));
 
-          foreach ($key, $value in $entry.imageUrn($image.getName())) {
+          foreach ($key, $value in $entry.imageUrn($image.getName()) as [:string]?) {
             $i.setAttribute('origin-' ~ $key, $value);
           }
         }
