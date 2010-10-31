@@ -97,6 +97,7 @@
       ));
       $child->addChild(Node::fromObject($imageStrip->createdAt, 'created'));
       $child->addChild(new Node('highlight', $imageStrip->imageAt(0)->getName()));
+      $child->addChild(new Node('description', new PCData($imageStrip->getDescription())));
       return $child;
     }
 
