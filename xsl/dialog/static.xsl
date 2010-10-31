@@ -174,7 +174,7 @@
       <tr>
         <xsl:for-each select="exsl:node-set($entries)[position() &gt;= $i and position() &lt; $i + $max]">
           <td>
-            <a href="{func:linkImageStrip(../../@name)}#{position()- 1}">
+            <a href="{func:linkImageStrip(../../@name)}#{$i - 1 + position() - 1}">
               <img width="150" height="113" border="0" src="/albums/{../../@name}/thumb.{name}"/>
             </a>
           </td>
