@@ -18,9 +18,7 @@
   <xsl:include href="opengraph.inc.xsl"/>
   
   <!--
-   ! Template that matches on the root node
-   !
-   ! @purpose  Define the site layout
+   ! Template that matches on the root node and defines the site layout
    !-->
   <xsl:template match="/">
     <html xmlns:og="http://ogp.me/ns#">
