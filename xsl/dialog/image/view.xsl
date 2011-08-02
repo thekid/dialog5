@@ -37,6 +37,16 @@
   </xsl:template>
 
   <!--
+   ! Template for page header
+   !
+   ! @see       ../layout.xsl
+   !-->
+  <xsl:template name="page-head">
+    <meta property="og:type" content="album" />
+    <xsl:apply-templates select="/formresult/selected" mode="og"/>
+  </xsl:template>
+
+  <!--
    ! Template for content
    !
    ! @see      ../../layout.xsl

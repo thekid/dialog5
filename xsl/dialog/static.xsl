@@ -34,6 +34,16 @@
   </xsl:template>
 
   <!--
+   ! Template for page header
+   !
+   ! @see       ../layout.xsl
+   !-->
+  <xsl:template name="page-head">
+    <meta property="og:type" content="album" />
+    <xsl:apply-templates select="/formresult/entries/entry[1]" mode="og"/>
+  </xsl:template>
+
+  <!--
    ! Template for pager
    !
    ! @purpose  Links to previous and next
@@ -93,7 +103,7 @@
     </p>
     <br/><br clear="all"/>
   </xsl:template>
-  
+
   <!--
    ! Template for updates
    !
@@ -116,7 +126,7 @@
   </xsl:template>
 
   <!--
-   ! Template for updates
+   ! Template for single shots
    !
    ! @purpose  Specialized entry template
    !-->

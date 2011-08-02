@@ -15,6 +15,7 @@
 >
   <xsl:include href="../master.xsl"/>
   <xsl:include href="links.inc.xsl"/>
+  <xsl:include href="opengraph.inc.xsl"/>
   
   <!--
    ! Template that matches on the root node
@@ -22,13 +23,14 @@
    ! @purpose  Define the site layout
    !-->
   <xsl:template match="/">
-    <html>
+    <html xmlns:og="http://ogp.me/ns#">
       <head>
         <title>
           <xsl:call-template name="page-title"/>
         </title>
         <link rel="stylesheet" href="/{/formresult/config/style}.css"/>
       	<link rel="alternate" type="application/rss+xml" title="RSS - {/formresult/config/title}" href="/rss/"/>
+        <xsl:call-template name="page-head"/>
         <xsl:if test="/formresult/config/analyticscode">
           <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -128,8 +130,14 @@
     </xsl:if>
   </xsl:template>
 
+  <!-- Overwriteables -->
+
   <xsl:template name="page-title">
     <xsl:value-of select="$__state"/> - 
     <xsl:value-of select="/formresult/config/title"/>
+  </xsl:template>
+
+  <xsl:template name="page-head">
+    <!-- No default implementation -->
   </xsl:template>
 </xsl:stylesheet>

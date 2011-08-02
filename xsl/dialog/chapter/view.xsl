@@ -29,6 +29,16 @@
   </xsl:template>
 
   <!--
+   ! Template for page header
+   !
+   ! @see       ../layout.xsl
+   !-->
+  <xsl:template name="page-head">
+    <meta property="og:type" content="album" />
+    <xsl:apply-templates select="/formresult/chapter" mode="og"/>
+  </xsl:template>
+
+  <!--
    ! Function that draws the images of a chapter
    !
    ! @see      ../layout.xsl

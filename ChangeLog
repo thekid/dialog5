@@ -6,6 +6,11 @@ Version ?.?.?, released ????-??-??
 ----------------------------------
 SVN version: ?????
 
+Features
+~~~~~~~~
+- Added OpenGraph support - see issue #2
+  (friebe)
+  
 
 Version 2.5.0, released 2009-11-01
 ----------------------------------
