@@ -95,8 +95,8 @@
       </xsl:choose>
     </xsl:variable>
     <meta property="og:url" content="{/formresult/config/base}{func:linkShot(name, $id)}"/>
-    <meta property="og:image" content="{/formresult/config/base}/shots/thumb.color.{@filename}"/>
-    <meta property="og:image" content="{/formresult/config/base}/shots/thumb.gray.{@filename}"/>
+    <meta property="og:image" content="{/formresult/config/base}/shots/thumb.color.{fileName}"/>
+    <meta property="og:image" content="{/formresult/config/base}/shots/thumb.gray.{fileName}"/>
     <meta property="og:title" content="{title}"/>
     <meta property="og:description" content=""/>
   </xsl:template>
