@@ -31,15 +31,14 @@ public class EntryCollectionNodeHandler implements NodeHandler {
    */
   public Node nodeFor(IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
     with ($collection= $entry as EntryCollection?) {
-      $numEntries= $collection.numEntries();
       $child= new Node('entry', null, [
         name        : $collection.getName(),
         title       : $collection.getTitle(),
-        num_entries : $numEntries
+        num_entries : $collection.numEntries()
       ]);
       $child.addChild(Node::fromObject($collection.createdAt, 'created'));
       $this.addDetails($child, $collection, $nodeHandlers);
-      return $node;
+      return $child;
     }
   }
   
