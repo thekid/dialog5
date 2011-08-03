@@ -37,6 +37,7 @@ public class ImageStripNodeHandler implements NodeHandler {
         num_images : $imageStrip.numImages(),
       ]);
       $child.addChild(Node::fromObject($imageStrip.createdAt, 'date'));
+      $this.addDetails($child, $imageStrip, $nodeHandlers);
       return $child;
     }
   }
