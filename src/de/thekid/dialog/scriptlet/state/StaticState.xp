@@ -17,6 +17,12 @@ import de.thekid.dialog.Update;
 import de.thekid.dialog.SingleShot;
 import de.thekid.dialog.ImageStrip;
 import de.thekid.dialog.EntryCollection;
+import de.thekid.dialog.scriptlet.NodeHandler;
+import de.thekid.dialog.scriptlet.AlbumNodeHandler;
+import de.thekid.dialog.scriptlet.UpdateNodeHandler;
+import de.thekid.dialog.scriptlet.SingleShotNodeHandler;
+import de.thekid.dialog.scriptlet.ImageStripNodeHandler;
+import de.thekid.dialog.scriptlet.EntryCollectionNodeHandler;
 
 import native standard.sscanf;
 
@@ -28,90 +34,39 @@ public class StaticState extends de.thekid.dialog.scriptlet.AbstractDialogState 
   protected static [:NodeHandler] $nodeHandlers = [:];
   
   static {
-    self::$nodeHandlers['de.thekid.dialog.Album']= new NodeHandler() {
-      public Node nodeFor(IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
-        with ($album= $entry as Album?) {
-          $child= new Node('entry', null, [
-            name         : $album.getName(),
-            title        : $album.getTitle(),
-            num_images   : $album.numImages(),
-            num_chapters : $album.numChapters()
-          ]);
-          $child.addChild(new Node('description', new PCData($album.getDescription())));
-          $child.addChild(Node::fromObject($album.getCreatedAt(), 'created'));
-          $child.addChild(Node::fromArray($album.highlights, 'highlights'));
-
-          return $child;
-        }
+    self::$nodeHandlers['de.thekid.dialog.Album']= new AlbumNodeHandler() {
+      protected void addDetails(Node $child, Album? $album, [:NodeHandler]? $nodeHandlers) {
+        $child.addChild(new Node('description', new PCData($album.getDescription())));
+        $child.addChild(Node::fromArray($album.highlights, 'highlights'));
       }
     };
-    self::$nodeHandlers['de.thekid.dialog.Update']= new NodeHandler() {
-      public Node nodeFor(IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
-        with ($update= $entry as Update?) {
-          $child= new Node('entry', null, [
-            album : $update.getAlbumName(),
-            title : $update.getTitle()
-          ]);
-          $child.addChild(new Node('description', new PCData($update.getDescription())));
-          $child.addChild(Node::fromObject($update.date, 'date'));
-
-          return $child;
-        }
+    self::$nodeHandlers['de.thekid.dialog.Update']= new UpdateNodeHandler() {
+      protected void addDetails(Node $child, Update? $update, [:NodeHandler]? $nodeHandlers) {
+        $child.addChild(new Node('description', new PCData($update.getDescription())));
       }
     };
-    self::$nodeHandlers['de.thekid.dialog.SingleShot']= new NodeHandler() {
-      public Node nodeFor(IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
-        with ($shot= $entry as SingleShot?) {
-          $child= new Node('entry', null, [
-            name     : $shot.getName(),
-            filename : $shot.getFileName(),
-            title    : $shot.getTitle()
-          ]);
-          $child.addChild(new Node('description', new PCData($shot.getDescription())));
-          $child.addChild(Node::fromObject($shot.date, 'date'));
-
-          return $child;
-        }
+    self::$nodeHandlers['de.thekid.dialog.SingleShot']= new SingleShotNodeHandler() {
+      protected void addDetails(Node $child, SingleShot? $shot, [:NodeHandler]? $nodeHandlers) {
+        $child.addChild(new Node('description', new PCData($shot.getDescription())));
       }
     };
-    self::$nodeHandlers['de.thekid.dialog.ImageStrip']= new NodeHandler() {
-      public Node nodeFor(IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
-        with ($imageStrip= $entry as ImageStrip?) {
-          $child= new Node('entry', null, [
-            name       : $imageStrip.getName(),
-            title      : $imageStrip.getTitle(),
-            num_images : $imageStrip.numImages(),
-          ]);
-          $child.addChild(new Node('description', new PCData($imageStrip.getDescription())));
-          $child.addChild(Node::fromObject($imageStrip.createdAt, 'date'));
-          $child.addChild(Node::fromArray($imageStrip.images, 'images'));
-          return $child;
-        }
+    self::$nodeHandlers['de.thekid.dialog.ImageStrip']= new ImageStripNodeHandler() {
+      protected void addDetails(Node $child, ImageStrip? $imageStrip, [:NodeHandler]? $nodeHandlers) {
+        $child.addChild(new Node('description', new PCData($imageStrip.getDescription())));
+        $child.addChild(Node::fromArray($imageStrip.images, 'images'));
       }
     };
-    self::$nodeHandlers['de.thekid.dialog.EntryCollection']= new NodeHandler() {
-      public Node nodeFor(IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
-        with ($collection= $entry as EntryCollection?) {
-          $numEntries= $collection.numEntries();
-          $node= new Node('entry', null, [
-            name        : $collection.getName(),
-            title       : $collection.getTitle(),
-            num_entries : $numEntries
-          ]);
-          $node.addChild(new Node('description', new PCData($collection.getDescription())));
-          $node.addChild(Node::fromObject($collection.createdAt, 'created'));
-
-          for ($i= 0; $i < $numEntries; $i++) {
-            $entry= $collection.entryAt($i);
-            if (!isset($nodeHandlers[$entry.getClassName()])) {
-              throw new FormatException('Collection index contains unknown element "' ~ $entry.getClassName() ~ '"');
-            }
-
-            $child= $node.addChild($nodeHandlers[$entry.getClassName()].nodeFor($entry));
-            $child.setAttribute('type', $entry.getClassName());
+    self::$nodeHandlers['de.thekid.dialog.EntryCollection']= new EntryCollectionNodeHandler() {
+      protected void addDetails(Node $child, EntryCollection? $collection, [:NodeHandler]? $nodeHandlers) {
+        $child.addChild(new Node('description', new PCData($collection.getDescription())));
+        for ($i= 0; $i < $collection.numEntries(); $i++) {
+          $entry= $collection.entryAt($i);
+          if (!isset($nodeHandlers[$entry.getClassName()])) {
+            throw new FormatException('Collection index contains unknown element "' ~ $entry.getClassName() ~ '"');
           }
 
-          return $node;
+          $node= $child.addChild($nodeHandlers[$entry.getClassName()].nodeFor($entry));
+          $node.setAttribute('type', $entry.getClassName());
         }
       }
     };
