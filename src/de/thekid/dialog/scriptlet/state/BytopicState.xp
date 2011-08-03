@@ -1,0 +1,106 @@
+package de.thekid.dialog.scriptlet.state;
+
+import scriptlet.xml.XMLScriptletRequest;
+import scriptlet.xml.XMLScriptletResponse;
+import scriptlet.xml.workflow.Context;
+import xml.Node;
+import xml.PCData;
+
+import de.thekid.dialog.IEntry;
+import de.thekid.dialog.Update;
+import de.thekid.dialog.SingleShot;
+import de.thekid.dialog.ImageStrip;
+import de.thekid.dialog.Topic;
+import de.thekid.dialog.scriptlet.NodeHandler;
+import de.thekid.dialog.scriptlet.AlbumNodeHandler;
+import de.thekid.dialog.scriptlet.UpdateNodeHandler;
+import de.thekid.dialog.scriptlet.SingleShotNodeHandler;
+import de.thekid.dialog.scriptlet.ImageStripNodeHandler;
+import de.thekid.dialog.scriptlet.EntryCollectionNodeHandler;
+
+import native standard.sscanf;
+import native standard.krsort;
+
+/**
+ * Handles /xml/bytopic
+ *
+ */
+public class BytopicState extends de.thekid.dialog.scriptlet.AbstractDialogState {
+  protected static [:NodeHandler] $nodeHandlers = [:];
+
+  static {
+    self::$nodeHandlers['de.thekid.dialog.Album']= new AlbumNodeHandler();
+    self::$nodeHandlers['de.thekid.dialog.Update']= new UpdateNodeHandler() {
+      protected void addDetails(Node $child, Update? $update, [:NodeHandler]? $nodeHandlers) {
+        $child.addChild(Node::fromObject($update.getDate(), 'created'));       // FIXME: Standardize!
+      }
+    };
+    self::$nodeHandlers['de.thekid.dialog.SingleShot']= new SingleShotNodeHandler() {
+      protected void addDetails(Node $child, SingleShot? $shot, [:NodeHandler]? $nodeHandlers) {
+        $child.addChild(Node::fromObject($shot.getDate(), 'created'));         // FIXME: Standardize!
+      }
+    };
+    self::$nodeHandlers['de.thekid.dialog.ImageStrip']= new ImageStripNodeHandler() {
+      protected void addDetails(Node $child, ImageStrip? $imageStrip, [:NodeHandler]? $nodeHandlers) {
+        $child.addChild(Node::fromObject($imageStrip.getDate(), 'created'));   // FIXME: Standardize!
+      }
+    };
+    self::$nodeHandlers['de.thekid.dialog.EntryCollection']= new EntryCollectionNodeHandler();
+  }
+
+  /**
+   * Process this state.
+   *
+   */
+  public void process(XMLScriptletRequest? $request, XMLScriptletResponse? $response, Context? $context) {
+    $page= 0;
+    sscanf($request.getQueryString(), 'page%d', $page);
+    $index= $this.getIndexTopics($page);
+
+    // Add paging information
+    $response.addFormResult(new Node('pager', null, [
+      offset  : $page,
+      total   : $index['total'],
+      perpage : $index['perpage']
+    ]));
+
+    $node= $response.addFormResult(new Node('topics'));
+    foreach ($name in $index['entries'] as string[]?) {
+      $topic= $this._getEntryFor($name, Topic::class) as Topic?;
+
+      $t= $node.addChild(new Node('topic', null, [ name : $topic.getName(), title : $topic.getTitle() ]));
+      $t.addChild(Node::fromObject($topic.getCreatedAt(), 'created'));
+
+      // Add origins grouped by year
+      $o= $t.addChild(new Node('origins'));
+      $origins= new [:Node] {:};
+      $classes= new [:string] {:};
+      foreach ($name in $topic.origins()) {
+        $entry= $this.getEntryFor($name);
+        if (!isset(self::$nodeHandlers[$entry.getClassName()])) {
+          throw new FormatException('Index contains unknown element "' ~ $entry.getClassName() ~ '"');
+        }
+
+        $child= self::$nodeHandlers[$entry.getClassName()].nodeFor($entry, self::$nodeHandlers);
+        $y= $entry.getDate().toString('Y');
+        if (!isset($origins[$y])) {
+          $origins[$y]= new Node('year', null, [ num : $y ]);
+        }
+        $origins[$y].addChild($child).setAttribute('type', $entry.getClassName());
+        $classes[$name]= $entry.getClassName();
+      }
+      krsort($origins);
+      foreach ($byYear in $origins) {
+        $o.addChild($byYear);
+      }
+
+      // Add featured images
+      $images= $t.addChild(new Node('featured'));
+      foreach ($origin, $image in $topic.featuredImages()) {
+        $image= $images.addChild(Node::fromObject($image, 'image'));
+        $image.setAttribute('origin-name', $origin);
+        $image.setAttribute('origin-class', $classes[$origin]);
+      }
+    }
+  }
+}
