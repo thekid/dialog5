@@ -121,7 +121,7 @@ public class StaticState extends de.thekid.dialog.scriptlet.AbstractDialogState 
    * Process this state.
    *
    */
-  public void process(scriptlet.xml.workflow.WorkflowScriptletRequest? $request, scriptlet.xml.XMLScriptletResponse? $response, scriptlet.xml.workflow.Context? $context) {
+  public void process(XMLScriptletRequest? $request, XMLScriptletResponse? $response, Context? $context) {
     $page= 0;
     sscanf($request.getQueryString(), 'page%d', $page);
     $index= $this.getIndexPage($page);
