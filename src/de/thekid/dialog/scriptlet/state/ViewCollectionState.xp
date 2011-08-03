@@ -1,0 +1,81 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+package de.thekid.dialog.scriptlet.state;
+
+import scriptlet.xml.XMLScriptletRequest;
+import scriptlet.xml.XMLScriptletResponse;
+import scriptlet.xml.workflow.Context;
+import xml.Node;
+import xml.PCData;
+
+import de.thekid.dialog.Album;
+import de.thekid.dialog.EntryCollection;
+
+/**
+ * Handles /xml/collection/view
+ *
+ */
+public class ViewCollectionState extends de.thekid.dialog.scriptlet.AbstractDialogState {
+  public [:lang.reflect.Method] $nodeHandlers = [:];
+
+  /**
+   * Constructor
+   *
+   */
+  public __construct() {
+    foreach ($method in $this.getClass().getMethods()) {
+      $method.hasAnnotation('handles') && ($this.nodeHandlers[$method.getAnnotation('handles')]= $method);
+    }
+  }
+
+  /**
+   * Handler for albums
+   *
+   */
+  [@handles('de.thekid.dialog.Album')]
+  public Node albumNode(Album? $album) {
+    $child= new Node('entry', null, [
+      name         : $album.getName(),
+      title        : $album.getTitle(),
+      num_images   : $album.numImages(),
+      num_chapters : $album.numChapters()
+    ]);
+    $child.addChild(new Node('description', new PCData($album.getDescription())));
+    $child.addChild(Node::fromObject($album.getCreatedAt(), 'created'));
+    $child.addChild(Node::fromArray($album.highlights, 'highlights'));
+
+    return $child;
+  }
+
+  /**
+   * Process this state.
+   *
+   */
+  public void process(XMLScriptletRequest? $request, XMLScriptletResponse? $response, Context? $context) {
+    $name= $request.getQueryString();
+
+    with ($collection= $this._getEntryFor($name, EntryCollection::class) as EntryCollection?) {
+      $child= $response.addFormResult(new Node('collection', null, [
+        name  : $collection.getName(),
+        title : $collection.getTitle(),
+        page  : $this.getDisplayPageFor($name)
+      ]));
+      $child.addChild(new Node('description', new PCData($collection.getDescription())));
+      $child.addChild(Node::fromObject($collection.createdAt, 'created'));
+
+      // Add entries from collection 
+      $node= $response.addFormResult(new Node('entries'));
+      foreach ($entry in $collection.entries) {
+        if (!isset($this.nodeHandlers[$entry.getClassName()])) {
+          throw new FormatException('Index contains unknown element "' ~ $entry.getClassName() ~ '"');
+        }
+
+        $child= $node.addChild($this.nodeHandlers[$entry.getClassName()].invoke($this, [$entry]));
+        $child.setAttribute('type', $entry.getClassName());
+      }
+    }
+  }
+}
