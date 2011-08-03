@@ -1,0 +1,61 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+package de.thekid.dialog.scriptlet.state;
+
+import scriptlet.xml.XMLScriptletRequest;
+import scriptlet.xml.XMLScriptletResponse;
+import scriptlet.xml.workflow.Context;
+import xml.Node;
+
+import de.thekid.dialog.Album;
+import de.thekid.dialog.EntryCollection;
+
+import native standard.sscanf;
+import native standard.substr;
+import native standard.strpos;
+
+/**
+ * Handles /xml/chapter/view
+ *
+ */
+public class ViewChapterState extends de.thekid.dialog.scriptlet.AbstractDialogState {
+
+  /**
+   * Process this state.
+   *
+   */
+  public void process(XMLScriptletRequest? $request, XMLScriptletResponse? $response, Context? $context) {
+    $name= $id= null;
+    if (2 != sscanf($request.getQueryString(), '%[^,],%d', $name, $id)) {
+      throw new IllegalAccessException('Malformed query string');
+    }
+
+    with ($album= $this._getEntryFor($name, Album::class) as Album?) {
+
+      // Add formresult information about the album
+      $child= $response.addFormResult(new Node('album', null, [
+        name  : $album.getName(),
+        title : $album.getTitle(),
+        page  : $this.getDisplayPageFor($name)
+      ]));
+
+      $chapter= $response.addFormResult(Node::fromObject($album.chapterAt($id), 'chapter'));
+      $chapter.setAttribute('id', $id+ 1);
+      $chapter.setAttribute('previous', $id == 0 ? null : $id - 1);
+      $chapter.setAttribute('next', $id == $album.numChapters() - 1 ? null : $id + 1);
+
+      // Check if an album is inside a collection
+      if (false === ($p= strpos($name, '/'))) return; 
+
+      $parent= $this._getEntryFor(substr($name, 0, $p), EntryCollection::class) as EntryCollection?;
+      $child.setAttribute('page', $this.getDisplayPageFor($parent.getName()));
+      $child.addChild(new Node('collection', null, [
+        name  : $parent.getName(),
+        title : $parent.getTitle()
+      ]));
+    }
+  }
+}
