@@ -71,9 +71,13 @@ public class IndexCreator implements Traceable {
    */
   public bool regenerate() throws io.IOException {
     $entries= [:];
-    for ($i= new FilteredFolderIterator($this.folder, '/\.dat$/'); $i.hasNext(); ) {
-      $entry= $i.next();
-      $file= new File($entry);
+    $dataFiles= new io.collections.iterate.ExtensionEqualsFilter('.dat');
+    for (
+      $it= new io.collections.iterate.FilteredIOCollectionIterator(new io.collections.FileCollection($this.folder.getURI()), $dataFiles);
+      $it.hasNext();
+    ) {
+      $entry= $it.next();
+      $file= new File($entry.getURI());
       $data= unserialize(FileUtil::getContents($file)) as IEntry;
 
       $date= $data.getDate();
