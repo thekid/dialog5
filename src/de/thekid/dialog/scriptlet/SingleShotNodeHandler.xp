@@ -1,0 +1,51 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+package de.thekid.dialog.scriptlet;
+
+import xml.Node;
+
+import de.thekid.dialog.IEntry;
+import de.thekid.dialog.SingleShot;
+
+/**
+ * Handles SingleShot nodes
+ *
+ * The XML produced is structured as follows:
+ * <code>
+ *   entry(@name, @title, @filename) {
+ *     date { } 
+ *     [details]
+ *   }
+ * </code>
+ *
+ * @see   xp://de.thekid.dialog.scriptlet.NodeHandler
+ */
+public class SingleShotNodeHandler implements NodeHandler {
+
+  /**
+   * Produces the node
+   *
+   */
+  public Node nodeFor(IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
+    with ($shot= $entry as SingleShot?) {
+      $child= new Node('entry', null, [
+        name     : $shot.getName(),
+        filename : $shot.getFileName(),
+        title    : $shot.getTitle()
+      ]);
+      $child.addChild(Node::fromObject($shot.date, 'date'));
+
+      return $child;
+    }
+  }
+  
+  /**
+   * Add details. Overwrite in subclasses
+   *
+   */
+  protected void addDetails(Node $child, SingleShot? $shot, [:NodeHandler]? $nodeHandlers) {
+  }
+}
