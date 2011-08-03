@@ -17,6 +17,7 @@ import de.thekid.dialog.EntryCollection;
 import de.thekid.dialog.ImageStrip;
 import de.thekid.dialog.SingleShot;
 import de.thekid.dialog.Update;
+import de.thekid.dialog.Topic;
 
 import native standard.unserialize;
 import native standard.sprintf;
@@ -80,14 +81,14 @@ public class AbstractDialogState extends scriptlet.xml.workflow.AbstractState {
    * @param   expect expected type
    * @throws  IllegalArgumentException if found entry is not of expected type
    */
-  protected inline IEntry _getEntryFor(string? $name, string? $expect) throws IllegalArgumentException {
+  protected inline IEntry _getEntryFor(string? $name, XPClass? $expect) throws IllegalArgumentException {
     $entry= unserialize(FileUtil::getContents(new File($this.dataLocation ~ $name ~ '.dat')));
 
     // Check expectancy
-    if (!is($expect, $entry)) throw new IllegalArgumentException(sprintf(
+    if (!$expect.isInstance($entry)) throw new IllegalArgumentException(sprintf(
       'Entry of type %s found, %s expected',
       xp::typeOf($entry),
-      $expect
+      $expect.getName() 
     ));
 
     return $entry;
@@ -98,7 +99,7 @@ public class AbstractDialogState extends scriptlet.xml.workflow.AbstractState {
    *
    */
   public IEntry getEntryFor(string? $name) {
-    return $this._getEntryFor($name, 'de.thekid.dialog.IEntry');
+    return $this._getEntryFor($name, IEntry::class);
   }
 
   /**
@@ -106,7 +107,7 @@ public class AbstractDialogState extends scriptlet.xml.workflow.AbstractState {
    *
    */
   public Album getAlbumFor(string? $name) {
-    return $this._getEntryFor($name, 'de.thekid.dialog.Album');
+    return $this._getEntryFor($name, Album::class);
   }
 
   /**
