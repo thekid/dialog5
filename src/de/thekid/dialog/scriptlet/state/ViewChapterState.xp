@@ -47,7 +47,7 @@ public class ViewChapterState extends de.thekid.dialog.scriptlet.AbstractDialogS
       $chapter.setAttribute('previous', $id == 0 ? null : $id - 1);
       $chapter.setAttribute('next', $id == $album.numChapters() - 1 ? null : $id + 1);
 
-      // Check if an album is inside a collection
+      // Check if album is inside a collection
       if (false === ($p= strpos($name, '/'))) return; 
 
       $parent= $this._getEntryFor(substr($name, 0, $p), EntryCollection::class) as EntryCollection?;

@@ -92,7 +92,7 @@ public class ViewImageState extends de.thekid.dialog.scriptlet.AbstractDialogSta
       $next && $selected.addChild(Node::fromArray($next, 'next'));
       $prev && $selected.addChild(Node::fromArray($prev, 'prev'));
 
-      // Check if an album is inside a collection
+      // Check if album is inside a collection
       if (false === ($p= strpos($name, '/'))) return; 
 
       $parent= $this._getEntryFor(substr($name, 0, $p), EntryCollection::class) as EntryCollection?;
