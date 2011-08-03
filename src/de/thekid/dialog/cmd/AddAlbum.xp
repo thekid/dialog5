@@ -8,6 +8,7 @@ package de.thekid.dialog.cmd;
 import de.thekid.dialog.GroupingStrategy;
 import de.thekid.dialog.Album;
 import de.thekid.dialog.AlbumChapter;
+
 import native standard.sprintf;
 import native standard.unserialize;
 import native standard.is_file;
