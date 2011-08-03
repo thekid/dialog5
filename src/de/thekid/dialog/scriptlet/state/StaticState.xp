@@ -5,94 +5,114 @@
 
 package de.thekid.dialog.scriptlet.state;
 
-import de.thekid.dialog.scriptlet.AbstractDialogState;
+import scriptlet.xml.XMLScriptletRequest;
+import scriptlet.xml.XMLScriptletResponse;
+import scriptlet.xml.workflow.Context;
 import xml.Node;
 import xml.PCData;
+
+import de.thekid.dialog.IEntry;
+import de.thekid.dialog.Album;
+import de.thekid.dialog.Update;
+import de.thekid.dialog.SingleShot;
+import de.thekid.dialog.ImageStrip;
+import de.thekid.dialog.EntryCollection;
+
 import native standard.sscanf;
 
 /**
  * Handles /xml/static
  *
  */
-public class StaticState extends AbstractDialogState {
+public class StaticState extends de.thekid.dialog.scriptlet.AbstractDialogState {
   protected static [:NodeHandler] $nodeHandlers = [:];
   
   static {
     self::$nodeHandlers['de.thekid.dialog.Album']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.Album? $album, [:NodeHandler] $nodeHandlers) {
-        $child= new Node('entry', null, [
-          'name'          : $album.getName(),
-          'title'         : $album.getTitle(),
-          'num_images'    : $album.numImages(),
-          'num_chapters'  : $album.numChapters()
-        ]);
-        $child.addChild(new Node('description', new PCData($album.getDescription())));
-        $child.addChild(Node::fromObject($album.createdAt, 'created'));
-        $child.addChild(Node::fromArray($album.highlights, 'highlights'));
+      public Node nodeFor(IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
+        with ($album= $entry as Album?) {
+          $child= new Node('entry', null, [
+            name         : $album.getName(),
+            title        : $album.getTitle(),
+            num_images   : $album.numImages(),
+            num_chapters : $album.numChapters()
+          ]);
+          $child.addChild(new Node('description', new PCData($album.getDescription())));
+          $child.addChild(Node::fromObject($album.getCreatedAt(), 'created'));
+          $child.addChild(Node::fromArray($album.highlights, 'highlights'));
 
-        return $child;
+          return $child;
+        }
       }
     };
     self::$nodeHandlers['de.thekid.dialog.Update']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.Update? $update, [:NodeHandler] $nodeHandlers) {
-        $child= new Node('entry', null, [
-          'album'         : $update.getAlbumName(),
-          'title'         : $update.getTitle()
-        ]);
-        $child.addChild(new Node('description', new PCData($update.getDescription())));
-        $child.addChild(Node::fromObject($update.date, 'date'));
+      public Node nodeFor(IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
+        with ($update= $entry as Update?) {
+          $child= new Node('entry', null, [
+            album : $update.getAlbumName(),
+            title : $update.getTitle()
+          ]);
+          $child.addChild(new Node('description', new PCData($update.getDescription())));
+          $child.addChild(Node::fromObject($update.date, 'date'));
 
-        return $child;
+          return $child;
+        }
       }
     };
     self::$nodeHandlers['de.thekid.dialog.SingleShot']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.SingleShot? $shot, [:NodeHandler] $nodeHandlers) {
-        $child= new Node('entry', null, [
-          'name'      : $shot.getName(),
-          'filename'  : $shot.getFileName(),
-          'title'     : $shot.getTitle()
-        ]);
-        $child.addChild(new Node('description', new PCData($shot.getDescription())));
-        $child.addChild(Node::fromObject($shot.date, 'date'));
+      public Node nodeFor(IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
+        with ($shot= $entry as SingleShot?) {
+          $child= new Node('entry', null, [
+            name     : $shot.getName(),
+            filename : $shot.getFileName(),
+            title    : $shot.getTitle()
+          ]);
+          $child.addChild(new Node('description', new PCData($shot.getDescription())));
+          $child.addChild(Node::fromObject($shot.date, 'date'));
 
-        return $child;
+          return $child;
+        }
       }
     };
     self::$nodeHandlers['de.thekid.dialog.ImageStrip']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.ImageStrip? $imageStrip, [:NodeHandler] $nodeHandlers) {
-        $child= new Node('entry', null, [
-          'name'          : $imageStrip.getName(),
-          'title'         : $imageStrip.getTitle(),
-          'num_images'    : $imageStrip.numImages(),
-        ]);
-        $child.addChild(new Node('description', new PCData($imageStrip.getDescription())));
-        $child.addChild(Node::fromObject($imageStrip.createdAt, 'date'));
-        $child.addChild(Node::fromArray($imageStrip.images, 'images'));
-        return $child;
+      public Node nodeFor(IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
+        with ($imageStrip= $entry as ImageStrip?) {
+          $child= new Node('entry', null, [
+            name       : $imageStrip.getName(),
+            title      : $imageStrip.getTitle(),
+            num_images : $imageStrip.numImages(),
+          ]);
+          $child.addChild(new Node('description', new PCData($imageStrip.getDescription())));
+          $child.addChild(Node::fromObject($imageStrip.createdAt, 'date'));
+          $child.addChild(Node::fromArray($imageStrip.images, 'images'));
+          return $child;
+        }
       }
     };
     self::$nodeHandlers['de.thekid.dialog.EntryCollection']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.EntryCollection? $collection, [:NodeHandler] $nodeHandlers) {
-        $numEntries= $collection.numEntries();
-        $node= new Node('entry', null, [
-          'name'          : $collection.getName(),
-          'title'         : $collection.getTitle(),
-          'num_entries'   : $numEntries
-        ]);
-        $node.addChild(new Node('description', new PCData($collection.getDescription())));
-        $node.addChild(Node::fromObject($collection.createdAt, 'created'));
+      public Node nodeFor(IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
+        with ($collection= $entry as EntryCollection?) {
+          $numEntries= $collection.numEntries();
+          $node= new Node('entry', null, [
+            name        : $collection.getName(),
+            title       : $collection.getTitle(),
+            num_entries : $numEntries
+          ]);
+          $node.addChild(new Node('description', new PCData($collection.getDescription())));
+          $node.addChild(Node::fromObject($collection.createdAt, 'created'));
 
-        for ($i= 0; $i < $numEntries; $i++) {
-          $entry= $collection.entryAt($i);
-          if (!isset($nodeHandlers[$entry.getClassName()])) {
-            throw new FormatException('Collection index contains unknown element "' ~ $entry.getClassName() ~ '"');
+          for ($i= 0; $i < $numEntries; $i++) {
+            $entry= $collection.entryAt($i);
+            if (!isset($nodeHandlers[$entry.getClassName()])) {
+              throw new FormatException('Collection index contains unknown element "' ~ $entry.getClassName() ~ '"');
+            }
+
+            $child= $node.addChild($nodeHandlers[$entry.getClassName()].nodeFor($entry));
+            $child.setAttribute('type', $entry.getClassName());
           }
 
-          $child= $node.addChild($nodeHandlers[$entry.getClassName()].nodeFor($entry));
-          $child.setAttribute('type', $entry.getClassName());
+          return $node;
         }
-
-        return $node;
       }
     };
   }
@@ -108,9 +128,9 @@ public class StaticState extends AbstractDialogState {
     
     // Add paging information
     $response.addFormResult(new Node('pager', null, [
-      'offset'  : $page,
-      'total'   : $index['total'],
-      'perpage' : $index['perpage']
+      offset  : $page,
+      total   : $index['total'],
+      perpage : $index['perpage']
     ]));
     
     // Add entries from index
