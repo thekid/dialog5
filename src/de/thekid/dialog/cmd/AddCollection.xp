@@ -1,0 +1,335 @@
+/* This file is part of the XP framework
+ *
+ * $Id$
+ */
+
+package de.thekid.dialog.cmd;
+
+import io.Folder;
+import io.File;
+import io.FileUtil;
+import io.FileNotFoundException;
+import io.collections.FileCollection;
+import io.collections.iterate.FilteredIOCollectionIterator;
+import io.collections.iterate.AnyOfFilter;
+import io.collections.iterate.ExtensionEqualsFilter;
+import util.Date;
+
+import de.thekid.dialog.GroupingStrategy;
+import de.thekid.dialog.IEntry;
+import de.thekid.dialog.Album;
+import de.thekid.dialog.AlbumChapter;
+import de.thekid.dialog.AlbumImage;
+import de.thekid.dialog.EntryCollection; 
+
+import native standard.dirname;
+import native standard.serialize;
+import native standard.unserialize;
+import native standard.sprintf;
+import native standard.usort;
+import native standard.is_file;
+import native standard.is_dir;
+import native standard.file_get_contents;
+import native core.create_function;
+
+/**
+ * Adds collections to dialog Will import a complete directory with 
+ * subdirectories containing the (original) images and assumes the 
+ * following directory layout:
+ * <pre>
+ *   + [directory]
+ *   |--+ [subdirectory #1]
+ *   |  |--+ [highlights]
+ *   |  |  |-- image #1
+ *   |  |  |-- image #2
+ *   |  |  |-- ...
+ *   |  |
+ *   |  |-- description.txt
+ *   |  |-- title.txt
+ *   |  |-- image #1
+ *   |  |-- image #2
+ *   |  |-- ...
+ *   |
+ *   |--+ [subdirectory #2]
+ *   |  |--+ [highlights]
+ *   |  |  |-- image #1
+ *   |  |  |-- ...
+ *   |  |
+ *   |  |-- description.txt
+ *   |  |-- title.txt
+ *   |  |-- image #1
+ *   |  |-- ...
+ *   |
+ *   |--+ ...
+ *   |-- description.txt
+ * </pre>
+ * 
+ * It will then follow these rules:
+ * 
+ * <ul>
+ *   <li>The entire text from the file description.txt will be used to
+ *     make the text for the front page.
+ *
+ *   </li><li>The directory's name will be used for the collection's title.
+ *     Note: This can be overridden by the command line switch "-t"
+ *
+ *   </li><li>The directory's creation date will be used for the 
+ *     collection's creation timestamp.
+ *     Note: This can be overridden by the command line switch "-c"
+ *
+ *   </li><li>For each of the subdirectories in the origin directory,
+ *     an album inside this collection will be created according to the
+ *     rules described inside the AddAlbum command.
+ * 
+ *   </li><li>If a file inside the subdirectory called "title.txt" exists,
+ *     then the text inside will be used as the album's title - the sub-
+ *     directory's name will be used otherwise.
+ *
+ *   </li><li>Any non-directory inside the collection directory will be
+ *     ignored.
+ *
+ *   </li><li>The directory's name will be transformed to the collection's 
+ *     online name by lowercasing all characters in it and replacing any 
+ *     character besides a-z, 0-9 and - by an underscore. Double 
+ *     underscores will be replaced by single ones.
+ *    
+ *     Example: 
+ *     "Philippines Vacation 2006" will become "philippines_vacation_2006"
+ * 
+ *     The online name is used in permalinks.
+ *   </li>
+ * </ul>
+ *
+ * @see      xp://de.thekid.dialog.cmd.AddAlbum
+ * @purpose  Command
+ */
+public class AddCollection extends ImportCommand {
+  protected Folder $origin;
+  protected Folder $imageDestination;
+  protected Folder $dataDestination;
+  protected Date $createdAt;
+  protected string $title;
+  protected GroupingStrategy $groupingStrategy;
+
+  /**
+   * Set origin folder
+   *
+   */
+  [@arg(position= 0)]
+  public void setOrigin(string $folder) {
+    $this.origin= new Folder($folder);
+    if (!$this.origin.exists()) {
+      throw new FileNotFoundException('Folder "' ~ $folder ~ '" does not exist');
+    }
+  }
+
+  /**
+   * Set collection's title. If no title is given and the collection did not 
+   * previously exist, uses the origin folder's directory name.
+   *
+   */
+  [@arg]
+  public void setTitle(string $title= null) {
+    $this.title= $title;
+  }
+
+  /**
+   * Set collection's creation date. If no date is given and the collection did not 
+   * previously exist, uses the origin folder's creation date.
+   *
+   */
+  [@arg]
+  public void setCreatedAt(string $date= null) {
+    $this.createdAt= $date ? new Date($date) : null;
+  }
+
+  /**
+   * Sets how to group images into chapters (one of "hour" or "day")
+   *
+   * @see     xp://de.thekid.dialog.GroupingStrategy
+   */
+  [@arg]
+  public void setGroupBy(string $method= 'hour') {
+    try {
+      $this.groupingStrategy= Enum::valueOf(XPClass::forName('de.thekid.dialog.GroupingStrategy'), $method);
+    } catch (IllegalArgumentException $e) {
+      throw new IllegalArgumentException(sprintf(
+        'Unknown grouping method "%s", supported: %s',
+        $method,
+        xp::stringOf(GroupingStrategy::values())
+      ));
+    }
+    $this.out.writeLine('--> Group by ', $this.groupingStrategy);
+  }
+
+  /**
+   * Import
+   *
+   */
+  protected void doImport() {
+    $jpegs= new AnyOfFilter([
+      new ExtensionEqualsFilter('.jpg'),
+      new ExtensionEqualsFilter('.JPG')
+    ]);
+    $this.topics= [:];
+
+    // Normalize name
+    $collectionName= $this.normalizeName($this.origin.dirname);
+    $this.out.writeLine('===> Adding collection "', $collectionName, '" from ', $this.origin);
+
+    // Create destination folders if not already existant
+    $this.imageDestination= new Folder($this.imageFolder.getURI() ~ $collectionName);
+    $this.dataDestination= new Folder($this.dataFolder.getURI()~ $collectionName);
+
+    // Check if the collection already exists
+    $collectionStorage= new File($this.dataFolder, $collectionName ~ '.dat');
+    if ($collectionStorage.exists()) {
+      $this.out.writeLine('--> Found existing collection');
+      $collection= unserialize(FileUtil::getContents($collectionStorage)) as EntryCollection;
+
+      // Entries will be regenated from scratch    
+      $collection.entries= new IEntry[] {};
+   } else {
+      $this.out.writeLine('--> Creating new collection');
+      $collection= new EntryCollection();
+      $collection.setName($collectionName);
+    }
+
+    // Read the introductory text from description.txt if existant
+    if (is_file($df= $this.origin.getURI() ~ 'description.txt')) {
+      $collection.setDescription(file_get_contents($df));
+    }
+
+    // If not specified: Read the title from title.txt if existant, use the 
+    // directory name otherwise
+    if (null !== $this.title) {
+      $collection.setTitle($this.title);
+    } else {
+
+      if (is_file($tf= $this.origin.getURI() ~ 'title.txt')) {
+        $collection.setTitle(file_get_contents($tf));
+      } else {
+        $collection.setTitle($this.origin.dirname);
+      }
+    }
+    $this.out.writeLine('--> Title "', $collection.getTitle(), '"');
+
+    // Create destination directory if not existant
+    $this.imageDestination.exists() || $this.imageDestination.create(0755);
+    $this.dataDestination.exists() || $this.dataDestination.create(0755);
+
+    // Iterate on collection's origin folder
+    while ($entry= $this.origin.getEntry()) {
+      $qualified= $this.origin.getURI() ~ $entry ~ DIRECTORY_SEPARATOR;
+      if (!is_dir($qualified)) continue;
+
+      // Create album
+      $albumName= $this.normalizeName($entry);
+      $this.out.writeLine('     >> Creating album "', $entry, '" (name= "', $albumName, '")');
+
+      $album= $collection.addEntry(new Album()) as Album?;
+      $album.setName($collection.getName() ~ '/' ~ $albumName);
+
+      // Read the title title.txt if existant, use the directory name otherwise
+      if (is_file($tf= $qualified ~ 'title.txt')) {
+        $album.setTitle(file_get_contents($tf));
+      } else {
+        $album.setTitle($entry);
+      }
+      $this.out.writeLine('     >> Title "', $album.getTitle(), '"');
+
+      // Read the introductory text from description.txt if existant
+      if (is_file($df= $qualified ~ 'description.txt')) {
+        $album.setDescription(file_get_contents($df));
+      }
+
+      // Create destination directory if not existant
+      // Point processor at new destination
+      $albumDestination= new Folder($this.imageDestination.getURI() ~ $albumName);
+      $albumDestination.exists() || $albumDestination.create(0755);
+      $this.processor.setOutputFolder($albumDestination);
+      $this.out.writeLine('     >> Destination ', $albumDestination);
+
+      // Get highlights
+      $highlights= new Folder($qualified ~ 'highlights');
+      if ($highlights.exists()) {
+        for (
+          $it= new FilteredIOCollectionIterator(new FileCollection($highlights.getURI()), $jpegs);
+          $it.hasNext();
+        ) {
+          $highlight= $this.processor.albumImageFor($it.next().getURI());
+          $this.processMetaData($highlight, $album);
+
+          $album.addHighlight($highlight);
+          $this.out.writeLine('     >> Added highlight ', $highlight.getName(), ' to album ', $albumName);
+        }
+        $needsHighlights= self::HIGHLIGHTS_MAX - $album.numHighlights();
+      }
+
+      // Process all images
+      for (
+        $images= new AlbumImage[] {},
+        $it= new FilteredIOCollectionIterator(new FileCollection($qualified), $jpegs);
+        $it.hasNext();
+      ) {
+        $image= $this.processor.albumImageFor($it.next().getURI());
+        $this.processMetaData($image, $album);
+
+        $images[]= $image;
+        $this.out.writeLine('     >> Added image ', $image.getName(), ' to album ', $albumName);
+
+        // Check if more highlights are needed
+        if ($needsHighlights <= 0) continue;
+
+        $this.out.writeLine('     >> Need ', $needsHighlights, ' more highlight(s) for album ', $albumName, ', using above image');
+        $album.addHighlight($image);
+        $needsHighlights--;
+      }
+
+      // Sort images by their creation date (from EXIF data)
+      usort($images, create_function(
+        '$a, $b', 
+        'return $b.exifData.dateTime.compareTo($a.exifData.dateTime);'
+      ));
+
+      // Group images by strategy
+      for ($i= 0, $chapter= new [:AlbumChapter] {:}, $s= $images.length; $i < $s; $i++) {
+        $key= $this.groupingStrategy.groupFor($images[$i]);
+        if (!isset($chapter[$key])) {
+          $chapter[$key]= $album.addChapter(new AlbumChapter($key));
+        }
+        if ($images[$i].exifData.dateTime && !$album.getCreatedAt()) {
+          $this.out.writeLine('--> Inferring album creation date from ', $images[$i]);
+          $album.setCreatedAt($images[$i].exifData.dateTime);
+        }
+
+        $chapter[$key].addImage($images[$i]);
+      }
+
+      // Save album
+      $base= dirname($this.dataDestination.getURI()) ~ DIRECTORY_SEPARATOR ~ $album.getName();
+      FileUtil::setContents(new File($base ~ '.dat'), serialize($album));
+      FileUtil::setContents(new File($base ~ '.idx'), serialize($collection.getName()));
+    }
+
+    // Sort entries inside collection by creation date
+    usort($collection.entries, create_function(
+      '$a, $b', 
+      'return $b.getDate().compareTo($a.getDate());'
+    ));
+
+    // If not specified: Use first album' creation time as collections's
+    if (null !== $this.createdAt) {
+      $collection.setCreatedAt($this.createdAt);
+    } else if ($collection.entries[0]) {
+      $this.out.writeLine('--> Inferring collection creation date from ', $collection.entries[0]);
+      $collection.setCreatedAt($collection.entries[0].getDate());
+    } else {
+      $collection.setCreatedAt(new Date($this.origin.createdAt()));
+    }
+    $this.out.writeLine('--> Created ', $collection.getCreatedAt());
+
+    // Save collection
+    FileUtil::setContents($collectionStorage, serialize($collection));
+  }
+}
