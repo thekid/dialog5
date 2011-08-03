@@ -19,35 +19,26 @@ import de.thekid.dialog.EntryCollection;
  *
  */
 public class ViewCollectionState extends de.thekid.dialog.scriptlet.AbstractDialogState {
-  public [:lang.reflect.Method] $nodeHandlers = [:];
+  protected static [:NodeHandler] $nodeHandlers = [:];
 
-  /**
-   * Constructor
-   *
-   */
-  public __construct() {
-    foreach ($method in $this.getClass().getMethods()) {
-      $method.hasAnnotation('handles') && ($this.nodeHandlers[$method.getAnnotation('handles')]= $method);
-    }
-  }
+  static {
+    self::$nodeHandlers['de.thekid.dialog.Album']= new NodeHandler() {
+      public xml.Node nodeFor(de.thekid.dialog.IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
+        with ($album= $entry as Album?) {
+          $child= new Node('entry', null, [
+            name         : $album.getName(),
+            title        : $album.getTitle(),
+            num_images   : $album.numImages(),
+            num_chapters : $album.numChapters()
+          ]);
+          $child.addChild(new Node('description', new PCData($album.getDescription())));
+          $child.addChild(Node::fromObject($album.getCreatedAt(), 'created'));
+          $child.addChild(Node::fromArray($album.highlights, 'highlights'));
 
-  /**
-   * Handler for albums
-   *
-   */
-  [@handles('de.thekid.dialog.Album')]
-  public Node albumNode(Album? $album) {
-    $child= new Node('entry', null, [
-      name         : $album.getName(),
-      title        : $album.getTitle(),
-      num_images   : $album.numImages(),
-      num_chapters : $album.numChapters()
-    ]);
-    $child.addChild(new Node('description', new PCData($album.getDescription())));
-    $child.addChild(Node::fromObject($album.getCreatedAt(), 'created'));
-    $child.addChild(Node::fromArray($album.highlights, 'highlights'));
-
-    return $child;
+          return $child;
+        }
+      }
+    };
   }
 
   /**
@@ -58,6 +49,8 @@ public class ViewCollectionState extends de.thekid.dialog.scriptlet.AbstractDial
     $name= $request.getQueryString();
 
     with ($collection= $this._getEntryFor($name, EntryCollection::class) as EntryCollection?) {
+
+      // Add formresult information about collection
       $child= $response.addFormResult(new Node('collection', null, [
         name  : $collection.getName(),
         title : $collection.getTitle(),
@@ -69,11 +62,11 @@ public class ViewCollectionState extends de.thekid.dialog.scriptlet.AbstractDial
       // Add entries from collection 
       $node= $response.addFormResult(new Node('entries'));
       foreach ($entry in $collection.entries) {
-        if (!isset($this.nodeHandlers[$entry.getClassName()])) {
+        if (!isset(self::$nodeHandlers[$entry.getClassName()])) {
           throw new FormatException('Index contains unknown element "' ~ $entry.getClassName() ~ '"');
         }
 
-        $child= $node.addChild($this.nodeHandlers[$entry.getClassName()].invoke($this, [$entry]));
+        $child= $node.addChild(self::$nodeHandlers[$entry.getClassName()].nodeFor($entry, self::$nodeHandlers));
         $child.setAttribute('type', $entry.getClassName());
       }
     }
