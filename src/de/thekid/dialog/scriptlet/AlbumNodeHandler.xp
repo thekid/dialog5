@@ -1,0 +1,52 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+package de.thekid.dialog.scriptlet;
+
+import xml.Node;
+
+import de.thekid.dialog.IEntry;
+import de.thekid.dialog.Album;
+
+/**
+ * Handles album nodes
+ *
+ * The XML produced is structured as follows:
+ * <code>
+ *   entry(@name, @title, @num_images, @num_chapters) {
+ *     created { } 
+ *     [details]
+ *   }
+ * </code>
+ *
+ * @see   xp://de.thekid.dialog.scriptlet.NodeHandler
+ */
+public class AlbumNodeHandler implements NodeHandler {
+
+  /**
+   * Produces the node
+   *
+   */
+  public Node nodeFor(IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
+    with ($album= $entry as Album?) {
+      $child= new Node('entry', null, [
+        name         : $album.getName(),
+        title        : $album.getTitle(),
+        num_images   : $album.numImages(),
+        num_chapters : $album.numChapters()
+      ]);
+      $child.addChild(Node::fromObject($album.getCreatedAt(), 'created'));
+      $this.addDetails($child, $album, $nodeHandlers);
+      return $child;
+    }
+  }
+  
+  /**
+   * Add details. Overwrite in subclasses
+   *
+   */
+  protected void addDetails(Node $child, Album? $album, [:NodeHandler]? $nodeHandlers) {
+  }
+}
