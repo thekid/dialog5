@@ -1,0 +1,41 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+package de.thekid.dialog.scriptlet.state;
+
+import scriptlet.xml.XMLScriptletRequest;
+import scriptlet.xml.XMLScriptletResponse;
+import scriptlet.xml.workflow.Context;
+import xml.Node;
+
+import native standard.sscanf;
+
+/**
+ * Handles /xml/shot/view
+ *
+ */
+public class ViewShotState extends de.thekid.dialog.scriptlet.AbstractDialogState {
+  public static string[] $modes= ['color', 'gray'];
+
+  /**
+   * Process this state.
+   *
+   */
+  public void process(XMLScriptletRequest? $request, XMLScriptletResponse? $response, Context? $context) {
+    $name= $mode= null;
+    if (
+      (2 != sscanf($request.getQueryString(), '%[^,],%d', $name, $mode)) ||
+      !isset(self::$modes[$mode])
+    ) {
+      throw new IllegalAccessException('Malformed query string');
+    }
+
+    with ($shot= $this._getEntryFor($name, de.thekid.dialog.SingleShot::class)) {
+      $s= $response.addFormResult(Node::fromObject($shot, 'selected'));
+      $s.setAttribute('mode', self::$modes[$mode]);
+      $s.setAttribute('page', $this.getDisplayPageFor($name));
+    }
+  }
+}
