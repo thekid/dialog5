@@ -42,7 +42,6 @@ public class ProcessorTarget {
   /**
    * Get method
    *
-   * @return  string
    */
   public string getMethod() {
     return $this.method;
