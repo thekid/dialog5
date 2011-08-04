@@ -22,7 +22,7 @@ public class ProcessorTarget {
    * @param   method
    * @param   destination
    * @param   applyFilters default TRUE
-   * @param   inferDimensions default TRUE
+   * @param   inferDimensions default FALSE
    */
   public __construct(string $method, string $destination, bool $applyFilters= true, bool $inferDimensions= false) {
     $this.method= $method;
