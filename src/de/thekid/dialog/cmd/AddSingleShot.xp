@@ -1,0 +1,152 @@
+/* This file is part of the XP framework
+ *
+ * $Id$
+ */
+
+package de.thekid.dialog.cmd;
+
+import io.Folder;
+import io.File;
+import io.FileUtil;
+import io.FileNotFoundException;
+import util.Date;
+
+import de.thekid.dialog.SingleShot;
+
+import native standard.serialize;
+import native standard.unserialize;
+import native standard.is_file;
+import native standard.file_get_contents;
+import native standard.substr;
+import native standard.strpos;
+
+/**
+ * Adds single shots ("Featured images") to dialog. Will import a 
+ * single image file.
+ *
+ * Three views of the image are created:
+ * <ol>
+ *   <li>A detailed "wide-screen" view (approximately 16:9)</li>
+ *   <li>A colored version</li>
+ *   <li>A grayscale version</li>
+ * </ol>
+ *
+ * They are rendered (in the default layout) as follows:
+ * <pre>
+ *   .------------------------>.----------->
+ *   |                        ||   color   |
+ *   |                        ||   thumb   |
+ *   |       detailed         |'-----------'
+ *   |        wide            |.----------->
+ *   |                        || grayscale |
+ *   |                        ||   thumb   |
+ *   '------------------------''-----------'
+ * </pre>
+ *
+ * If a file with the same filename as the origin's but with ".txt" 
+ * extension exists, its complete contents are used as a descriptive
+ * text.
+ *
+ * Example: When adding IMG_6100.jpg as featured image, content from a
+ * file by name IMG_6100.txt (in the same directory as the image) will 
+ * be used as description.
+ *
+ */
+public class AddSingleShot extends ImportCommand {
+  protected File $origin;
+  protected File $shotStorage;
+  protected Date $createdAt;
+  protected string $title;
+
+  /**
+   * Returns processor. Overrides base class getProcessor() method.
+   *
+   */
+  protected de.thekid.dialog.io.ImageProcessor getProcessor() {
+    $processor= new de.thekid.dialog.io.ShotProcessor();
+    $processor.detailDimensions= [619, 347];
+    return $processor;
+  }
+
+  /**
+   * Set origin file
+   *
+   * @param   string file
+   */
+  [@arg(position= 0)]
+  public void setOrigin(string $file) {
+    $this.origin= new File($file);
+    if (!$this.origin.exists()) {
+      throw new FileNotFoundException('File "' ~ $file ~ '" does not exist');
+    }
+  }
+
+  /**
+   * Set shots's title. If no title is given and the shot did not 
+   * previously exist, uses the origin file's name.
+   *
+   * @param   string title default null
+   */
+  [@arg]
+  public void setTitle(string $title= null) {
+    $this.title= $title;
+  }
+
+  /**
+   * Set shots's creation date. If no date is given and the shot did not 
+   * previously exist, uses the origin file's creation date.
+   *
+   * @param   string date default null
+   */
+  [@arg]
+  public void setCreatedAt(string $date= null) {
+    $this.createdAt= $date;
+  }
+
+  /**
+   * Import
+   *
+   */
+  protected void doImport() {
+
+    // Normalize name
+    $fileName= substr($this.origin.getFilename(), 0, strpos($this.origin.getFilename(), '.'));
+    $shotName= $this.normalizeName($fileName);
+    $this.out.writeLine('===> Adding shot "', $shotName, '" from ', $this.origin);
+
+    $this.processor.setOutputFolder($this.shotsFolder);
+
+    // Check if the shot already exists
+    $this.shotStorage= new File($this.dataFolder, $shotName ~ '.dat');
+    if ($this.shotStorage.exists()) {
+      $this.out.writeLine('--> Found existing shot');
+      $shot= unserialize(FileUtil::getContents($this.shotStorage)) as SingleShot;
+    } else {
+      $this.out.writeLine('--> Creating new shot');
+      $shot= new SingleShot();
+      $shot.setName($shotName);
+      $shot.setFileName($this.origin.getFilename());
+    }        
+
+    // Read the introductory text from description.txt if existant
+    if (is_file($df= $this.origin.getPath() ~ DIRECTORY_SEPARATOR ~ $fileName ~ '.txt')) {
+      $shot.setDescription(file_get_contents($df));
+    }
+
+    if (!$shot.getDate() || null !== $this.createdAt) {
+      $shot.setDate(new Date(null === $this.createdAt ? $this.origin.createdAt() : $this.createdAt));
+    }
+    if (!$shot.getTitle() || null !== $this.title) {
+      $shot.setTitle(null === $this.title ? $fileName : $this.title);
+    }
+    $this.out.writeLine('--> Created ', $shot.getDate());
+    $this.out.writeLine('--> Title "', $shot.getTitle(), '"');
+
+    $image= $this.processor.albumImageFor($this.origin.getURI());
+    $this.processMetaData($image, $shot);
+    $shot.setImage($image);
+
+    // Save shot
+    FileUtil::setContents($this.shotStorage, serialize($shot));
+  }
+}
