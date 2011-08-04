@@ -74,7 +74,7 @@ public class ShotProcessor extends ImageProcessor {
    *
    */
   public Image grayScaleFullImageFor(Image? $origin, ExifData? $exifData) {
-    $resized= $this.resampleTo($origin, $exifData.isHorizontal(), $this.fullDimensions);
+    $resized= $this.fullImageFor($origin, $exifData);
     $resized.convertTo($this.converter['grayscale']);
     return $resized;
   }
