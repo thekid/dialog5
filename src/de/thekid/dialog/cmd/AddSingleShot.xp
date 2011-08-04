@@ -71,7 +71,6 @@ public class AddSingleShot extends ImportCommand {
   /**
    * Set origin file
    *
-   * @param   string file
    */
   [@arg(position= 0)]
   public void setOrigin(string $file) {
@@ -85,7 +84,6 @@ public class AddSingleShot extends ImportCommand {
    * Set shots's title. If no title is given and the shot did not 
    * previously exist, uses the origin file's name.
    *
-   * @param   string title default null
    */
   [@arg]
   public void setTitle(string $title= null) {
@@ -96,7 +94,6 @@ public class AddSingleShot extends ImportCommand {
    * Set shots's creation date. If no date is given and the shot did not 
    * previously exist, uses the origin file's creation date.
    *
-   * @param   string date default null
    */
   [@arg]
   public void setCreatedAt(string $date= null) {
