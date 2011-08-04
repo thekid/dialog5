@@ -18,6 +18,7 @@ import img.Color;
 import img.io.StreamReader;
 import img.io.JpegStreamWriter;
 import util.log.Traceable;
+
 import native standard.array_reverse;
 import native standard.max;
 import native standard.min;
