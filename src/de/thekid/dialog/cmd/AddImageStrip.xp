@@ -72,9 +72,8 @@ import native core.create_function;
  *   </li>
  * </ul>
  *
- * @purpose  Command
  */
-class AddImageStrip extends ImportCommand {
+public class AddImageStrip extends ImportCommand {
   protected Folder $origin;
   protected Folder $destination;
   protected Folder $imageStripStorage;
