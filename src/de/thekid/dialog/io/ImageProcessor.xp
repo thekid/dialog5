@@ -31,7 +31,6 @@ import native standard.sizeof;
  * Processes images, creating the "full" and thumbnail versions of
  * specified files and extracting their EXIF and IPTC data.
  *
- * @purpose  Utility class
  */
 public class ImageProcessor extends Object implements Traceable {
   public Folder $outputFolder = null;
