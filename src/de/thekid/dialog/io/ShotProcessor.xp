@@ -19,7 +19,7 @@ import native standard.intval;
  */
 public class ShotProcessor extends ImageProcessor {
   public [:img.convert.ImageConverter] $converter= [:];
-  public int[] $detailDimensions = [];
+  public int[] $detailDimensions = [459, 230];
 
   /**
    * Constructor
@@ -27,7 +27,6 @@ public class ShotProcessor extends ImageProcessor {
    */
   public __construct() {
     $this.converter['grayscale']= new img.convert.GrayscaleConverter();
-    $this.detailDimensions = [ 459, 230 ];
   }
 
   /**
