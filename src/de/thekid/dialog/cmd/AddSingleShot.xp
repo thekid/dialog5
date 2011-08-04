@@ -133,9 +133,6 @@ public class AddSingleShot extends ImportCommand {
       $shot.setDescription(file_get_contents($df));
     }
 
-    if (!$shot.getDate() || null !== $this.createdAt) {
-      $shot.setDate(new Date(null === $this.createdAt ? $this.origin.createdAt() : $this.createdAt));
-    }
     if (!$shot.getTitle() || null !== $this.title) {
       $shot.setTitle(null === $this.title ? $fileName : $this.title);
     }
@@ -143,6 +140,16 @@ public class AddSingleShot extends ImportCommand {
     $this.out.writeLine('--> Title "', $shot.getTitle(), '"');
 
     $image= $this.processor.albumImageFor($this.origin.getURI());
+
+    // Use date from command line if explicitely given, otherwise, if not
+    // already set, infer from image
+    if ($this.createdAt) {
+      $shot.setDate($this.createdAt);
+    } else if (!$shot.getDate()) {
+      $this.out.writeLine('--> Inferring shot creation date from ', $image);
+      $shot.setDate($image.exifData.dateTime);
+    }
+
     $this.processMetaData($image, $shot);
     $shot.setImage($image);
 
