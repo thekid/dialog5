@@ -129,11 +129,9 @@ public class AddSingleShot extends ImportCommand {
     if (is_file($df= $this.origin.getPath() ~ DIRECTORY_SEPARATOR ~ $fileName ~ '.txt')) {
       $shot.setDescription(file_get_contents($df));
     }
-
     if (!$shot.getTitle() || null !== $this.title) {
       $shot.setTitle(null === $this.title ? $fileName : $this.title);
     }
-    $this.out.writeLine('--> Created ', $shot.getDate());
     $this.out.writeLine('--> Title "', $shot.getTitle(), '"');
 
     $image= $this.processor.albumImageFor($this.origin.getURI());
@@ -146,6 +144,8 @@ public class AddSingleShot extends ImportCommand {
       $this.out.writeLine('--> Inferring shot creation date from ', $image);
       $shot.setDate($image.exifData.dateTime);
     }
+
+    $this.out.writeLine('--> Created ', $shot.getDate());
 
     $this.processMetaData($image, $shot);
     $shot.setImage($image);
