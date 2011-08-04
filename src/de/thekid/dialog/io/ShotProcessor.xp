@@ -55,7 +55,7 @@ public class ShotProcessor extends ImageProcessor {
    * Helper method to create detail image from origin image.
    *
    */
-  public Image detailImageFor(Image $origin, ExifData $exifData) {
+  public Image detailImageFor(Image? $origin, ExifData? $exifData) {
     return $this.resampleToFixedCut($origin, $this.detailDimensions);
   }
 
@@ -63,8 +63,8 @@ public class ShotProcessor extends ImageProcessor {
    * Helper method to create grayscale from origin image. 
    *
    */
-  public Image grayScaleThumbImageFor(Image $origin, ExifData $exifData) {
-    $resized= $this.resampleToFixedCut($origin, $this.thumbDimensions);
+  public Image grayScaleThumbImageFor(Image? $origin, ExifData? $exifData) {
+    $resized= $this.thumbImageFor($origin, $this.thumbDimensions);
     $resized.convertTo($this.converter['grayscale']);
     return $resized;
   }
@@ -73,7 +73,7 @@ public class ShotProcessor extends ImageProcessor {
    * Helper method to create grayscale from origin image ~ 
    *
    */
-  public Image grayScaleFullImageFor(Image $origin, ExifData $exifData) {
+  public Image grayScaleFullImageFor(Image? $origin, ExifData? $exifData) {
     $resized= $this.resampleTo($origin, $exifData.isHorizontal(), $this.fullDimensions);
     $resized.convertTo($this.converter['grayscale']);
     return $resized;
@@ -83,7 +83,7 @@ public class ShotProcessor extends ImageProcessor {
    * Retrieve a list of targets to be transformed
    *
    */
-  public ProcessorTarget[] targetsFor(io.File $in) {
+  public ProcessorTarget[] targetsFor(io.File? $in) {
     return [
       new ProcessorTarget('detailImageFor', 'detail.' ~ $in.getFilename(), true, false),
       new ProcessorTarget('fullImageFor', 'color.' ~ $in.getFilename(), true, true),
