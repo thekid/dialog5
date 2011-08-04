@@ -6,10 +6,9 @@
 package de.thekid.dialog.io;
 
 /**
- * Represents a target
+ * Represents a target - Utility class for ImageProcessor
  *
  * @see      xp://de.thekid.dialog.io.ImageProcessor
- * @purpose  Utility class for ImageProcessor
  */
 public class ProcessorTarget {
   public string $method;
