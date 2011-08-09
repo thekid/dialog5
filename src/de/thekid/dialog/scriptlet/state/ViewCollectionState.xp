@@ -13,6 +13,7 @@ import xml.PCData;
 
 import de.thekid.dialog.Album;
 import de.thekid.dialog.EntryCollection;
+import de.thekid.dialog.scriptlet.NodeHandler;
 
 /**
  * Handles /xml/collection/view
