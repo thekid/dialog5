@@ -22,7 +22,7 @@ public class TopicState extends AbstractDialogState {
 
   static {
     self::$nodeHandlers['de.thekid.dialog.Album']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.Album? $album, [:NodeHandler] $nodeHandlers) {
+      public xml.Node nodeFor(de.thekid.dialog.Album? $album, [:NodeHandler]? $nodeHandlers) {
         $child= new Node('entry', null, [
           'name'          : $album.getName(),
           'title'         : $album.getTitle(),
@@ -35,7 +35,7 @@ public class TopicState extends AbstractDialogState {
       }
     };
     self::$nodeHandlers['de.thekid.dialog.Update']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.Update? $update, [:NodeHandler] $nodeHandlers) {
+      public xml.Node nodeFor(de.thekid.dialog.Update? $update, [:NodeHandler]? $nodeHandlers) {
         $child= new Node('entry', null, [
           'album'         : $update.getAlbumName(),
           'title'         : $update.getTitle()
@@ -46,7 +46,7 @@ public class TopicState extends AbstractDialogState {
       }
     };
     self::$nodeHandlers['de.thekid.dialog.SingleShot']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.SingleShot? $shot, [:NodeHandler] $nodeHandlers) {
+      public xml.Node nodeFor(de.thekid.dialog.SingleShot? $shot, [:NodeHandler]? $nodeHandlers) {
         $child= new Node('entry', null, [
           'name'      : $shot.getName(),
           'title'     : $shot.getTitle()
@@ -57,7 +57,7 @@ public class TopicState extends AbstractDialogState {
       }
     };
     self::$nodeHandlers['de.thekid.dialog.ImageStrip']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.ImageStrip? $imageStrip, [:NodeHandler] $nodeHandlers) {
+      public xml.Node nodeFor(de.thekid.dialog.ImageStrip? $imageStrip, [:NodeHandler]? $nodeHandlers) {
         $child= new Node('entry', null, [
           'name'          : $imageStrip.getName(),
           'title'         : $imageStrip.getTitle(),
@@ -69,7 +69,7 @@ public class TopicState extends AbstractDialogState {
       }
     };
     self::$nodeHandlers['de.thekid.dialog.EntryCollection']= new NodeHandler() {
-      public xml.Node nodeFor(de.thekid.dialog.EntryCollection? $collection, [:NodeHandler] $nodeHandlers) {
+      public xml.Node nodeFor(de.thekid.dialog.EntryCollection? $collection, [:NodeHandler]? $nodeHandlers) {
         $node= new Node('entry', null, [
           'name'          : $collection.getName(),
           'title'         : $collection.getTitle(),
