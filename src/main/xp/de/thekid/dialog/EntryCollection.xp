@@ -154,7 +154,7 @@ public class EntryCollection implements IEntry {
    * can not be found.
    *
    */
-  public IEntry entryAt(int $i) {
+  public IEntry entryAt(int? $i) {
     if (!isset($this.entries[$i])) return null;
     return $this.entries[$i];
   }
