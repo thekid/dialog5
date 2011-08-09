@@ -3,7 +3,7 @@
  * $Id$ 
  */
 
-package de.thekid.dialog.scriptlet.state;
+package de.thekid.dialog.scriptlet;
 
 import de.thekid.dialog.IEntry;
 
