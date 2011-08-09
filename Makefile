@@ -2,7 +2,7 @@ VERSION?=$(shell cat VERSION)
 
 compile:
 	xcc -o dist/main -sp src/main/xp src/main/xp
-	xcc -o dist/test src/test/xp
+	xcc -o dist/test -sp src/main/xp src/test/xp
 
 dist:	compile
 	cd dist/main && xar cvf ../dialog-$(VERSION).xar .
