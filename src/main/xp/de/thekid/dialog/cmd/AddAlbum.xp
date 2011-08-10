@@ -80,6 +80,7 @@ import native standard.serialize;
  * @purpose  Command
  */
 public class AddAlbum extends ImportCommand {
+  const int HIGHLIGHTS_MAX = 5;
   protected io.Folder $origin= null;
   protected io.Folder $destination= null;
   protected io.File $albumStorage= null;
