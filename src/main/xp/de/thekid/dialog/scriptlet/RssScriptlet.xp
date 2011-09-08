@@ -1,0 +1,143 @@
+package de.thekid.dialog.scriptlet;
+
+import io.File;
+import io.FileUtil;
+import io.IOException;
+import xml.rdf.RDFNewsFeed;
+import util.PropertyManager;
+import util.Date;
+import scriptlet.HttpScriptlet;
+import scriptlet.HttpScriptletRequest;
+import scriptlet.HttpScriptletResponse;
+import de.thekid.dialog.IEntry;
+import de.thekid.dialog.Album;
+import de.thekid.dialog.Update;
+import de.thekid.dialog.SingleShot;
+import de.thekid.dialog.EntryCollection;
+
+import native standard.unserialize;
+import native standard.sprintf;
+import native core.get_class;
+import native standard.dirname;
+import native standard.array_merge;
+import native standard.current;
+
+class RssScriptlet extends HttpScriptlet {
+  protected string $HTTP_HOST= null;
+  protected string $DATALOCATION= null;
+  
+  public __construct(string $datalocation) {
+    $this.DATALOCATION= $datalocation;
+  }
+
+  protected IEntry getEntryFor(string $name) {
+    return unserialize(FileUtil::getContents(new File($this.DATALOCATION ~ $name ~ '.dat')));
+  }
+
+  protected IEntry getIndexFor(int $i= 0) {
+    return unserialize(FileUtil::getContents(new File($this.DATALOCATION ~ 'page_' ~ $i ~ '.idx')));
+  }
+
+  protected string urlFor(var $item) {
+    $base= sprintf('http://%s', $this.HTTP_HOST);
+    switch (get_class($item)) {
+      case 'Album':
+        return sprintf('%s/album/%s', $base, $item.getName());
+        
+      case 'Update': 
+        return sprintf('%s/album/%s', $base, $item.getAlbumName());      
+        
+      case 'SingleShot':
+        return sprintf('%s/shot/%s/0', $base, $item.getName());
+      
+      case 'EntryCollection':
+        return $this.urlFor($item.entryAt(0));
+    }
+  }
+
+  protected void addAlbumItem(RDFNewsFeed $rdf, IEntry $item) {
+    $rdf.addItem(
+      $item.getTitle(),
+      $this.urlFor($item),
+      $item.getDescription() ~ '<br/><img border="1" src="/albums/' ~ $item.getName() ~ '/thumb.' ~ $item.highlightAt(0).getName() ~ '"/>',
+      $item.getCreatedAt()
+    );
+  }
+
+  protected void addUpdateItem(RDFNewsFeed $rdf, IEntry $item) {
+    $rdf.addItem(
+      $item.getTitle(),
+      $this.urlFor($item),
+      $item.getDescription(),
+      $item.getDate()
+    );
+  }
+
+  protected void addSingleShotItem(RDFNewsFeed $rdf, IEntry $item) {
+    $rdf.addItem(
+      $item.getTitle(),
+      $this.urlFor($item),
+      $item.getDescription() ~ '<br/><img border="1" src="/shots/thumb.color.' ~ $item.getName() ~ '.jpg"/>',
+      $item.getDate()
+    );
+  }
+
+  protected void addEntryCollectionItem(RDFNewsFeed $rdf, IEntry $item) {
+    $rdf.addItem(
+      $item.getTitle(),
+      $this.urlFor($item),
+      $item.getDescription() ~ '<br/><img border="1" src="/albums/' ~ $item.entryAt(0).getName() ~ '/thumb.' ~ $item.entryAt(0).highlightAt(0).getName() ~ '"/>',
+      $item.getCreatedAt()
+    );
+  }
+  
+  public void doGet(HttpScriptletRequest $request, HttpScriptletResponse $response) {
+    $prop= PropertyManager::getInstance().getProperties('dialog');
+    
+    $this.HTTP_HOST= $request.getEnvValue('HTTP_HOST');
+    // $this.DATALOCATION= $prop.readString('data', 'location', dirname(__FILE__) ~ '/../../data/');
+ 
+    // Load index of first two pages
+    $index= [];
+    $index[0]= $this.getIndexFor(0);
+    $entries= $index[0]['entries'];
+
+    try {
+      $index[1]= $this.getIndexFor(1);
+      $index[1] && $entries= array_merge($entries, $index[1]['entries']);
+    } catch(IOException $ignored) {
+    }
+
+    // Find date of newest entry
+    $lastChange= Date::now();
+    $entry= $this.getEntryFor(current($index[0]['entries']));
+    $lastChange= $entry.getDate();
+    
+    $rdf= new RDFNewsFeed();
+    $rdf.setChannel(
+      $prop.readString('general', 'title', 'Dialog'),
+      'http://' ~ $this.HTTP_HOST ~ '/',
+      $prop.readString('general', 'title', 'Dialog'),
+      $lastChange,
+      $prop.readString('general', 'language', 'en_US'),
+      $prop.readString('general', 'creator', ''),
+      $prop.readString('general', 'publisher', ''),
+      $prop.readString('general', 'copyright', '')
+    );
+    
+    foreach ($name in $entries) {
+      $entry= $this.getEntryFor($name);
+
+      switch (get_class($entry)) {
+        case 'Album': $this.addAlbumItem($rdf, $entry); break;
+        case 'Update': $this.addUpdateItem($rdf, $entry); break;
+        case 'SingleShot': $this.addSingleShotItem($rdf, $entry); break;
+        case 'EntryCollection': $this.addEntryCollectionItem($rdf, $entry); break;
+        default: break;
+      }
+    }
+
+    $response.setContentType('text/xml');
+    $response.write($rdf.getDeclaration() ~ "\n" ~ $rdf.getSource(0));
+  }
+}
