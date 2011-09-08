@@ -84,10 +84,10 @@ public class IndexCreator implements Traceable {
       $this.cat && $this.cat.debugf(
         '--> %s "%s" @ %s', 
         xp::typeOf($data),
-        $entry,
+        xp::stringOf($entry),
         xp::stringOf($date)
       );
-      $entries[$date.toString('YmdHis-') ~ basename($entry)]= basename($entry, '.dat');
+      $entries[$date.toString('YmdHis-') ~ basename($entry.getURI())]= basename($entry.getURI(), '.dat');
       delete($data);
     }
     $this.folder.close();
