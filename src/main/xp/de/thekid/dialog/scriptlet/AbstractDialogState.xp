@@ -7,6 +7,7 @@ package de.thekid.dialog.scriptlet;
 
 import io.File;
 import io.FileUtil;
+import util.log.Logger;
 import xml.Node;
 import scriptlet.xml.XMLScriptletRequest;
 import scriptlet.xml.XMLScriptletResponse;
@@ -134,5 +135,7 @@ public class AbstractDialogState extends scriptlet.xml.workflow.AbstractState {
         $links.addChild(new Node('link', null, [ id : $name, href : $url]));
       }
     }
+
+    Logger::getInstance().getCategory().debug('Processing', $request);
   }  
 }

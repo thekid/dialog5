@@ -2,6 +2,8 @@
  *
  * $Id$
  */
+
+package de.thekid.dialog.scriptlet;
  
 import scriptlet.xml.XMLScriptletURL;
 
