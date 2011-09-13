@@ -28,7 +28,7 @@ class ViewAlbumState extends de.thekid.dialog.scriptlet.AbstractDialogState {
    *
    */
   public void process(XMLScriptletRequest? $request, XMLScriptletResponse? $response, Context? $context) {
-    $name= $request.getQueryString();
+    $name= $request.getURL().getValue('album');
 
     with ($album= $this._getEntryFor($name, Album::class) as Album?) {
       $child= $response.addFormResult(new Node('album', null, [

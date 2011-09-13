@@ -8,6 +8,7 @@ package de.thekid.dialog.scriptlet;
 import scriptlet.xml.workflow.AbstractXMLScriptlet;
 import scriptlet.xml.XMLScriptletRequest;
 import scriptlet.xml.XMLScriptletResponse;
+import scriptlet.xml.XMLScriptletURL;
 
 import native standard.sprintf;
 
@@ -29,4 +30,15 @@ public class WebsiteScriptlet extends AbstractXMLScriptlet {
       $request.getStateName()
     ));
   }
+
+  /**
+   * Returns an URL object for the given URL
+   *
+   * @param string url The current requested URL
+   * @return scriptlet.XMLScriptletURL
+   */
+  protected XMLScriptletURL _url(string? $url) {
+    return new WebsiteScriptletURL($url);
+  }
+
 }

@@ -47,7 +47,7 @@ public class ViewCollectionState extends de.thekid.dialog.scriptlet.AbstractDial
    *
    */
   public void process(XMLScriptletRequest? $request, XMLScriptletResponse? $response, Context? $context) {
-    $name= $request.getQueryString();
+    $name= $request.getURL().getValue('collection');
 
     with ($collection= $this._getEntryFor($name, EntryCollection::class) as EntryCollection?) {
 

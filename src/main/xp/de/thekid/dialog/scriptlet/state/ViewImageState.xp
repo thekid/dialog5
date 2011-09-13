@@ -28,10 +28,10 @@ public class ViewImageState extends de.thekid.dialog.scriptlet.AbstractDialogSta
    *
    */
   public void process(XMLScriptletRequest? $request, XMLScriptletResponse? $response, Context? $context) {
-    $name= $type= $chapter= $id= null;
-    if (4 != sscanf($request.getQueryString(), '%[^,],%1s,%d,%d', $name, $type, $chapter, $id)) {
-      throw new IllegalAccessException('Malformed query string');
-    }
+    $name= $request.getURL().getValue('album');
+    $chapter= $request.getURL().getValue('chapter') as int;
+    $type= $request.getURL().getValue('type');
+    $id= $request.getURL().getValue('index') as int;
 
     with ($album= $this._getEntryFor($name, Album::class) as Album?) {
 
