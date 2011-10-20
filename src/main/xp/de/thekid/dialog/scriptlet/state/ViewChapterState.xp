@@ -28,10 +28,8 @@ public class ViewChapterState extends de.thekid.dialog.scriptlet.AbstractDialogS
    *
    */
   public void process(XMLScriptletRequest? $request, XMLScriptletResponse? $response, Context? $context) {
-    $name= $id= null;
-    if (2 != sscanf($request.getQueryString(), '%[^,],%d', $name, $id)) {
-      throw new IllegalAccessException('Malformed query string');
-    }
+    $name= $request.getURL().getValue('album');
+    $id= $request.getURL().getValue('chapter') as int;
 
     with ($album= $this._getEntryFor($name, Album::class) as Album?) {
 

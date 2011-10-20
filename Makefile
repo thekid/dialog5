@@ -1,7 +1,11 @@
 VERSION?=$(shell cat VERSION)
 
-compile: dist/main dist/test
+compile: compile-main compile-test
+
+compile-main: dist/main
 	xcc -o dist/main -sp src/main/xp src/main/xp
+
+compile-test: dist/test
 	xcc -o dist/test -sp src/test/xp src/test/xp
 
 dist:	compile

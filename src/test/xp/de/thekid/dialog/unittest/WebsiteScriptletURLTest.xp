@@ -1,0 +1,172 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+package de.thekid.dialog.unittest;
+
+import unittest.TestCase;
+import de.thekid.dialog.scriptlet.WebsiteScriptletURL;
+
+/**
+ * Tests the url class
+ *
+ * @see      xp://de.thekid.dialog.scriptlet.WebsiteScriptletURL
+ */
+public class WebsiteScriptletURLTest extends TestCase {
+
+  /**
+   * Create URL object, set default state
+   *
+   */
+  protected WebsiteScriptletURL urlFor(string $path) {
+    $u= new WebsiteScriptletURL('http://localhost' ~ $path);
+    $u.setDefaultStateName('static');
+    return $u;
+  }
+  
+  /**
+   * Assert state name and map of key-value pairs, if given
+   *
+   */
+  protected void assertState(string $url, string $stateName, var $map= [:]) {
+    $url= $this.urlFor($url);
+    $this.assertEquals($stateName, $url.getStateName());
+    
+    foreach ($key, $value in $map) {
+      $this.assertEquals($value, $url.getValue($key));
+    }
+  }
+
+  /**
+   * Check default state handling
+   *
+   */
+  [@test] public void defaultState() {
+    $this.assertEquals('static', $this.urlFor('/').getStateName());
+  }
+  
+  /**
+   * Check pagination
+   *
+   */
+  [@test] public void secondPage() {
+    $this.assertState('/page/2', 'static', ['index' : 2]);
+  }
+  
+  /**
+   * View simple album
+   *
+   */
+  [@test] public void viewAlbum() {
+    $this.assertState('/album/firstAlbum', 'album/view', ['album' : 'firstAlbum']);
+  }
+
+  /**
+   * View chapter
+   *
+   */
+  [@test] public void viewChapter() {
+    $this.assertState('/album/firstAlbum/5', 'chapter/view', ['album' : 'firstAlbum', 'chapter' : '5']);
+  }
+  
+  /**
+   * View single shot
+   *
+   */
+  [@test] public void viewShot() {
+    $this.assertState('/shot/someShot/0', 'shot/view', ['shot' : 'someShot', 'mode' : 0]);
+  }
+  
+  /**
+   * View highlight
+   *
+   */
+  [@test] public void viewHighlight() {
+    $this.assertState('/album/firstAlbum/5/h,4', 'image/view', [
+      'album'   : 'firstAlbum', 
+      'chapter' : '5',
+      'type'    : 'h',
+      'index'   : '4'
+    ]);
+  }
+
+  /**
+   * View regular image
+   *
+   */
+  [@test] public void viewImage() {
+    $this.assertState('/album/firstAlbum/5/i,426', 'image/view', [
+      'album'   : 'firstAlbum', 
+      'chapter' : '5',
+      'type'    : 'i',
+      'index'   : '426'
+    ]);
+  }
+  
+  /**
+   * If illegal type is given, fallback to default state
+   *
+   */
+  [@test] public void viewImageOfIllegalTypeEndsOnHome() {
+    $this.assertState('/album/firstAlbum/5/g,426', 'static');
+  }
+  
+  /**
+   * View collection
+   *
+   */
+  [@test] public void viewCollection() {
+    $this.assertState('/collection/someAlbums', 'collection/view', ['collection' : 'someAlbums']);
+  }
+  
+  /**
+   * View album in collection
+   *
+   */
+  [@test] public void viewAlbumInCollection() {
+    $this.assertState('/album/someAlbums/secondAlbum', 'album/view', ['album' : 'someAlbums/secondAlbum']);
+  }
+
+  /**
+   * View chapter in collection
+   *
+   */
+  [@test] public void viewChapterOfAlbumInCollection() {
+    $this.assertState('/album/someAlbums/secondAlbum/3', 'chapter/view', ['album' : 'someAlbums/secondAlbum', 'chapter' : '3']);
+  }
+
+  /**
+   * View hightlight of album in collection
+   *
+   */
+  [@test] public void viewHighlightOfAlbumInCollection() {
+    $this.assertState('/album/someAlbums/secondAlbum/22/h,9', 'image/view', [
+      'album'   : 'someAlbums/secondAlbum', 
+      'chapter' : '22',
+      'type'    : 'h',
+      'index'   : '9'
+    ]);
+  }
+
+  /**
+   * View image of album in collection
+   *
+   */
+  [@test] public void viewImageOfAlbumInCollection() {
+    $this.assertState('/album/someAlbums/secondAlbum/3/i,9', 'image/view', [
+      'album'   : 'someAlbums/secondAlbum', 
+      'chapter' : '3',
+      'type'    : 'i',
+      'index'   : '9'
+    ]);
+  }
+  
+  /**
+   * Old-style URLs (/xml/...) are still supported
+   *
+   */
+  [@test] public void legacyUrlStillSupported() {
+    $this.assertState('/xml/bytopic', 'bytopic');
+  }
+}
