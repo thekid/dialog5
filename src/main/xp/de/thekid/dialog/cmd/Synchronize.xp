@@ -1,0 +1,52 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+package de.thekid.dialog.cmd;
+
+import de.thekid.dialog.sync.Syncronizer;
+
+import native standard.ucfirst;
+
+/**
+ * Synchronizes webspace
+ *
+ */
+public class Synchronize extends util.cmd.Command {
+  protected Syncronizer $synchronizer;
+  protected static var $implementations = Syncronizer::class.getPackage();
+
+  /**
+   * Configure synchronization
+   *
+   */
+  [@inject(name= 'dialog')]
+  public void configure(util.Properties $prop) {
+
+    // Load synchronizer implementation
+    $impl= $prop.readString('sync', 'impl', null);
+    if (null === $impl) {
+      throw new IllegalStateException('No synchronization configuration');
+    }
+    
+    $class= self::$implementations.loadClass(ucfirst($impl) ~ 'Impl');
+
+    // Instantiate and inject configuration
+    $this.synchronizer= $class.newInstance();
+    foreach ($key, $value in $prop.readSection('sync')) {
+      if ('impl'  === $key) continue;
+      $class.getMethod('set' ~ $key).invoke($this.synchronizer, [$value]);
+    }
+  }
+
+  /**
+   * Entry point method
+   *
+   */
+  public void run() {
+    $this.out.writeLine('---> Synchronizing ', $this.synchronizer);
+    $this.synchronizer.run();
+    $this.out.writeLine('---> Finished @ ', util.Date::now());
+  }
+}

@@ -1,0 +1,14 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+package de.thekid.dialog.sync;
+
+/**
+ * Synchronizer interface
+ *
+ */
+public abstract class Syncronizer implements Runnable {
+  protected string[] $origins = [ 'project.pth', 'xsl', 'etc', 'data', 'dist', 'doc_root' ];
+}
