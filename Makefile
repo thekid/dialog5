@@ -2,7 +2,7 @@ VERSION?=$(shell cat VERSION)
 
 compile: compile-main compile-test
 
-test: compile-test
+test: compile
 	unittest de.thekid.dialog.unittest.**
 
 compile-main: dist/main

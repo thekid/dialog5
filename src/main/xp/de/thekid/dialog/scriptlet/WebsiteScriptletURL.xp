@@ -63,6 +63,18 @@ class WebsiteScriptletURL extends XMLScriptletURL {
       $this.setValue('mode', $mode);
       return;
     }
+
+    if (preg_match('#/by/date(/([0-9]{4}))?$#', $this.getPath(), $parts)) {
+      $this.setStateName('bydate');
+      $this.setValue('year', isset($parts[2]) ? $parts[2] as int : null);
+      return;
+    }
+
+    if (preg_match('#/by/topic(/page/([0-9]+))?$#', $this.getPath(), $parts)) {
+      $this.setStateName('bytopic');
+      $this.setValue('page', isset($parts[2]) ? $parts[2] as int : 0);
+      return;
+    }
     
     parent::extract();
   }

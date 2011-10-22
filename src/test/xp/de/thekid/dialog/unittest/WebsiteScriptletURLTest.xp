@@ -175,7 +175,7 @@ public class WebsiteScriptletURLTest extends TestCase {
    *
    */
   [@test] public void byTopic() {
-    $this.assertState('/by/topic', 'bytopic', [:]);
+    $this.assertState('/by/topic', 'bytopic', [ page : 0 ]);
   }
 
   /**
@@ -191,7 +191,7 @@ public class WebsiteScriptletURLTest extends TestCase {
    *
    */
   [@test] public void byDate() {
-    $this.assertState('/by/date', 'bydate', [:]);
+    $this.assertState('/by/date', 'bydate', [ year : null ]);
   }
 
 

@@ -77,8 +77,7 @@ public class BydateState extends de.thekid.dialog.scriptlet.AbstractDialogState 
    *
    */
   public void process(XMLScriptletRequest? $request, XMLScriptletResponse? $response, Context? $context) {
-    $year= null;
-    sscanf($request.getQueryString(), '%4d', $year);
+    $year= $request.getURL().getValue('year');
 
     // Calculate year from newest item
     if (null === $year) {

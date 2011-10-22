@@ -14,6 +14,10 @@ Heads up!
 
 Features
 ~~~~~~~~
+- Added short URL for "By topic" - /by/topic. Implements issue #4.
+  (friebe)
+- Added short URL for "By date" - /by/date. Implements issue #3.
+  (friebe)
 - Added new designs - simple-white, and full-black
   (friebe)
 - Implemented rsync over ssh strategy for synchronization (name: rsync)
