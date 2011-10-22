@@ -14,7 +14,7 @@ Heads up!
 
 Features
 ~~~~~~~~
-- Added a new design - simple-white
+- Added new designs - simple-white, and full-black
   (friebe)
 - Implemented rsync over ssh strategy for synchronization (name: rsync)
   (friebe)
