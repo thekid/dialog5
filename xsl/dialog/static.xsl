@@ -101,7 +101,7 @@
       This album contains <xsl:value-of select="@num_images"/> images in <xsl:value-of select="@num_chapters"/> chapters -
       <a href="{func:linkAlbum(@name)}">See more</a>
     </p>
-    <br/><br clear="all"/>
+    <br clear="all"/><hr/>
   </xsl:template>
 
   <!--
@@ -122,7 +122,7 @@
       - <a href="{func:linkAlbum(@album)}">Go to album</a>
       <br clear="all"/>
     </p>
-    <br/><br clear="all"/>
+    <br clear="all"/><hr/>
   </xsl:template>
 
   <!--
@@ -168,7 +168,7 @@
         </td>
       </tr>
     </table>
-    <br/><br clear="all"/>
+    <br clear="all"/><hr/>
   </xsl:template>
 
   <!--
@@ -226,7 +226,7 @@
       This image strip contains <xsl:value-of select="@num_images"/> images -
       <a href="{func:linkImageStrip(@name)}">See more</a>
     </p>
-    <br/><br clear="all"/>
+    <br clear="all"/><hr/>
   </xsl:template>
 
   <!--
@@ -274,8 +274,7 @@
         </tr>
       </xsl:for-each>
     </table>
-      
-    <br/><br clear="all"/>
+    <br clear="all"/><hr/>
   </xsl:template>
 
   <!--

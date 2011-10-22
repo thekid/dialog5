@@ -230,7 +230,7 @@
         </xsl:for-each>
       </table>
 
-      <br/><br clear="all"/>
+      <br clear="all"/><hr/>
     </xsl:for-each>
     
     <br clear="all"/>

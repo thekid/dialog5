@@ -22,7 +22,8 @@ a {
   color: #cfcccc; 
 }
 hr {
-  background-color: #aaaaaa;
+  background-color: black;
+  color: black;
 }
 tr#header {
   background-color: black;
