@@ -39,13 +39,25 @@ public class RsyncImpl extends Syncronizer {
    *
    */
   public void run() {
-    $args= array_merge([ '-v', '-r', '-e', 'ssh' ], $this.origins, [ $this.target ]);
-
+    Console::$out.write('[');
+    $args= array_merge([ '-e', 'ssh', '--chmod=Da+rx,Fa+r', '--files-from=-', $this.relativePathOf($this.base.getURI()), $this.target ]);
     $command= new Process('rsync', $args, null, null);
+
+    // Pipe all files
+    foreach ($file in $this.filesNewerThan($this.lastSync())) {
+      $name= $this.relativePathOf($file.getURI());
+      $command.in.writeLine($name);
+      Console::$out.write('.');
+    }
+    $command.in.close();
+    
+    // Read rest
     do {
       Console::$out.write($command.out.read());
     } while (!$command.out.eof());
+    Console::$out.writeLine(']');
 
+    // Check exitcode
     $exitCode= $command.close();
     if (0 != $exitCode) {
       throw new lang.reflect.TargetInvocationException('Invoking `' ~ $command.getCommandLine() ~ '` failed w/ exitcode ' ~ $exitCode);

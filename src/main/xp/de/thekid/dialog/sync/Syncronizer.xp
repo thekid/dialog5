@@ -5,10 +5,110 @@
 
 package de.thekid.dialog.sync;
 
+import io.collections.iterate.IOCollectionIterator;
+import io.collections.iterate.FilteredIOCollectionIterator;
+import io.collections.iterate.ModifiedAfterFilter;
+import io.collections.CollectionComposite;
+import io.collections.FileCollection;
+import io.collections.FileElement;
+import io.collections.IOElement;
+import io.File;
+import io.Folder;
+import util.Date;
+
+import native core.strlen;
+import native core.strncmp;
+import native standard.substr;
+import native standard.strtr;
+
 /**
  * Synchronizer interface
  *
  */
 public abstract class Syncronizer implements Runnable {
-  protected string[] $origins = [ 'project.pth', 'xsl', 'etc', 'doc_root', 'data', 'dist' ];
+  protected string[] $originFiles = [ 'project.pth' ];
+  protected string[] $originFolders = [ 'xsl', 'etc', 'doc_root', 'data', 'dist' ];
+  protected Folder $base= xp::null();
+  protected File $lastSync= xp::null();
+
+  /**
+   * Sets base folder
+   *
+   */
+  public void setBase(Folder $base) {
+    $this.base= $base;
+    $this.lastSync= new File($this.base, '.synced');
+  }
+
+  /**
+   * Get last sync
+   *
+   */
+  protected Date lastSync() {
+    return $this.lastSync.exists() ? new Date($this.lastSync.lastModified()) : null;
+  }
+
+  /**
+   * Gets path relative to base directory
+   *
+   */
+  protected string relativePathOf(string $uri) throws IllegalStateException {
+    $l= strlen($this.base.getURI());
+    if (0 !== strncmp($uri, $this.base.getURI(), $l)) {
+      throw new IllegalStateException($uri ~ ' is not in ' ~ $this.base.toString()); 
+    }
+    $relative= substr($uri, $l);
+    return 0 === strlen($relative) ? '.' : strtr($relative, '\\', '/');
+  }
+
+  /**
+   * Gets files newer than a given date inside our origin folders
+   *
+   */
+  protected IOCollectionIterator filesNewerThan(Date $date= null) {
+
+    // Add origin files
+    $collections= new FileCollection[] {
+      new FileCollection($this.base, $this.originFiles) {
+        protected IOElement[] $elements= [];
+        protected int $offset= 0;
+
+        public __construct(Folder $base, string[] $files) {
+          foreach ($origin in $files) {
+            $file= new File($base, $origin);
+            $file.exists() && $this.elements[]= new FileElement($file.getURI());
+          }
+        }
+
+        public void rewind() {
+          $this.offset= 0;
+        }
+
+        public IOElement next() { 
+          if ($this.offset >= $this.elements.length) return null; 
+          return $this.elements[$this.offset++]; 
+        }
+      }
+    };
+
+    // Add all origin folders
+    foreach ($origin in $this.originFolders) {
+      $folder= new Folder($origin);
+      $folder.exists() && $collections[]= new FileCollection($folder);
+    }
+    $composite= new CollectionComposite($collections);
+
+    return $date
+      ? new FilteredIOCollectionIterator($composite, new ModifiedAfterFilter($date), true)
+      : new IOCollectionIterator($composite, true)
+    ;
+  }
+
+  /**
+   * Update last sync
+   *
+   */
+  public void finalize() {
+    $this.lastSync.touch();
+  }
 }

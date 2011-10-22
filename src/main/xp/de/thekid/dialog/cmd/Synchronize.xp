@@ -6,6 +6,7 @@
 package de.thekid.dialog.cmd;
 
 import de.thekid.dialog.sync.Syncronizer;
+import io.Folder;
 
 import native standard.ucfirst;
 
@@ -41,12 +42,22 @@ public class Synchronize extends util.cmd.Command {
   }
 
   /**
+   * Sets base folder
+   *
+   */
+  [@arg]
+  public void setBase(string $dir= '.') {
+    $this.synchronizer.setBase(new Folder($dir));
+  }
+
+  /**
    * Entry point method
    *
    */
   public void run() {
     $this.out.writeLine('---> Synchronizing ', $this.synchronizer);
     $this.synchronizer.run();
+    $this.synchronizer.finalize();
     $this.out.writeLine('---> Finished @ ', util.Date::now());
   }
 }
