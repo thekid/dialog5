@@ -10,5 +10,5 @@ package de.thekid.dialog.sync;
  *
  */
 public abstract class Syncronizer implements Runnable {
-  protected string[] $origins = [ 'project.pth', 'xsl', 'etc', 'data', 'dist', 'doc_root' ];
+  protected string[] $origins = [ 'project.pth', 'xsl', 'etc', 'doc_root', 'data', 'dist' ];
 }
