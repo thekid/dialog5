@@ -8,6 +8,8 @@ SVN version: ?????
 
 Features
 ~~~~~~~~
+- Added a new design - simple-white
+  (friebe)
 - Implemented rsync over ssh strategy for synchronization (name: rsync)
   (friebe)
 - Added de.thekid.dialog.cmd.Synchronize command tool to synchronize
