@@ -16,6 +16,7 @@ body {
 h2 { 
   font-weight: normal;
   color: #cfcccc;
+  margin-bottom: 6px;
 }
 a { 
   color: #cfcccc; 
@@ -79,6 +80,9 @@ table.collection_list img {
 }
 table.collection_list td {
   color: white;
+}
+table.chapter {
+  margin-top: 10px;
 }
 table.chapter img {
   border-color:  #424542;
