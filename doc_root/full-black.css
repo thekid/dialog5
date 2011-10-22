@@ -66,11 +66,11 @@ small {
   color: #a9a9a9;
 }
 table.highlights {
-  border-color: #424542;
+  border-color: #202021;
   margin-bottom: 10px;
 }
 table.highlights img {
-  border-color: #424542;
+  border-color: #202021;
 }
 table.collection_list {
   border: none;
@@ -85,7 +85,7 @@ table.chapter {
   margin-top: 10px;
 }
 table.chapter img {
-  border-color:  #424542;
+  border-color:  #202021;
 }
 table.bydate_list {
   color: #eeeeee;
@@ -126,5 +126,5 @@ img.singleshot {
   border-color: #f4f4f4;
 }
 img.singleshot_thumb {
-  border-color: #424542;
+  border-color: #202021;
 }
