@@ -67,7 +67,7 @@
             0
           )"/></xsl:attribute>
         </xsl:if>
-        <img alt="&#xab;" src="/image/prev.gif" border="0" width="19" height="15"/>
+        <xsl:text>&#xab;</xsl:text>
       </a>
       <a title="Black and white version" class="pager{/formresult/selected/@mode = 'color'}" id="next">
         <xsl:if test="/formresult/selected/@mode = 'color'">
@@ -76,7 +76,7 @@
             1
           )"/></xsl:attribute>
         </xsl:if>
-        <img alt="&#xbb;" src="/image/next.gif" border="0" width="19" height="15"/>
+        <xsl:text>&#xbb;</xsl:text>
       </a>
     </center>
     

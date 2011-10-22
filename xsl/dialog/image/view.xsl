@@ -102,7 +102,7 @@
             /formresult/selected/prev/number
           )"/></xsl:attribute>
         </xsl:if>
-        <img alt="&#xab;" src="/image/prev.gif" border="0" width="19" height="15"/>
+        <xsl:text>&#xab;</xsl:text>
       </a>
       <a title="Next image" class="pager{/formresult/selected/next != ''}" id="next">
         <xsl:if test="/formresult/selected/next != ''">
@@ -113,7 +113,7 @@
             /formresult/selected/next/number
           )"/></xsl:attribute>
         </xsl:if>
-        <img alt="&#xbb;" src="/image/next.gif" border="0" width="19" height="15"/>
+        <xsl:text>&#xbb;</xsl:text>
       </a>
     </center>
     

@@ -41,6 +41,16 @@ hr {
   border: 0;
   height: 1px;
 }
+#next {
+  font-size: 20px;
+  font-weight: bold;
+  padding-left: 4px;
+}
+#previous {
+  font-size: 20px;
+  font-weight: bold;
+  padding-right: 4px;
+}
 
 /* Page layout */
 tr#header {

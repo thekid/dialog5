@@ -38,13 +38,13 @@
         <xsl:if test="/formresult/years/@current &lt; /formresult/years/@max">
           <xsl:attribute name="href"><xsl:value-of select="func:link(concat('bydate?', /formresult/years/@current + 1))"/></xsl:attribute>
         </xsl:if>
-        <img alt="&#xab;" src="/image/prev.gif" border="0" width="19" height="15"/>
+        <xsl:text>&#xab;</xsl:text>
       </a>
       <a title="Year before" class="pager{/formresult/years/@current &gt; /formresult/years/@min}" id="next">
         <xsl:if test="/formresult/years/@current &gt; /formresult/years/@min">
           <xsl:attribute name="href"><xsl:value-of select="func:link(concat('bydate?', /formresult/years/@current - 1))"/></xsl:attribute>
         </xsl:if>
-        <img alt="&#xbb;" src="/image/next.gif" border="0" width="19" height="15"/>
+        <xsl:text>&#xbb;</xsl:text>
       </a>
     </center>
   </xsl:template>
