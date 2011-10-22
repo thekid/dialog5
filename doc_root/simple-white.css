@@ -1,0 +1,100 @@
+/* Stylesheet for Dialog (simple white)
+ *
+ * $Id$
+ */
+
+@import url("layout.css");
+
+body {
+  background-color: white;
+}
+h2 { 
+  color: #2e2e2e;
+}
+a { 
+  color: #2e2e2e; 
+}
+hr {
+  background-color: #dcdcdc;
+}
+tr#header {
+  background-color: black;
+}
+.main {
+  background-color: #ededed;
+  color: black;
+}
+.footer {
+  background-color: #202021; 
+}
+.footer small {
+  color: #eeeeee;
+}
+.gutter#menu a {
+  color: #e9e7ff;
+  border-color: #424542; 
+  background-color: #c3c3c3;
+  background: #313031 url(/image/bg_menu_black.png);
+}
+.gutter#menu a#active {
+  border-color: #c3c3c3; 
+}
+.datebox {
+  border-right: 1px solid #505050;
+  color: #2e2e2e;
+}
+.datebox h2 {
+  color: #2e2e2e;
+}
+table.highlights {
+  border-color: #c4c4c4;
+}
+table.highlights img {
+  border-color: #c4c4c4;
+}
+table.collection_list {
+  border: none;
+}
+table.collection_list img {
+  border: none;
+}
+table.collection_list td {
+  color: white;
+}
+table.chapter img {
+  border-color: #c4c4c4;
+}
+table.bydate_list {
+  color: black;
+}
+
+/* Image display */
+td.image .display {
+  border: 1px solid #f4f4f4;
+}
+td.image .opaqueborder {
+  width: 100%; 
+  height: 100%; 
+  border: 10px solid #f4f4f4; 
+  -ms-box-sizing: border-box; 
+  -webkit-box-sizing: border-box; 
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; 
+  opacity: 0.5; 
+  filter: alpha(opacity= 50);
+  -moz-opacity: .50;
+  -khtml-opacity: 0.5;
+}
+
+/* Single shot */
+div.singleshot {
+  width: 619; 
+  height: 347;
+  border: 1px solid #f4f4f4;
+}
+img.singleshot {
+  border-color: #f4f4f4;
+}
+img.singleshot_thumb {
+  border-color: #c4c4c4;
+}
