@@ -169,12 +169,12 @@
           <xsl:if test="position() &lt; last()">, </xsl:if>
         </xsl:for-each>
       </p>
-      <table class="highlights" border="0">
+      <table class="chapter" border="0">
         <tr>
           <xsl:copy-of select="func:highlights(exsl:node-set(image))"/>
         </tr>
       </table>
-      <br clear="all"/>
+      <br clear="all"/><hr/>
     </xsl:for-each>
     
   </xsl:template>
