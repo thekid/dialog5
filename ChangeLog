@@ -8,6 +8,11 @@ SVN version: ?????
 
 Features
 ~~~~~~~~
+- Implemented rsync over ssh strategy for synchronization (name: rsync)
+  (friebe)
+- Added de.thekid.dialog.cmd.Synchronize command tool to synchronize
+  local installation with remote
+  (friebe)
 - Added OpenGraph support - see issue #2
   (friebe)
   
