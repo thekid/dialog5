@@ -77,4 +77,26 @@
       <xsl:value-of select="concat('/shot/', $shot, '/', $no)"/>
     </func:result>
   </func:function>
+
+  <func:function name="func:linkByTopic">
+    <xsl:param name="page" select="false()"/>
+    
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="$page = false()">/by/topic</xsl:when>
+        <xsl:otherwise>/by/topic/page<xsl:value-of select="$page"/></xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
+
+  <func:function name="func:linkByDate">
+    <xsl:param name="year" select="false()"/>
+    
+    <func:result>
+      <xsl:choose>
+        <xsl:when test="$year = false()">/by/year</xsl:when>
+        <xsl:otherwise>/by/year/<xsl:value-of select="$year"/></xsl:otherwise>
+      </xsl:choose>
+    </func:result>
+  </func:function>
 </xsl:stylesheet>

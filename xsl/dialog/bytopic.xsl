@@ -35,13 +35,13 @@
     <center>
       <a title="Newer entries" class="pager{/formresult/pager/@offset &gt; 0}" id="previous">
         <xsl:if test="/formresult/pager/@offset &gt; 0">
-          <xsl:attribute name="href"><xsl:value-of select="func:link(concat('bytopic?page', /formresult/pager/@offset - 1))"/></xsl:attribute>
+          <xsl:attribute name="href"><xsl:value-of select="func:linkByTopic(/formresult/pager/@offset - 1)"/></xsl:attribute>
         </xsl:if>
         <xsl:text>&#xab;</xsl:text>
       </a>
       <a title="Older entries" class="pager{(/formresult/pager/@offset + 1) * /formresult/pager/@perpage &lt; /formresult/pager/@total}" id="next">
         <xsl:if test="(/formresult/pager/@offset + 1) * /formresult/pager/@perpage &lt; /formresult/pager/@total">
-          <xsl:attribute name="href"><xsl:value-of select="func:link(concat('bytopic?page', /formresult/pager/@offset + 1))"/></xsl:attribute>
+          <xsl:attribute name="href"><xsl:value-of select="func:linkByTopic(/formresult/pager/@offset + 1)"/></xsl:attribute>
         </xsl:if>
         <xsl:text>&#xbb;</xsl:text>
       </a>

@@ -81,9 +81,9 @@
               <td width="690" class="gutter" id="menu">
                 <a id="active" href="{func:linkPage(0)}">
                   Home
-                </a><a href="{func:link('bydate')}">
+                </a><a href="{func:linkByDate()}">
                   By Date
-                </a><a href="{func:link('bytopic')}">
+                </a><a href="{func:linkByTopic()}">
                   By Topic
                 </a>
               </td>
