@@ -45,7 +45,7 @@
     <xsl:param name="name"/>
     
     <func:result>
-      <xsl:value-of select="concat('/xml/', $__product, '.', $__lang, '/imagestrip?', $name)"/>
+      <xsl:value-of select="concat('/imagestrip/', $name)"/>
     </func:result>
   </func:function>
   
