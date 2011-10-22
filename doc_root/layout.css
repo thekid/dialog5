@@ -131,7 +131,6 @@ table.bydate_list td#content p {
   margin: 0px;
 }
 
-
 /* Paging elements */
 a.pager img {
   border: none;
@@ -148,4 +147,9 @@ img.singleshot {
 }
 img.singleshot_thumb {
   border: 2px solid;
+}
+
+/* Image display */
+.image {
+  text-align: center;
 }
