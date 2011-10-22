@@ -1,30 +1,33 @@
 /* Layout stylesheet for Dialog
  *
- * $Id$
+ * $Id: layout.css 10631 2007-06-17 18:24:44Z friebe $
  */
 
 /* Common elements */
+* {
+  font-family: "Tahoma";
+}
 body {
   margin: 0px;
 }
 td, p, ul { 
-  font: 13px "Tahoma"; 
+  font-size: 13px;
   line-height: 20px;
 }
 h1 { 
   font: 42px "Arial narrow";
 }
 h2 { 
-  font: 19px "Tahoma"; 
+  font: 19px; 
   padding: 0px;
   margin: 1px;
 }
 h3 { 
-  font: bold 13px "Tahoma";
+  font: bold 13px;
   margin: 1px;
 }
 h4 { 
-  font: bold 13px "Tahoma"; 
+  font: bold 13px; 
   padding: 0px;
   margin: 0px;
 }
