@@ -20,7 +20,7 @@ public class ImagestripState extends AbstractDialogState {
    *
    */
   public void process(scriptlet.xml.workflow.WorkflowScriptletRequest? $request, scriptlet.xml.XMLScriptletResponse? $response, scriptlet.xml.workflow.Context? $context) {
-    $name= $request.getQueryString();
+    $name= $request.getURL().getValue('imagestrip');
 
     with ($imageStrip= $this.getEntryFor($name) as de.thekid.dialog.ImageStrip) {
       $child= $response.addFormResult(new Node('imagestrip', null, [

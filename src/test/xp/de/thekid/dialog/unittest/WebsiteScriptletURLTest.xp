@@ -161,6 +161,14 @@ public class WebsiteScriptletURLTest extends TestCase {
       'index'   : '9'
     ]);
   }
+
+  /**
+   * View imagestrip
+   *
+   */
+  [@test] public void viewImageStrip() {
+    $this.assertState('/imagestrip/someStrip', 'imagestrip', [ 'imagestrip' : 'someStrip']);
+  }
   
   /**
    * Old-style URLs (/xml/...) are still supported
@@ -193,7 +201,6 @@ public class WebsiteScriptletURLTest extends TestCase {
   [@test] public void byDate() {
     $this.assertState('/by/date', 'bydate', [ year : null ]);
   }
-
 
   /**
    * New /by/date/2010 url

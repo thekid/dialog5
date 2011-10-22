@@ -64,6 +64,12 @@ class WebsiteScriptletURL extends XMLScriptletURL {
       return;
     }
 
+    if (1 == sscanf($this.getPath(), '/imagestrip/%[^/]', $imagestrip)) {
+      $this.setStateName('imagestrip');
+      $this.setValue('imagestrip', $imagestrip);
+      return;
+    }
+
     if (preg_match('#/by/date(/([0-9]{4}))?$#', $this.getPath(), $parts)) {
       $this.setStateName('bydate');
       $this.setValue('year', isset($parts[2]) ? $parts[2] as int : null);
