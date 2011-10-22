@@ -2,6 +2,9 @@ VERSION?=$(shell cat VERSION)
 
 compile: compile-main compile-test
 
+test: compile-test
+	unittest de.thekid.dialog.unittest.**
+
 compile-main: dist/main
 	xcc -o dist/main -sp src/main/xp src/main/xp
 

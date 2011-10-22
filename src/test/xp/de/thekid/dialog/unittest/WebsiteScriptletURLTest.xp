@@ -169,4 +169,37 @@ public class WebsiteScriptletURLTest extends TestCase {
   [@test] public void legacyUrlStillSupported() {
     $this.assertState('/xml/bytopic', 'bytopic');
   }
+
+  /**
+   * New /by/topic url
+   *
+   */
+  [@test] public void byTopic() {
+    $this.assertState('/by/topic', 'bytopic', [:]);
+  }
+
+  /**
+   * New /by/topic/page/1 url
+   *
+   */
+  [@test] public void byTopicPage1() {
+    $this.assertState('/by/topic/page/1', 'bytopic', [ page : 1 ]);
+  }
+
+  /**
+   * New /by/date url
+   *
+   */
+  [@test] public void byDate() {
+    $this.assertState('/by/date', 'bydate', [:]);
+  }
+
+
+  /**
+   * New /by/date/2010 url
+   *
+   */
+  [@test] public void byDate2010() {
+    $this.assertState('/by/date/2010', 'bydate', [ year : 2010 ]);
+  }
 }
