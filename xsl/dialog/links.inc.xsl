@@ -84,7 +84,7 @@
     <func:result>
       <xsl:choose>
         <xsl:when test="$page = false()">/by/topic</xsl:when>
-        <xsl:otherwise>/by/topic/page<xsl:value-of select="$page"/></xsl:otherwise>
+        <xsl:otherwise>/by/topic/page/<xsl:value-of select="$page"/></xsl:otherwise>
       </xsl:choose>
     </func:result>
   </func:function>
@@ -94,8 +94,8 @@
     
     <func:result>
       <xsl:choose>
-        <xsl:when test="$year = false()">/by/year</xsl:when>
-        <xsl:otherwise>/by/year/<xsl:value-of select="$year"/></xsl:otherwise>
+        <xsl:when test="$year = false()">/by/date</xsl:when>
+        <xsl:otherwise>/by/date/<xsl:value-of select="$year"/></xsl:otherwise>
       </xsl:choose>
     </func:result>
   </func:function>
