@@ -118,7 +118,7 @@
     </center>
     
     <!-- Selected image -->
-    <table border="0" width="800">
+    <table border="0" class="image">
       <tr>
         <td class="image" align="center">
           <a>

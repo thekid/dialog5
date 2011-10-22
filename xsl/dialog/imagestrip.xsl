@@ -74,7 +74,7 @@
     
     <!-- Images -->
     <br clear="all"/>
-    <table border="0" width="800">
+    <table border="0" class="image">
       <xsl:for-each select="/formresult/imagestrip/images/image">
         <tr>
           <td class="image" align="center">

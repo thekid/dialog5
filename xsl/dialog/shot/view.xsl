@@ -81,7 +81,7 @@
     </center>
     
     <!-- Selected image -->
-    <table width="800" border="0">
+    <table border="0" class="image">
       <tr>
         <td class="image" align="center">
           <div class="display" style="background-image: url(/shots/{/formresult/selected/@mode}.{/formresult/selected/fileName}); width: {/formresult/selected/image/width}px; height: {/formresult/selected/image/height}px">
