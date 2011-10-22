@@ -118,25 +118,21 @@
     </center>
     
     <!-- Selected image -->
-    <table border="0" class="image">
-      <tr>
-        <td class="image" align="center">
-          <a>
-            <xsl:if test="/formresult/selected/next != ''">
-              <xsl:attribute name="href"><xsl:value-of select="func:linkImage(
-                /formresult/album/@name,
-                /formresult/selected/next/chapter,
-                /formresult/selected/next/type,
-                /formresult/selected/next/number
-              )"/></xsl:attribute>
-            </xsl:if>
-            <div class="display" style="background-image: url(/albums/{/formresult/album/@name}/{/formresult/selected/name}); width: {/formresult/selected/width}px; height: {/formresult/selected/height}px">
-              <div class="opaqueborder"/>
-            </div>
-          </a>
-        </td>
-      </tr>
-    </table>
+    <div class="image">
+      <a>
+        <xsl:if test="/formresult/selected/next != ''">
+          <xsl:attribute name="href"><xsl:value-of select="func:linkImage(
+            /formresult/album/@name,
+            /formresult/selected/next/chapter,
+            /formresult/selected/next/type,
+            /formresult/selected/next/number
+          )"/></xsl:attribute>
+        </xsl:if>
+        <div class="display" style="background-image: url(/albums/{/formresult/album/@name}/{/formresult/selected/name}); width: {/formresult/selected/width}px; height: {/formresult/selected/height}px">
+          <div class="opaqueborder"/>
+        </div>
+      </a>
+    </div>
     
     <p>
       Originally taken on <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(/formresult/selected/exifData/dateTime/value), 'D, d M H:i')"/>

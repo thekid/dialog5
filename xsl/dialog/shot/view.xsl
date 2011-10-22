@@ -81,15 +81,11 @@
     </center>
     
     <!-- Selected image -->
-    <table border="0" class="image">
-      <tr>
-        <td class="image" align="center">
-          <div class="display" style="background-image: url(/shots/{/formresult/selected/@mode}.{/formresult/selected/fileName}); width: {/formresult/selected/image/width}px; height: {/formresult/selected/image/height}px">
-            <div class="opaqueborder"/>
-          </div>
-        </td>
-      </tr>
-    </table>
+    <div class="image">
+      <div class="display" style="background-image: url(/shots/{/formresult/selected/@mode}.{/formresult/selected/fileName}); width: {/formresult/selected/image/width}px; height: {/formresult/selected/image/height}px">
+        <div class="opaqueborder"/>
+      </div>
+    </div>
     
     <p>
       Originally taken on <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(/formresult/selected/image/exifData/dateTime/value), 'D, d M H:i')"/>

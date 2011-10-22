@@ -74,50 +74,42 @@
     
     <!-- Images -->
     <br clear="all"/>
-    <table border="0" class="image">
+    <div class="image">
       <xsl:for-each select="/formresult/imagestrip/images/image">
-        <tr>
-          <td class="image" align="center">
-            <a name="{position() - 1}">
-              <div class="display" style="background-image: url(/albums/{/formresult/imagestrip/@name}/{name}); width: {width}px; height: {height}px">
-                <div class="opaqueborder"/>
-              </div>
-            </a>
-          </td>
-        </tr>
-        <tr>
-          <td class="exif">
-            <p>
-              Originally taken on <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(exifData/dateTime/value), 'D, d M H:i')"/>
-              with <xsl:value-of select="exifData/make"/>'s
-              <xsl:value-of select="exifData/model"/>.
+        <a name="{position() - 1}">
+          <div class="display" style="background-image: url(/albums/{/formresult/imagestrip/@name}/{name}); width: {width}px; height: {height}px">
+            <div class="opaqueborder"/>
+          </div>
+        </a>
+        <p>
+          Originally taken on <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(exifData/dateTime/value), 'D, d M H:i')"/>
+          with <xsl:value-of select="exifData/make"/>'s
+          <xsl:value-of select="exifData/model"/>.
 
-              (<small>
-              <xsl:if test="exifData/apertureFNumber != ''">
-                <xsl:value-of select="exifData/apertureFNumber"/>
-              </xsl:if>
-              <xsl:if test="exifData/exposureTime != ''">
-                <xsl:text>, </xsl:text>
-                <xsl:value-of select="exifData/exposureTime"/> sec.
-              </xsl:if>  
-              <xsl:if test="exifData/isoSpeedRatings != ''">
-                <xsl:text>, ISO </xsl:text>
-                <xsl:value-of select="exifData/isoSpeedRatings"/>
-              </xsl:if>  
-              <xsl:if test="exifData/focalLength != '0'">
-                <xsl:text>, focal length: </xsl:text>
-                <xsl:value-of select="exifData/focalLength"/>
-                <xsl:text> mm</xsl:text>
-              </xsl:if>
-              <xsl:if test="(exifData/flash mod 8) = 1">
-                <xsl:text>, flash fired</xsl:text>
-              </xsl:if>
-              </small>)
-            </p>
-          </td>
-        </tr>
+          (<small>
+          <xsl:if test="exifData/apertureFNumber != ''">
+            <xsl:value-of select="exifData/apertureFNumber"/>
+          </xsl:if>
+          <xsl:if test="exifData/exposureTime != ''">
+            <xsl:text>, </xsl:text>
+            <xsl:value-of select="exifData/exposureTime"/> sec.
+          </xsl:if>  
+          <xsl:if test="exifData/isoSpeedRatings != ''">
+            <xsl:text>, ISO </xsl:text>
+            <xsl:value-of select="exifData/isoSpeedRatings"/>
+          </xsl:if>  
+          <xsl:if test="exifData/focalLength != '0'">
+            <xsl:text>, focal length: </xsl:text>
+            <xsl:value-of select="exifData/focalLength"/>
+            <xsl:text> mm</xsl:text>
+          </xsl:if>
+          <xsl:if test="(exifData/flash mod 8) = 1">
+            <xsl:text>, flash fired</xsl:text>
+          </xsl:if>
+          </small>)
+        </p>
       </xsl:for-each>
-    </table>
+    </div>
   </xsl:template>
   
 </xsl:stylesheet>
