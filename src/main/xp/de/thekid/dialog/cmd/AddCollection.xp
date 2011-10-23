@@ -262,7 +262,7 @@ public class AddCollection extends ImportCommand {
           $album.addHighlight($highlight);
           $this.out.writeLine('     >> Added highlight ', $highlight.getName(), ' to album ', $albumName);
         }
-        $needsHighlights= self::HIGHLIGHTS_MAX - $album.numHighlights();
+        $needsHighlights= $this.HIGHLIGHTS_MAX - $album.numHighlights();
       }
 
       // Process all images

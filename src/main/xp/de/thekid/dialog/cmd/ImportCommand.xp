@@ -113,9 +113,12 @@ public abstract class ImportCommand extends Command {
   protected void processMetaData(AlbumImage $image, IEntry $origin) {
 
     // Ensure image date is always present, fall back to origin date
-    // if necessary
+    // if necessary, and the current date in the worst case
+    if (!($date= $origin.getDate())) {
+      $date= util.Date::now();
+    }
     if (!$image.exifData.dateTime) {
-      $image.exifData.dateTime= $origin.getDate();
+      $image.exifData.dateTime= $date;
     }
 
     // Extract topics form IPTC keywords if available
@@ -127,13 +130,13 @@ public abstract class ImportCommand extends Command {
         $topic= new File($this.dataFolder, 'topics/' ~ $normalized ~ '.dat');
         if ($topic.exists()) {
           $this.topics[$normalized]= unserialize(FileUtil::getContents($topic));
-          $this.out.writeLine('     >> Found existing topic for ', $keyword);
+          $this.out.writeLine('     >> Found existing topic for "', $keyword, '"');
         } else {
-          $this.out.writeLine('     >> Creating new topic for ', $keyword);
+          $this.out.writeLine('     >> Creating new topic for "', $keyword, '"');
           $this.topics[$normalized]= new Topic();
           $this.topics[$normalized].setName($normalized);
           $this.topics[$normalized].setTitle($keyword);
-          $this.topics[$normalized].setCreatedAt($origin.getDate());
+          $this.topics[$normalized].setCreatedAt($date);
         }
       }
       $this.topics[$normalized].addImage($image, $origin.getName());

@@ -80,7 +80,6 @@ import native standard.serialize;
  * @purpose  Command
  */
 public class AddAlbum extends ImportCommand {
-  const int HIGHLIGHTS_MAX = 5;
   protected io.Folder $origin= null;
   protected io.Folder $destination= null;
   protected io.File $albumStorage= null;
@@ -200,7 +199,7 @@ public class AddAlbum extends ImportCommand {
     
     // Get highlights
     $highlights= new io.Folder($this.origin.getURI() ~ 'highlights');
-    $needsHighlights= self::HIGHLIGHTS_MAX;
+    $needsHighlights= $this.HIGHLIGHTS_MAX;
     if ($highlights.exists()) {
       for (
         $it= new io.collections.iterate.FilteredIOCollectionIterator(new io.collections.FileCollection($highlights.getURI()), $jpegs);
@@ -212,7 +211,7 @@ public class AddAlbum extends ImportCommand {
         $this.album.addHighlight($highlight);
         $this.out.writeLine('     >> Added highlight ', $highlight.getName());
       }
-      $needsHighlights= self::HIGHLIGHTS_MAX - $this.album.numHighlights();
+      $needsHighlights= $this.HIGHLIGHTS_MAX - $this.album.numHighlights();
     }
     
     // Process all images
