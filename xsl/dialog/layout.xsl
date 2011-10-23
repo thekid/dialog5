@@ -85,6 +85,8 @@
                   By Date
                 </a><a href="{func:linkByTopic()}">
                   By Topic
+                </a><a id="rss" href="/rss">
+                  RSS
                 </a>
               </td>
             </tr>
