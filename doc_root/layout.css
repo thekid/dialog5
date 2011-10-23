@@ -113,6 +113,14 @@ tr#header {
   border: 2px solid;
   margin: 1px;
 }
+.chapter {
+  display: block;
+}
+.chapter img {
+  border: 2px solid;
+  margin: 1px;
+}
+
 table.collection_list {
   border: none;
 }
@@ -121,9 +129,6 @@ table.collection_list img {
 }
 table.collection_list td {
   color: white;
-}
-table.chapter img {
-  border: 2px solid;
 }
 td#image img {
   border: 6px solid;

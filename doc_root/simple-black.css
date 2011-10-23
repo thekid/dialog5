@@ -58,7 +58,7 @@ table.collection_list img {
 table.collection_list td {
   color: white;
 }
-table.chapter img {
+.chapter img {
   border-color:  #424542;
 }
 table.bydate_list {

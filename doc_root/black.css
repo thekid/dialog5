@@ -135,7 +135,7 @@ table.collection_list img {
 table.collection_list td {
   color: white;
 }
-table.chapter img {
+.chapter img {
   border: 1px solid #f4f4f4;
 }
 td#image img {

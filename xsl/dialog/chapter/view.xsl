@@ -37,35 +37,6 @@
     <meta property="og:type" content="album" />
     <xsl:apply-templates select="/formresult/chapter" mode="og"/>
   </xsl:template>
-
-  <!--
-   ! Function that draws the images of a chapter
-   !
-   ! @see      ../layout.xsl
-   ! @purpose  Define main content
-   !-->
-  <func:function name="func:chapter-images">
-    <xsl:param name="album"/>
-    <xsl:param name="chapter"/>
-    <xsl:param name="images"/>
-    <xsl:param name="i" select="1"/>
-    <xsl:param name="max" select="5"/>
-    
-    <func:result>
-      <tr>
-        <xsl:for-each select="exsl:node-set($images)/image[position() &gt;= $i and position() &lt; $i + $max]">
-          <td>
-            <a href="{func:linkImage($album, $chapter, 'i', $i - 2 + position())}">
-              <img width="150" height="113" border="0" src="/albums/{$album}/thumb.{name}"/>
-            </a>
-          </td>
-        </xsl:for-each>
-      </tr>
-      <xsl:if test="$i &lt; count(exsl:node-set($images)/image)">
-        <xsl:copy-of select="func:chapter-images($album, $chapter, exsl:node-set($images), $i + $max)"/>
-      </xsl:if>
-    </func:result>  
-  </func:function>
   
   <!--
    ! Template for content
@@ -139,13 +110,18 @@
       </a>
     </center>
 
-    <table border="0" class="chapter">
-      <xsl:copy-of select="func:chapter-images(
-        /formresult/album/@name, 
-        /formresult/chapter/@id - 1,
-        /formresult/chapter/images
-      )"/>
-    </table>
+    <div class="chapter">
+      <xsl:for-each select="/formresult/chapter/images/image">
+        <div style="float: left"> 
+          <a href="{func:linkImage(/formresult/album/@name, /formresult/chapter/@id, 'i', position()- 1)}">
+            <img width="150" height="113" border="0" src="/albums/{/formresult/album/@name}/thumb.{name}"/>
+          </a>
+        </div>
+      </xsl:for-each>
+      <br clear="all"/>
+    </div>
+    
+    <hr/>
   </xsl:template>
   
 </xsl:stylesheet>

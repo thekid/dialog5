@@ -117,21 +117,17 @@
         </xsl:choose>
       </p>
 
-      <table border="0" class="chapter">
-        <tr>
-          <xsl:for-each select="images/image">
-            <xsl:variable name="pos" select="position()"/>
-            <xsl:if test="($pos &gt; 1) and ($pos mod 5 = 1)"><xsl:text disable-output-escaping="yes">&lt;tr></xsl:text></xsl:if>
-            <td>
-              <a href="{func:linkImage(../../../../@name, $chapter, 'i', position()- 1)}">
-                <img width="150" height="113" border="0" src="/albums/{../../../../@name}/thumb.{name}"/>
-              </a>
-            </td>
-            <xsl:if test="($pos mod 5 = 0) and ($pos != last())"><xsl:text disable-output-escaping="yes">&lt;/tr></xsl:text></xsl:if>
-          </xsl:for-each>
-        </tr>
-      </table>
-      <br clear="all"/><hr/>
+      <div class="chapter">
+        <xsl:for-each select="images/image">
+          <div style="float: left"> 
+            <a href="{func:linkImage(../../../../@name, $chapter, 'i', position()- 1)}">
+              <img width="150" height="113" border="0" src="/albums/{../../../../@name}/thumb.{name}"/>
+            </a>
+          </div>
+        </xsl:for-each>
+        <br clear="all"/>
+      </div>
+      <hr/>
     </xsl:for-each>
   </xsl:template>
   

@@ -82,10 +82,10 @@ table.collection_list img {
 table.collection_list td {
   color: white;
 }
-table.chapter {
+.chapter {
   margin-top: 10px;
 }
-table.chapter img {
+.chapter img {
   border-color:  #202021;
 }
 table.bydate_list {
