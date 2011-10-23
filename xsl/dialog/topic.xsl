@@ -140,7 +140,7 @@
     <h3>
       <a href="/">Home</a>
       &#xbb;
-      <a href="{func:link('bytopic')}">
+      <a href="{func:linkByTopic()}">
         By Topic
       </a>
       &#xbb;
