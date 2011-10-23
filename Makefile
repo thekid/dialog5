@@ -13,7 +13,9 @@ compile-test: dist/test
 
 dist:	compile
 	cd dist/main && xar cvf ../dialog-$(VERSION).xar .
-	cd .. && zip -r dialog/dist/dialog-$(VERSION).zip dialog/dist/dialog-$(VERSION).xar dialog/xsl dialog/doc_root dialog/etc dialog/data -x \*.svn\* -x .cvsignore
+	echo dist/dialog-$(VERSION).xar > class.pth
+	cd .. && zip -r dialog/dist/dialog-$(VERSION).zip dialog/dist/dialog-$(VERSION).xar dialog/xsl dialog/doc_root dialog/etc dialog/data dialog/class.pth -x \*.svn\* -x .cvsignore
+	rm class.pth
 
 dist/main:
 	mkdir -p $@
