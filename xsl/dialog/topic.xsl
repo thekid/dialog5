@@ -81,9 +81,16 @@
    ! @purpose  Specialized entry template
    !-->
   <xsl:template match="entry[@type = 'de.thekid.dialog.Album']">
-    <a title="Album of {@num_images} images in {@num_chapters} chapters" href="{func:linkAlbum(@name)}">
-      <xsl:value-of select="@title"/>
-    </a>
+    <h3>
+      <a href="{func:linkAlbum(@name)}">
+        <xsl:value-of select="@title"/>
+      </a>
+      (<xsl:value-of select="@num_images"/> images in <xsl:value-of select="@num_chapters"/> chapters)
+    </h3>
+    <p align="justify">
+      <xsl:apply-templates select="description"/>
+      <br clear="all"/>
+    </p>
   </xsl:template>
   
   <!--
@@ -92,9 +99,16 @@
    ! @purpose  Specialized entry template
    !-->
   <xsl:template match="entry[@type = 'de.thekid.dialog.Update']">
-    <a title="Update" href="{func:linkAlbum(@album)}">
-      <xsl:value-of select="@title"/>
-    </a>
+    <h3>
+      <a href="{func:linkAlbum(@album)}">
+        <xsl:value-of select="@title"/>
+      </a>
+      (Update)
+    </h3>
+    <p align="justify">
+      <xsl:apply-templates select="description"/>
+      <br clear="all"/>
+    </p>
   </xsl:template>
 
   <!--
@@ -103,9 +117,34 @@
    ! @purpose  Specialized entry template
    !-->
   <xsl:template match="entry[@type = 'de.thekid.dialog.SingleShot']">
-    <a title="Featured image" href="{func:linkShot(@name, 0)}">
-      <xsl:value-of select="@title"/>
-    </a>
+    <h3>
+      <a href="{func:linkShot(@name, 0)}">
+        <xsl:value-of select="@title"/>
+      </a>
+      (Featured image)
+    </h3>
+    <p align="justify">
+      <xsl:apply-templates select="description"/>
+      <br clear="all"/>
+    </p>
+  </xsl:template>
+
+  <!--
+   ! Template for image strips
+   !
+   ! @purpose  Specialized entry template
+   !-->
+  <xsl:template match="entry[@type = 'de.thekid.dialog.ImageStrip']">
+    <h3>
+      <a href="{func:linkImageStrip(@name)}">
+        <xsl:value-of select="@title"/>
+      </a>
+      (Image strip with <xsl:value-of select="@num_images"/> images)
+    </h3>
+    <p align="justify">
+      <xsl:apply-templates select="description"/>
+      <br clear="all"/>
+    </p>
   </xsl:template>
 
   <!--
@@ -114,20 +153,16 @@
    ! @purpose  Specialized entry template
    !-->
   <xsl:template match="entry[@type = 'de.thekid.dialog.EntryCollection']">
-    <a title="Collection of {@num_entries}" href="{func:linkCollection(@name)}">
-      <xsl:value-of select="@title"/>
-    </a>
-  </xsl:template>
-
-  <!--
-   ! Template for collections 
-   !
-   ! @purpose  Specialized entry template
-   !-->
-  <xsl:template match="entry[@type = 'de.thekid.dialog.ImageStrip']">
-    <a title="Image strip with {@num_images} images" href="{func:linkImageStrip(@name)}">
-      <xsl:value-of select="@title"/>
-    </a>
+    <h3>
+      <a href="{func:linkCollection(@name)}">
+        <xsl:value-of select="@title"/>
+      </a>
+      (Collection of <xsl:value-of select="@num_entries"/>)
+    </h3>
+    <p align="justify">
+      <xsl:apply-templates select="description"/>
+      <br clear="all"/>
+    </p>
   </xsl:template>
 
   <!--
@@ -151,9 +186,6 @@
     <br clear="all"/>
 
     <xsl:for-each select="/formresult/topic/year">
-      <div class="datebox">
-        <h2><xsl:value-of select="position()"/></h2> 
-      </div>
       <h2>
         <xsl:value-of select="@num"/> - 
         <xsl:variable name="total" select="count(image)"/>
@@ -162,17 +194,22 @@
           <xsl:otherwise><xsl:value-of select="$total"/> images</xsl:otherwise>
         </xsl:choose>
       </h2>
-      <p>
-        Images originate from 
-        <xsl:for-each select="entry">
-          <xsl:apply-templates select="."/>
-          <xsl:if test="position() &lt; last()">, </xsl:if>
-        </xsl:for-each>
-      </p>
-      <table class="chapter" border="0">
+      <table class="highlights" border="0">
         <tr>
           <xsl:copy-of select="func:highlights(exsl:node-set(image))"/>
         </tr>
+      </table>
+      <table class="bydate_list" border="0" width="770">
+        <xsl:for-each select="entry">
+          <tr>
+            <td id="day" valign="top">
+              <h2><xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(created/value), 'M')"/></h2>
+            </td>
+            <td id="content" valign="top">
+              <xsl:apply-templates select="."/>
+            </td>
+          </tr>
+        </xsl:for-each>
       </table>
       <br clear="all"/><hr/>
     </xsl:for-each>

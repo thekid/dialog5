@@ -30,7 +30,7 @@ public class TopicState extends AbstractDialogState {
           'num_chapters'  : $album.numChapters()
         ]);
         $child.addChild(Node::fromObject($album.createdAt, 'created'));
-
+        $child.addChild(new Node('description', new PCData($album.getDescription())));
         return $child;
       }
     };
@@ -41,7 +41,7 @@ public class TopicState extends AbstractDialogState {
           'title'         : $update.getTitle()
         ]);
         $child.addChild(Node::fromObject($update.date, 'created'));
-
+        $child.addChild(new Node('description', new PCData($update.getDescription())));
         return $child;
       }
     };
@@ -52,7 +52,7 @@ public class TopicState extends AbstractDialogState {
           'title'     : $shot.getTitle()
         ]);
         $child.addChild(Node::fromObject($shot.date, 'created'));
-
+        $child.addChild(new Node('description', new PCData($shot.getDescription())));
         return $child;
       }
     };
@@ -64,7 +64,7 @@ public class TopicState extends AbstractDialogState {
           'num_images'    : $imageStrip.numImages(),
         ]);
         $child.addChild(Node::fromObject($imageStrip.createdAt, 'date'));
-
+        $child.addChild(new Node('description', new PCData($imageStrip.getDescription())));
         return $child;
       }
     };
@@ -76,7 +76,7 @@ public class TopicState extends AbstractDialogState {
           'num_entries'   : $collection.numEntries()
         ]);
         $node.addChild(Node::fromObject($collection.createdAt, 'created'));
-
+        $child.addChild(new Node('description', new PCData($collection.getDescription())));
         return $node;
       }
     };
