@@ -1,3 +1,8 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
 package de.thekid.dialog.scriptlet;
 
 import io.File;
@@ -13,6 +18,7 @@ import de.thekid.dialog.IEntry;
 import de.thekid.dialog.Album;
 import de.thekid.dialog.Update;
 import de.thekid.dialog.SingleShot;
+import de.thekid.dialog.ImageStrip;
 import de.thekid.dialog.EntryCollection;
 
 import native standard.unserialize;
@@ -22,23 +28,44 @@ import native standard.dirname;
 import native standard.array_merge;
 import native standard.current;
 
-class RssScriptlet extends HttpScriptlet {
+/**
+ * Dialog: RSS Feed
+ *
+ * @see   http://dialog.friebes.info/rss/
+ */
+public class RssScriptlet extends HttpScriptlet {
   protected string $HTTP_HOST= null;
   protected string $DATALOCATION= null;
   
-  public __construct(string $datalocation) {
+  /**
+   * Constructor
+   *
+   */
+  public __construct(string? $datalocation) {
     $this.DATALOCATION= $datalocation;
   }
 
-  protected IEntry getEntryFor(string $name) {
+  /**
+   * Get an entry by a given name
+   *
+   */
+  protected IEntry getEntryFor(string? $name) {
     return unserialize(FileUtil::getContents(new File($this.DATALOCATION ~ $name ~ '.dat')));
   }
 
-  protected IEntry getIndexFor(int $i= 0) {
+  /**
+   * Get an index page for a given number
+   *
+   */
+  protected IEntry getIndexFor(int? $i= 0) {
     return unserialize(FileUtil::getContents(new File($this.DATALOCATION ~ 'page_' ~ $i ~ '.idx')));
   }
 
-  protected string urlFor(var $item) {
+  /**
+   * Calculate URL for a given item
+   *
+   */
+  protected string urlFor(IEntry? $item) {
     $base= sprintf('http://%s', $this.HTTP_HOST);
     switch (get_class($item)) {
       case 'Album':
@@ -52,9 +79,16 @@ class RssScriptlet extends HttpScriptlet {
       
       case 'EntryCollection':
         return $this.urlFor($item.entryAt(0));
+
+      case 'ImageStrip':
+        return sprintf('%s/imagestrip/%s', $base, $item.getName());
     }
   }
 
+  /**
+   * Add an album to our RSS feed
+   *
+   */
   protected void addAlbumItem(RDFNewsFeed $rdf, IEntry $item) {
     $rdf.addItem(
       $item.getTitle(),
@@ -64,6 +98,10 @@ class RssScriptlet extends HttpScriptlet {
     );
   }
 
+  /**
+   * Add an update item to our RSS feed
+   *
+   */
   protected void addUpdateItem(RDFNewsFeed $rdf, IEntry $item) {
     $rdf.addItem(
       $item.getTitle(),
@@ -73,15 +111,23 @@ class RssScriptlet extends HttpScriptlet {
     );
   }
 
+  /**
+   * Add a single shot item to our RSS feed
+   *
+   */
   protected void addSingleShotItem(RDFNewsFeed $rdf, IEntry $item) {
     $rdf.addItem(
       $item.getTitle(),
       $this.urlFor($item),
-      $item.getDescription() ~ '<br/><img border="1" src="/shots/thumb.color.' ~ $item.getName() ~ '.jpg"/>',
+      $item.getDescription() ~ '<br/><img border="1" src="/shots/thumb.color.' ~ $item.getFileName() ~ '"/>',
       $item.getDate()
     );
   }
 
+  /**
+   * Add an entry collection to our RSS feed
+   *
+   */
   protected void addEntryCollectionItem(RDFNewsFeed $rdf, IEntry $item) {
     $rdf.addItem(
       $item.getTitle(),
@@ -90,7 +136,24 @@ class RssScriptlet extends HttpScriptlet {
       $item.getCreatedAt()
     );
   }
+
+  /**
+   * Add an image strip to our RSS feed
+   *
+   */
+  protected void addImageStripItem(RDFNewsFeed $rdf, IEntry $item) {
+    $rdf.addItem(
+      $item.getTitle(),
+      $this.urlFor($item),
+      $item.getDescription() ~ '<br/><img border="1" src="/albums/' ~ $item.getName() ~ '/thumb.' ~ $item.imageAt(0).getName() ~ '"/>',
+      $item.getCreatedAt()
+    );
+  }
   
+  /**
+   * HTTP GET implementation
+   *
+   */
   public void doGet(HttpScriptletRequest $request, HttpScriptletResponse $response) {
     $prop= PropertyManager::getInstance().getProperties('dialog');
     
@@ -133,6 +196,7 @@ class RssScriptlet extends HttpScriptlet {
         case 'Update': $this.addUpdateItem($rdf, $entry); break;
         case 'SingleShot': $this.addSingleShotItem($rdf, $entry); break;
         case 'EntryCollection': $this.addEntryCollectionItem($rdf, $entry); break;
+        case 'ImageStrip': $this.addImageStripItem($rdf, $entry); break;
         default: break;
       }
     }
