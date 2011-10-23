@@ -162,3 +162,8 @@ img.singleshot_thumb {
 .image {
   text-align: center;
 }
+.viewport {
+  width: 462px; 
+  height: 231px;
+  background-position: 50% 50%;
+}

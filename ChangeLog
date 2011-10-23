@@ -17,6 +17,10 @@ Heads up!
 
 Features
 ~~~~~~~~
+- Reworked design in "By topic" - shows a excerpt from the first of
+  the 10 newest puctures and then all other nine nicely aligned around.
+  See issue #5
+  (friebe)
 - Added topics to a displayed album highlight, image or single shot.
   Implements feature suggested in issue #6
   (friebe)

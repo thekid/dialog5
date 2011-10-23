@@ -54,9 +54,25 @@
     </a>
   </xsl:template>
 
+  <xsl:template match="image[@origin-class = 'de.thekid.dialog.Album']" mode="full">
+    <a href="{func:linkImage(@origin-name, @origin-chapter, @origin-type, @origin-id)}">
+      <div class="viewport" style="background-image: url(/albums/{@origin-name}/{@name});">
+        <div class="opaqueborder"/>
+      </div>
+    </a>
+  </xsl:template>
+
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.EntryCollection']">
     <a href="{func:linkImage(@origin-name, @origin-chapter, @origin-type, @origin-id)}">
       <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{@name}"/>
+    </a>
+  </xsl:template>
+
+  <xsl:template match="image[@origin-class = 'de.thekid.dialog.EntryCollection']" mode="full">
+    <a href="{func:linkImage(@origin-name, @origin-chapter, @origin-type, @origin-id)}">
+      <div class="viewport" style="background-image: url(/albums/{@origin-name}/{@name});">
+        <div class="opaqueborder"/>
+      </div>
     </a>
   </xsl:template>
 
@@ -66,36 +82,27 @@
     </a>
   </xsl:template>
 
+  <xsl:template match="image[@origin-class = 'de.thekid.dialog.SingleShot']" mode="full">
+    <a href="{func:linkShot(@origin-name, @origin-id)}">
+      <div class="viewport" style="background-image: url(/shots/detail.{@name});">
+        <div class="opaqueborder"/>
+      </div>
+    </a>
+  </xsl:template>
+
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.ImageStrip']">
     <a href="{func:linkImageStrip(@origin-name)}#{@origin-id}">
       <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{@name}"/>
     </a>
   </xsl:template>
 
-  <!--
-   ! Function that draws the highlights
-   !
-   ! @see      ../layout.xsl
-   ! @purpose  Define main content
-   !-->
-  <func:function name="func:highlights">
-    <xsl:param name="entries"/>
-    <xsl:param name="i" select="1"/>
-    <xsl:param name="max" select="5"/>
-    
-    <func:result>
-      <tr>
-        <xsl:for-each select="exsl:node-set($entries)[position() &gt;= $i and position() &lt; $i + $max]">
-          <td>
-            <xsl:apply-templates select="."/>
-          </td>
-        </xsl:for-each>
-      </tr>
-      <xsl:if test="$i &lt; count(exsl:node-set($entries))">
-        <xsl:copy-of select="func:highlights(exsl:node-set($entries), $i + $max)"/>
-      </xsl:if>
-    </func:result>  
-  </func:function>
+  <xsl:template match="image[@origin-class = 'de.thekid.dialog.ImageStrip']" mode="full">
+    <a href="{func:linkImageStrip(@origin-name)}#{@origin-id}">
+      <div class="viewport" style="background-image: url(/albums/{@origin-name}/{@name});">
+        <div class="opaqueborder"/>
+      </div>
+    </a>
+  </xsl:template>
 
   <!--
    ! Template for content
@@ -123,11 +130,17 @@
     
     <xsl:for-each select="/formresult/topics/topic">
       <h2><a href="{func:linkTopic(@name)}"><xsl:value-of select="@title"/></a></h2>
-      <table class="highlights" border="0">
-        <tr>
-          <xsl:copy-of select="func:highlights(exsl:node-set(featured/image))"/>
-        </tr>
-      </table>
+      <table border="0" class="highlights"><tr><td>
+        <div style="float: left; margin-top: 1px; margin-right: 1px">
+          <xsl:apply-templates select="featured/image[1]" mode="full"/>
+        </div>
+        <xsl:for-each select="featured/image[position() &gt; 1]">
+          <div style="float: left">
+            <xsl:apply-templates select="."/>
+          </div>
+        </xsl:for-each>
+        <br clear="all"/>
+      </td></tr></table>
       <p>
         This topic contains a total of <xsl:value-of select="featured/@total"/> images -
         <a href="{func:linkTopic(@name)}">See more</a>
