@@ -179,7 +179,7 @@
         By Topic
       </a>
       &#xbb;
-      <a href="{func:link(concat('topic?', /formresult/topic/@name))}">
+      <a href="{func:linkTopic(/formresult/topic/@name)}">
         <xsl:value-of select="/formresult/topic/@title"/>
       </a>
     </h3>
