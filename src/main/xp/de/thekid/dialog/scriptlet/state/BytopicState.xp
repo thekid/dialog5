@@ -25,6 +25,8 @@ import de.thekid.dialog.scriptlet.EntryCollectionNodeHandler;
 
 import native standard.sscanf;
 import native standard.krsort;
+import native standard.array_reverse;
+import native standard.sizeof;
 
 /**
  * Handles /xml/bytopic
@@ -74,36 +76,25 @@ public class BytopicState extends de.thekid.dialog.scriptlet.AbstractDialogState
 
       $t= $node.addChild(new Node('topic', null, [ name : $topic.getName(), title : $topic.getTitle() ]));
       $t.addChild(Node::fromObject($topic.getCreatedAt(), 'created'));
-
-      // Add origins grouped by year
-      $o= $t.addChild(new Node('origins'));
-      $origins= new [:Node] {:};
-      $classes= new [:string] {:};
-      foreach ($name in $topic.origins()) {
-        $entry= $this.getEntryFor($name);
-        if (!isset(self::$nodeHandlers[$entry.getClassName()])) {
-          throw new FormatException('Index contains unknown element "' ~ $entry.getClassName() ~ '"');
-        }
-
-        $child= self::$nodeHandlers[$entry.getClassName()].nodeFor($entry, self::$nodeHandlers);
-        $y= $entry.getDate().toString('Y');
-        if (!isset($origins[$y])) {
-          $origins[$y]= new Node('year', null, [ num : $y ]);
-        }
-        $origins[$y].addChild($child).setAttribute('type', $entry.getClassName());
-        $classes[$name]= $entry.getClassName();
-      }
-      krsort($origins);
-      foreach ($byYear in $origins) {
-        $o.addChild($byYear);
-      }
-
-      // Add featured images
+      
+      // Add 10 most recent featured images
+      $featured= $topic.featuredImages();
       $images= $t.addChild(new Node('featured'));
-      foreach ($origin, $image in $topic.featuredImages()) {
-        $image= $images.addChild(Node::fromObject($image, 'image'));
-        $image.setAttribute('origin-name', $origin);
-        $image.setAttribute('origin-class', $classes[$origin]);
+      $images.setAttribute('total', sizeof($featured));
+      $entries= new [:IEntry] {:};
+      $m= 1;
+      foreach ($origin, $image in array_reverse($featured)) {
+        $i= $images.addChild(Node::fromObject($image, 'image'));
+        $i.setAttribute('name', $image.getName());
+        $i.setAttribute('origin-name', $origin);
+        if (!isset($entries[$origin])) {
+          $entries[$origin]= $this.getEntryFor($origin);
+        }
+        $i.setAttribute('origin-class', $entries[$origin].getClassName());
+        foreach ($key, $value in $entries[$origin].imageUrn($image.getName()) as [:string]?) {
+          $i.setAttribute('origin-' ~ $key, $value);
+        }
+        if (++$m > 10) break;
       }
     }
   }

@@ -8,6 +8,9 @@ SVN version: ?????
 
 Heads up!
 ~~~~~~~~~
+- Changed "By topic" overview to show only the newest 10 images per
+  topic for performance reasons
+  (friebe)
 - Changed image and shot view as well as image strip document layout
   to use a div instead of a HTML table
   (friebe)

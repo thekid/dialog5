@@ -49,19 +49,27 @@
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.Album']">
-    <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{name}"/>
+    <a href="{func:linkImage(@origin-name, @origin-chapter, @origin-type, @origin-id)}">
+      <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{@name}"/>
+    </a>
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.EntryCollection']">
-    <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{name}"/>
-  </xsl:template>
-
-  <xsl:template match="image[@origin-class = 'de.thekid.dialog.ImageStrip']">
-    <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{name}"/>
+    <a href="{func:linkImage(@origin-name, @origin-chapter, @origin-type, @origin-id)}">
+      <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{@name}"/>
+    </a>
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.SingleShot']">
-    <img width="150" height="113" border="0" src="/shots/thumb.color.{name}"/>
+    <a href="{func:linkShot(@origin-name, @origin-id)}">
+      <img width="150" height="113" border="0" src="/shots/thumb.color.{@name}"/>
+    </a>
+  </xsl:template>
+
+  <xsl:template match="image[@origin-class = 'de.thekid.dialog.ImageStrip']">
+    <a href="{func:linkImageStrip(@origin-name)}#{@origin-id}">
+      <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{@name}"/>
+    </a>
   </xsl:template>
 
   <!--
@@ -88,61 +96,6 @@
       </xsl:if>
     </func:result>  
   </func:function>
-
-  <!--
-   ! Template for albums
-   !
-   ! @purpose  Specialized entry template
-   !-->
-  <xsl:template match="entry[@type = 'de.thekid.dialog.Album']">
-    <a title="Album of {@num_images} images in {@num_chapters} chapters" href="{func:linkAlbum(@name)}">
-      <xsl:value-of select="@title"/>
-    </a>
-  </xsl:template>
-  
-  <!--
-   ! Template for updates
-   !
-   ! @purpose  Specialized entry template
-   !-->
-  <xsl:template match="entry[@type = 'de.thekid.dialog.Update']">
-    <a title="Update" href="{func:linkAlbum(@album)}">
-      <xsl:value-of select="@title"/>
-    </a>
-  </xsl:template>
-
-  <!--
-   ! Template for updates
-   !
-   ! @purpose  Specialized entry template
-   !-->
-  <xsl:template match="entry[@type = 'de.thekid.dialog.SingleShot']">
-    <a title="Featured image" href="{func:linkShot(@name, 0)}">
-      <xsl:value-of select="@title"/>
-    </a>
-  </xsl:template>
-
-  <!--
-   ! Template for collections 
-   !
-   ! @purpose  Specialized entry template
-   !-->
-  <xsl:template match="entry[@type = 'de.thekid.dialog.EntryCollection']">
-    <a title="Collection of {@num_entries}" href="{func:linkCollection(@name)}">
-      <xsl:value-of select="@title"/>
-    </a>
-  </xsl:template>
-
-  <!--
-   ! Template for collections 
-   !
-   ! @purpose  Specialized entry template
-   !-->
-  <xsl:template match="entry[@type = 'de.thekid.dialog.ImageStrip']">
-    <a title="Image strip with {@num_images} images" href="{func:linkImageStrip(@name)}">
-      <xsl:value-of select="@title"/>
-    </a>
-  </xsl:template>
 
   <!--
    ! Template for content
@@ -175,21 +128,10 @@
           <xsl:copy-of select="func:highlights(exsl:node-set(featured/image))"/>
         </tr>
       </table>
-      <table class="bydate_list" border="0" width="770">
-        <xsl:for-each select="origins/year">
-          <tr>
-            <td id="day" valign="top">
-              <h2><xsl:value-of select="@num"/></h2>
-            </td>
-            <td id="content" valign="top">
-              <xsl:for-each select="entry">
-                <xsl:apply-templates select="."/>
-                <xsl:if test="position() &lt; last()">, </xsl:if>
-              </xsl:for-each>
-            </td>
-          </tr>
-        </xsl:for-each>
-      </table>
+      <p>
+        This topic contains a total of <xsl:value-of select="featured/@total"/> images -
+        <a href="{func:linkTopic(@name)}">See more</a>
+      </p>
       <br clear="all"/><hr/>
     </xsl:for-each>
 
