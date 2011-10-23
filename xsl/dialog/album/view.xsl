@@ -80,17 +80,16 @@
     </p>
     
     <h4>Highlights</h4>
-    <table class="highlights" border="0">
-      <tr>
-        <xsl:for-each select="/formresult/album/highlights/highlight">
-          <td>
-            <a href="{func:linkImage(../../@name, 0, 'h', position()- 1)}">
-              <img width="150" height="113" border="0" src="/albums/{../../@name}/thumb.{name}"/>
-            </a>
-          </td>
-        </xsl:for-each>
-      </tr>
-    </table>
+    <div class="highlights">
+      <xsl:for-each select="/formresult/album/highlights/highlight">
+        <div style="float: left"> 
+          <a href="{func:linkImage(../../@name, 0, 'h', position()- 1)}">
+            <img width="150" height="113" border="0" src="/albums/{../../@name}/thumb.{name}"/>
+          </a>
+        </div>
+      </xsl:for-each>
+      <br clear="all"/>
+    </div>
     <p>
       This album contains <xsl:value-of select="/formresult/album/@num_images"/> images in <xsl:value-of select="/formresult/album/@num_chapters"/> chapters.
     </p>

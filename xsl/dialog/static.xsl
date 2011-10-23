@@ -86,17 +86,16 @@
     </p>
 
     <h4>Highlights</h4>
-    <table class="highlights" border="0">
-      <tr>
-        <xsl:for-each select="highlights/highlight">
-          <td>
-            <a href="{func:linkImage(../../@name, 0, 'h', position()- 1)}">
-              <img width="150" height="113" border="0" src="/albums/{../../@name}/thumb.{name}"/>
-            </a>
-          </td>
-        </xsl:for-each>
-      </tr>
-    </table>
+    <div class="highlights">
+      <xsl:for-each select="highlights/highlight">
+        <div style="float: left">
+          <a href="{func:linkImage(../../@name, 0, 'h', position()- 1)}">
+            <img width="150" height="113" border="0" src="/albums/{../../@name}/thumb.{name}"/>
+          </a>
+        </div>
+      </xsl:for-each>
+      <br clear="all"/>
+    </div>
     <p>
       This album contains <xsl:value-of select="@num_images"/> images in <xsl:value-of select="@num_chapters"/> chapters -
       <a href="{func:linkAlbum(@name)}">See more</a>
@@ -172,31 +171,6 @@
   </xsl:template>
 
   <!--
-   ! Function that draws the image strip images, max. 5 in a row
-   !
-   !-->
-  <func:function name="func:stripimages">
-    <xsl:param name="entries"/>
-    <xsl:param name="i" select="1"/>
-    <xsl:param name="max" select="5"/>
-    
-    <func:result>
-      <tr>
-        <xsl:for-each select="exsl:node-set($entries)[position() &gt;= $i and position() &lt; $i + $max]">
-          <td>
-            <a href="{func:linkImageStrip(../../@name)}#{$i - 1 + position() - 1}">
-              <img width="150" height="113" border="0" src="/albums/{../../@name}/thumb.{name}"/>
-            </a>
-          </td>
-        </xsl:for-each>
-      </tr>
-      <xsl:if test="$i &lt; count(exsl:node-set($entries))">
-        <xsl:copy-of select="func:stripimages(exsl:node-set($entries), $i + $max)"/>
-      </xsl:if>
-    </func:result>  
-  </func:function>
-
-  <!--
    ! Template for image strips
    !
    ! @purpose  Specialized entry template
@@ -217,11 +191,16 @@
     </p>
 
     <h4>Images</h4>
-    <table class="highlights" border="0">
-      <tr>
-        <xsl:copy-of select="func:stripimages(exsl:node-set(images/image))"/>
-      </tr>
-    </table>
+    <div class="highlights">
+      <xsl:for-each select="images/image">
+        <div style="float: left"> 
+          <a href="{func:linkImageStrip(../../@name)}#{position() - 1}">
+            <img width="150" height="113" border="0" src="/albums/{../../@name}/thumb.{name}"/>
+          </a>
+        </div>
+      </xsl:for-each>
+      <br clear="all"/>
+    </div>
     <p>
       This image strip contains <xsl:value-of select="@num_images"/> images -
       <a href="{func:linkImageStrip(@name)}">See more</a>

@@ -130,7 +130,7 @@
     
     <xsl:for-each select="/formresult/topics/topic">
       <h2><a href="{func:linkTopic(@name)}"><xsl:value-of select="@title"/></a></h2>
-      <table border="0" class="highlights"><tr><td>
+      <div class="highlights">
         <div style="float: left; margin-top: 1px; margin-right: 1px">
           <xsl:apply-templates select="featured/image[1]" mode="full"/>
         </div>
@@ -140,7 +140,7 @@
           </div>
         </xsl:for-each>
         <br clear="all"/>
-      </td></tr></table>
+      </div>
       <p>
         This topic contains a total of <xsl:value-of select="featured/@total"/> images -
         <a href="{func:linkTopic(@name)}">See more</a>

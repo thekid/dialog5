@@ -66,11 +66,11 @@ small {
   font-size: 28px;
   color: #a9a9a9;
 }
-table.highlights {
+.highlights {
   border-color: #202021;
   margin-bottom: 10px;
 }
-table.highlights img {
+.highlights img {
   border-color: #202021;
 }
 table.collection_list {

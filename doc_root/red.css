@@ -121,10 +121,10 @@ a.nav {
 }
 
 /* Images */
-table.highlights {
+.highlights {
   border-top: 1px solid #fd9b1b;
 }
-table.highlights img {
+.highlights img {
   border: 1px solid #940408;
 }
 table.collection_list {

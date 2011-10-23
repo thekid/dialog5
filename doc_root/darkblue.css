@@ -120,10 +120,10 @@ a.nav {
 }
 
 /* Images */
-table.highlights {
+.highlights {
   border-top: 1px solid #eeeeee;
 }
-table.highlights img {
+.highlights img {
   border: 1px solid #f4f4f4;
 }
 table.collection_list {

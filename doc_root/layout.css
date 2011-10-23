@@ -106,11 +106,12 @@ tr#header {
 }
 
 /* Images */
-table.highlights {
-  border-top: 1px solid;
+.highlights {
+  display: block;
 }
-table.highlights img {
+.highlights img {
   border: 2px solid;
+  margin: 1px;
 }
 table.collection_list {
   border: none;
@@ -163,7 +164,7 @@ img.singleshot_thumb {
   text-align: center;
 }
 .viewport {
-  width: 462px; 
-  height: 231px;
+  width: 466px; 
+  height: 237px;
   background-position: 50% 50%;
 }

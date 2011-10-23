@@ -8,6 +8,9 @@ SVN version: ?????
 
 Heads up!
 ~~~~~~~~~
+- Changed highlight rendering to use divs floating left instead of HTML
+  tables - in browse, by date, by topic, albums and collections overviews
+  (friebe)
 - Changed "By topic" overview to show only the newest 10 images per
   topic for performance reasons
   (friebe)

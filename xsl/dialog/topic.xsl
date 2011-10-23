@@ -51,31 +51,6 @@
   </xsl:template>
 
   <!--
-   ! Function that draws the highlights
-   !
-   ! @see      ../layout.xsl
-   ! @purpose  Define main content
-   !-->
-  <func:function name="func:highlights">
-    <xsl:param name="entries"/>
-    <xsl:param name="i" select="1"/>
-    <xsl:param name="max" select="5"/>
-    
-    <func:result>
-      <tr>
-        <xsl:for-each select="exsl:node-set($entries)[position() &gt;= $i and position() &lt; $i + $max]">
-          <td>
-            <xsl:apply-templates select="."/>
-          </td>
-        </xsl:for-each>
-      </tr>
-      <xsl:if test="$i &lt; count(exsl:node-set($entries))">
-        <xsl:copy-of select="func:highlights(exsl:node-set($entries), $i + $max)"/>
-      </xsl:if>
-    </func:result>  
-  </func:function>
-
-  <!--
    ! Template for albums
    !
    ! @purpose  Specialized entry template
@@ -194,11 +169,14 @@
           <xsl:otherwise><xsl:value-of select="$total"/> images</xsl:otherwise>
         </xsl:choose>
       </h2>
-      <table class="highlights" border="0">
-        <tr>
-          <xsl:copy-of select="func:highlights(exsl:node-set(image))"/>
-        </tr>
-      </table>
+      <div class="highlights">
+        <xsl:for-each select="image">
+          <div style="float: left">
+            <xsl:apply-templates select="."/>
+          </div>
+        </xsl:for-each>
+        <br clear="all"/>
+      </div>
       <table class="bydate_list" border="0" width="770">
         <xsl:for-each select="entry">
           <tr>

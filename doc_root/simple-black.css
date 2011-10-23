@@ -46,10 +46,7 @@ tr#header {
 .datebox h2 {
   color: #a9a9a9;
 }
-table.highlights {
-  border-color: #424542;
-}
-table.highlights img {
+.highlights img {
   border-color: #424542;
 }
 table.collection_list {
