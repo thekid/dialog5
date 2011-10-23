@@ -289,7 +289,7 @@ public class AddCollection extends ImportCommand {
       // Sort images by their creation date (from EXIF data)
       usort($images, create_function(
         '$a, $b', 
-        'return $b.exifData.dateTime.compareTo($a.exifData.dateTime);'
+        'return $b->exifData->dateTime->compareTo($a->exifData->dateTime);'
       ));
 
       // Group images by strategy
