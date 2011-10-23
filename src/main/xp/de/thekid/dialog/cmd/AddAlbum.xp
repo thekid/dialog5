@@ -176,13 +176,12 @@ public class AddAlbum extends ImportCommand {
       $this.album= new Album();
       $this.album.setName($albumName);
     }
-    
-    // If not specified: Read the title from title.txt if existant, use the 
-    // directory name otherwise
+
+    // When no title is passed in, either use an existing one, or read the title 
+    // from title.txt if existant, failling back to the directory name otherwise
     if (null !== $this.title) {
       $this.album.setTitle($this.title);
-    } else {
-
+    } else if (!$this.album.getTitle()) {
       if (is_file($tf= $this.origin.getURI() ~ 'title.txt')) {
         $this.album.setTitle(file_get_contents($tf));
       } else {

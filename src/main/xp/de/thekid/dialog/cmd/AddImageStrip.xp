@@ -152,8 +152,7 @@ public class AddImageStrip extends ImportCommand {
     // directory name otherwise
     if (null !== $this.title) {
       $imageStrip.setTitle($this.title);
-    } else {
-
+    } else if (!$imageStrip.getTitle()) {
       if (is_file($tf= $this.origin.getURI() ~ 'title.txt')) {
         $imageStrip.setTitle(file_get_contents($tf));
       } else {
