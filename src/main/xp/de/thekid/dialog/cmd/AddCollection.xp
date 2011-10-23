@@ -315,7 +315,7 @@ public class AddCollection extends ImportCommand {
     // Sort entries inside collection by creation date
     usort($collection.entries, create_function(
       '$a, $b', 
-      'return $b.getDate().compareTo($a.getDate());'
+      'return $b->getDate()->compareTo($a->getDate());'
     ));
 
     // If not specified: Use first album' creation time as collections's
