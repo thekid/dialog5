@@ -169,6 +169,14 @@ public class WebsiteScriptletURLTest extends TestCase {
   [@test] public void viewImageStrip() {
     $this.assertState('/imagestrip/someStrip', 'imagestrip', [ 'imagestrip' : 'someStrip']);
   }
+
+  /**
+   * View topic
+   *
+   */
+  [@test] public void viewtopic() {
+    $this.assertState('/topic/someTopic', 'topic', [ 'topic' : 'someTopic']);
+  }
   
   /**
    * Old-style URLs (/xml/...) are still supported

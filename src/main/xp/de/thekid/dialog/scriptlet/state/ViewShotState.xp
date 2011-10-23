@@ -11,6 +11,8 @@ import scriptlet.xml.workflow.Context;
 import xml.Node;
 
 import native standard.sscanf;
+import native standard.strtolower;
+import native pcre.preg_replace;
 
 /**
  * Handles /xml/shot/view
@@ -31,6 +33,14 @@ public class ViewShotState extends de.thekid.dialog.scriptlet.AbstractDialogStat
       $s= $response.addFormResult(Node::fromObject($shot, 'selected'));
       $s.setAttribute('mode', self::$modes[$mode]);
       $s.setAttribute('page', $this.getDisplayPageFor($name));
+
+      // Check topics
+      if (null !== $shot.image.iptcData) {
+        $topics= $s.addChild(new Node('topics'));
+        foreach ($keyword in $shot.image.iptcData.getKeywords()) {
+          $topics.addChild(new Node('topic', $keyword, [ name : preg_replace('/[^a-z0-9-]/', '_', strtolower($keyword)) ]));
+        }
+      }
     }
   }
 }

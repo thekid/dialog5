@@ -16,6 +16,8 @@ import de.thekid.dialog.EntryCollection;
 import native standard.sscanf;
 import native standard.substr;
 import native standard.strpos;
+import native standard.strtolower;
+import native pcre.preg_replace;
 
 /**
  * Handles /xml/image/view
@@ -59,7 +61,7 @@ public class ViewImageState extends de.thekid.dialog.scriptlet.AbstractDialogSta
       $next= $prev= null;
       switch ($type) {
         case 'h':
-          $selected= $response.addFormResult(Node::fromObject($album.highlightAt($id), 'selected'));
+          $image= $album.highlightAt($id);
           if ($id < $album.numHighlights() - 1) {
             $next= [ type : 'h', chapter : 0, number : $id + 1 ];
           } else if (($album.numChapters() > 0) && ($album.chapterAt(0).numImages() > 0)) {
@@ -71,7 +73,7 @@ public class ViewImageState extends de.thekid.dialog.scriptlet.AbstractDialogSta
           break;
 
         case 'i':
-          $selected= $response.addFormResult(Node::fromObject($album.chapterAt($chapter).imageAt($id), 'selected'));
+          $image= $album.chapterAt($chapter).imageAt($id);
           if ($id < $album.chapterAt($chapter).numImages() - 1) {
             $next= [ type : 'i', chapter : $chapter, number : $id + 1 ];
           } else if ($chapter < $album.numChapters() - 1) {
@@ -87,10 +89,19 @@ public class ViewImageState extends de.thekid.dialog.scriptlet.AbstractDialogSta
           break;
       }
 
+      $selected= $response.addFormResult(Node::fromObject($image, 'selected'));
       $selected.setAttribute('type', $type);
       $selected.setAttribute('chapter', $chapter);
       $next && $selected.addChild(Node::fromArray($next, 'next'));
       $prev && $selected.addChild(Node::fromArray($prev, 'prev'));
+
+      // Check topics
+      if (null !== $image.iptcData) {
+        $topics= $selected.addChild(new Node('topics'));
+        foreach ($keyword in $image.iptcData.getKeywords()) {
+          $topics.addChild(new Node('topic', $keyword, [ name : preg_replace('/[^a-z0-9-]/', '_', strtolower($keyword)) ]));
+        }
+      }
 
       // Check if album is inside a collection
       if (false === ($p= strpos($name, '/'))) return; 

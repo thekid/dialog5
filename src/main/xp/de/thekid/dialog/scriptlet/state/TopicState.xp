@@ -87,7 +87,7 @@ public class TopicState extends AbstractDialogState {
    *
    */
   public void process(scriptlet.xml.workflow.WorkflowScriptletRequest? $request, scriptlet.xml.XMLScriptletResponse? $response, scriptlet.xml.workflow.Context? $context) {
-    $name= $request.getQueryString();
+    $name= $request.getURL().getValue('topic');
     $topic= $this.getEntryFor('topics/' ~ $name) as Topic;
 
     $t= $response.addFormResult(new Node('topic', null, [

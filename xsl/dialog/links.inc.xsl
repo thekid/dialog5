@@ -78,6 +78,14 @@
     </func:result>
   </func:function>
 
+  <func:function name="func:linkTopic">
+    <xsl:param name="name"/>
+    
+    <func:result>
+      <xsl:value-of select="concat('/topic/', $name)"/>
+    </func:result>
+  </func:function>
+
   <func:function name="func:linkByTopic">
     <xsl:param name="page" select="false()"/>
     

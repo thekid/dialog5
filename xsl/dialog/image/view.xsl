@@ -161,6 +161,16 @@
       </xsl:if>
       </small>)
     </p>
+    <hr/>
+    <xsl:if test="count(/formresult/selected/topics/topic) &gt; 0">
+      <p>
+        <xsl:text>Topics: </xsl:text>
+        <xsl:for-each select="/formresult/selected/topics/topic">
+          <a href="{func:linkTopic(@name)}"><xsl:value-of select="."/></a>
+          <xsl:text> </xsl:text>
+        </xsl:for-each>
+      </p>
+    </xsl:if>
   </xsl:template>
   
 </xsl:stylesheet>
