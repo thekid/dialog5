@@ -168,6 +168,10 @@ img.singleshot_thumb {
 .image {
   text-align: center;
 }
+.image .display {
+  margin-left: auto;
+  margin-right: auto;
+}
 .viewport {
   width: 466px; 
   height: 236px;

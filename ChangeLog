@@ -21,6 +21,11 @@ Heads up!
   to use a div instead of a HTML table
   (friebe)
 
+Bugfixes
+~~~~~~~~
+- Fixed issue #21 - Vertical Shot Spacing
+  (friebe)
+
 Features
 ~~~~~~~~
 - Added RSS link (id: "rss") to top navigation as suggested in issue #9
@@ -65,7 +70,6 @@ Heads up!
   an "img"-tag to make inner borders possible. To style your image, use
   the selector ".image .display" instead of "#image img" in your CSS!
   (friebe)
- 
 
 Features
 ~~~~~~~~
