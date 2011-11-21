@@ -113,7 +113,7 @@
     <div class="chapter">
       <xsl:for-each select="/formresult/chapter/images/image">
         <div style="float: left"> 
-          <a href="{func:linkImage(/formresult/album/@name, /formresult/chapter/@id, 'i', position()- 1)}">
+          <a href="{func:linkImage(/formresult/album/@name, /formresult/chapter/@id - 1, 'i', position()- 1)}">
             <img width="150" height="113" border="0" src="/albums/{/formresult/album/@name}/thumb.{name}"/>
           </a>
         </div>
