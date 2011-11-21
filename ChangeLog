@@ -28,6 +28,8 @@ Bugfixes
 
 Features
 ~~~~~~~~
+- Also added pager at the bottom of chapter pages
+  (friebe)
 - Added RSS link (id: "rss") to top navigation as suggested in issue #9
   (friebe)
 - Reworked design in "By topic" - shows a excerpt from the first of

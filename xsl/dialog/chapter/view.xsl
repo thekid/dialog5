@@ -39,6 +39,33 @@
   </xsl:template>
   
   <!--
+   ! Pager: Previous and next chapter
+   !
+   !-->
+  <xsl:template name="pager">
+    <center>
+      <a title="Previous chapter" class="pager{/formresult/chapter/@previous != ''}" id="previous">
+        <xsl:if test="/formresult/chapter/@previous != ''">
+          <xsl:attribute name="href"><xsl:value-of select="func:linkChapter(
+            /formresult/album/@name, 
+            /formresult/chapter/@previous
+          )"/></xsl:attribute>
+        </xsl:if>
+        <xsl:text>&#xab;</xsl:text>
+      </a>
+      <a title="Next chapter" class="pager{/formresult/chapter/@next != ''}" id="next">
+        <xsl:if test="/formresult/chapter/@next != ''">
+          <xsl:attribute name="href"><xsl:value-of select="func:linkChapter(
+            /formresult/album/@name,
+            /formresult/chapter/@next
+          )"/></xsl:attribute>
+        </xsl:if>
+        <xsl:text>&#xbb;</xsl:text>
+      </a>
+    </center>
+  </xsl:template>
+
+  <!--
    ! Template for content
    !
    ! @see      ../layout.xsl
@@ -88,27 +115,8 @@
         <xsl:otherwise><xsl:value-of select="$total"/> images</xsl:otherwise>
       </xsl:choose>
     </p>
-
-    <center>
-      <a title="Previous image" class="pager{/formresult/chapter/@previous != ''}" id="previous">
-        <xsl:if test="/formresult/chapter/@previous != ''">
-          <xsl:attribute name="href"><xsl:value-of select="func:linkChapter(
-            /formresult/album/@name, 
-            /formresult/chapter/@previous
-          )"/></xsl:attribute>
-        </xsl:if>
-        <xsl:text>&#xab;</xsl:text>
-      </a>
-      <a title="Next image" class="pager{/formresult/chapter/@next != ''}" id="next">
-        <xsl:if test="/formresult/chapter/@next != ''">
-          <xsl:attribute name="href"><xsl:value-of select="func:linkChapter(
-            /formresult/album/@name,
-            /formresult/chapter/@next
-          )"/></xsl:attribute>
-        </xsl:if>
-        <xsl:text>&#xbb;</xsl:text>
-      </a>
-    </center>
+    
+    <xsl:call-template name="pager"/>
 
     <div class="chapter">
       <xsl:for-each select="/formresult/chapter/images/image">
@@ -120,6 +128,8 @@
       </xsl:for-each>
       <br clear="all"/>
     </div>
+
+    <xsl:call-template name="pager"/>
     
     <hr/>
   </xsl:template>
