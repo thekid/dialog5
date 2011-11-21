@@ -28,6 +28,10 @@ Bugfixes
 
 Features
 ~~~~~~~~
+- Changed chapter view to zoom in on first picture if there are more 
+  than three pictures in this chapter. This gives the chapter overview a
+  distinguishable design from the album overview.
+  (friebe)
 - Also added pager at the bottom of chapter pages
   (friebe)
 - Added RSS link (id: "rss") to top navigation as suggested in issue #9

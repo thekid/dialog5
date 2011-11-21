@@ -119,13 +119,33 @@
     <xsl:call-template name="pager"/>
 
     <div class="chapter">
-      <xsl:for-each select="/formresult/chapter/images/image">
-        <div style="float: left"> 
-          <a href="{func:linkImage(/formresult/album/@name, /formresult/chapter/@id - 1, 'i', position()- 1)}">
-            <img width="150" height="113" border="0" src="/albums/{/formresult/album/@name}/thumb.{name}"/>
-          </a>
-        </div>
-      </xsl:for-each>
+      <xsl:choose>
+        <xsl:when test="count(/formresult/chapter/images/image) &lt; 3">
+          <xsl:for-each select="/formresult/chapter/images/image">
+            <div style="float: left">
+              <a href="{func:linkImage(/formresult/album/@name, /formresult/chapter/@id - 1, 'i', position()- 1)}">
+                <img width="150" height="113" border="0" src="/albums/{/formresult/album/@name}/thumb.{name}"/>
+              </a>
+            </div>
+          </xsl:for-each>
+        </xsl:when>
+        <xsl:otherwise>
+          <div style="float: left; margin-top: 1px; margin-right: 1px">
+            <a href="{func:linkImage(/formresult/album/@name, /formresult/chapter/@id - 1, 'i', '0')}">
+              <div class="viewport" style="background-image: url(/albums/{/formresult/album/@name}/{/formresult/chapter/images/image[1]/name});">
+                <div class="opaqueborder"/>
+              </div>
+            </a>
+          </div>
+          <xsl:for-each select="/formresult/chapter/images/image[position() &gt; 1]">
+            <div style="float: left">
+              <a href="{func:linkImage(/formresult/album/@name, /formresult/chapter/@id - 1, 'i', position())}">
+                <img width="150" height="113" border="0" src="/albums/{/formresult/album/@name}/thumb.{name}"/>
+              </a>
+            </div>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
       <br clear="all"/>
     </div>
 
