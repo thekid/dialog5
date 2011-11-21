@@ -27,7 +27,7 @@ public class ImageStrip implements IEntry {
    * Constructor
    *
    */
-  public __construct(string $name) {
+  public __construct(string $name= null) {
     $this.name= $name;
   }
 

@@ -23,6 +23,14 @@ public class Topic implements IEntry {
   public [:AlbumImage[]] $images = [:];
 
   /**
+   * Constructor
+   *
+   */
+  public __construct(string $name= null) {
+    $this.name= $name;
+  }
+
+  /**
    * Set name
    *
    */

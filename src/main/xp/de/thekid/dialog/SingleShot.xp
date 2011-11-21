@@ -22,6 +22,14 @@ public class SingleShot implements IEntry {
   public AlbumImage $image    = null;
 
   /**
+   * Constructor
+   *
+   */
+  public __construct(string $name= null) {
+    $this.name= $name;
+  }
+
+  /**
    * Set name
    *
    */

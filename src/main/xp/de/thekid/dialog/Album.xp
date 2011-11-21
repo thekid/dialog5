@@ -25,6 +25,14 @@ public class Album implements IEntry {
   public AlbumChapter[] $chapters = [];
 
   /**
+   * Constructor
+   *
+   */
+  public __construct(string $name= null) {
+    $this.name= $name;
+  }
+
+  /**
    * Set Name
    *
    */

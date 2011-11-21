@@ -21,6 +21,14 @@ public class EntryCollection implements IEntry {
   public IEntry[] $entries    = [];
 
   /**
+   * Constructor
+   *
+   */
+  public __construct(string $name= null) {
+    $this.name= $name;
+  }
+
+  /**
    * Set name
    *
    */
