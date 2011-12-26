@@ -23,6 +23,9 @@ Heads up!
 
 Bugfixes
 ~~~~~~~~
+- Fixed issue #23 - Images not displaying (when their filenames include 
+  characters that need encoding)
+  (friebe)
 - Fixed issue #21 - Vertical Shot Spacing
   (friebe)
 
