@@ -35,15 +35,15 @@
    !-->
   <xsl:template name="pager">
     <center>
-      <a title="Year after" class="pager{/formresult/years/@current &lt; /formresult/years/@max}" id="previous">
-        <xsl:if test="/formresult/years/@current &lt; /formresult/years/@max">
-          <xsl:attribute name="href"><xsl:value-of select="func:linkByDate(/formresult/years/@current + 1)"/></xsl:attribute>
+      <a title="Year after" class="pager{formresult/years/@next}" id="previous">
+        <xsl:if test="/formresult/years/@next">
+          <xsl:attribute name="href"><xsl:value-of select="func:linkByDate(/formresult/years/@next)"/></xsl:attribute>
         </xsl:if>
         <xsl:text>&#xab;</xsl:text>
       </a>
-      <a title="Year before" class="pager{/formresult/years/@current &gt; /formresult/years/@min}" id="next">
-        <xsl:if test="/formresult/years/@current &gt; /formresult/years/@min">
-          <xsl:attribute name="href"><xsl:value-of select="func:linkByDate(/formresult/years/@current - 1)"/></xsl:attribute>
+      <a title="Year before" class="pager{/formresult/years/@previous}" id="next">
+        <xsl:if test="/formresult/years/@previous">
+          <xsl:attribute name="href"><xsl:value-of select="func:linkByDate(/formresult/years/@previous)"/></xsl:attribute>
         </xsl:if>
         <xsl:text>&#xbb;</xsl:text>
       </a>
