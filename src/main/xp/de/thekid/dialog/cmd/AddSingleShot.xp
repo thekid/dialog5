@@ -97,7 +97,7 @@ public class AddSingleShot extends ImportCommand {
    */
   [@arg]
   public void setCreatedAt(string $date= null) {
-    $this.createdAt= $date;
+    $this.createdAt= $date ? new util.Date($date) : null;
   }
 
   /**
