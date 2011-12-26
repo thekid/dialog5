@@ -1,0 +1,61 @@
+/* This class is part of the XP framework
+ *
+ * $Id$ 
+ */
+
+package de.thekid.dialog.sync;
+
+import util.cmd.Console;
+import peer.ftp.FtpConnection;
+import peer.ftp.FtpTransfer;
+import peer.ftp.FtpDir;
+
+import native standard.dirname;
+import native standard.basename;
+
+/**
+ * Implements the synchronizer interface with an FTP based upload
+ *
+ */
+public class FtpImpl extends Syncronizer {
+  protected FtpDir $target;
+
+  /**
+   * Sets target
+   *
+   */
+  public void setTarget(string? $target) {
+    $conn= new FtpConnection($target);
+    $conn.connect();
+    $this.target= $conn.rootDir().getDir(new peer.URL($target).getPath('/'));
+  }
+  
+  /**
+   * Creates a string representation
+   *
+   */
+  public string toString() {
+    return $this.getClassName() ~ '(-> ' ~  xp::stringOf($this.target) ~ ')';
+  }
+
+  /**
+   * Uploads files
+   *
+   */
+  public void run() {
+    Console::$out.write('[');
+    foreach ($file in $this.filesNewerThan($this.lastSync())) {
+      $name= $this.relativePathOf($file.getURI());
+
+      if ($file instanceof io.collections.IOCollection) {
+        $this.target.dir(dirname($name)).dir(basename($name));
+        Console::$out.write('D');
+      } else {
+        $remote= $this.target.dir(dirname($name)).file(basename($name));
+        $remote.uploadFrom($file.getInputStream(), FtpTransfer::BINARY);
+        Console::$out.write('.');
+      }
+    }
+    Console::$out.writeLine(']');
+  }
+}
