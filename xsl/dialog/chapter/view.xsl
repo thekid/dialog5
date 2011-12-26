@@ -9,6 +9,7 @@
  xmlns:exsl="http://exslt.org/common"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:func="http://exslt.org/functions"
+ xmlns:str="http://exslt.org/strings"
  xmlns:php="http://php.net/xsl"
  extension-element-prefixes="func"
  exclude-result-prefixes="exsl func php"
@@ -124,7 +125,7 @@
           <xsl:for-each select="/formresult/chapter/images/image">
             <div style="float: left">
               <a href="{func:linkImage(/formresult/album/@name, /formresult/chapter/@id - 1, 'i', position()- 1)}">
-                <img width="150" height="113" border="0" src="/albums/{/formresult/album/@name}/thumb.{name}"/>
+                <img width="150" height="113" border="0" src="/albums/{/formresult/album/@name}/thumb.{str:encode-uri(name, false())}"/>
               </a>
             </div>
           </xsl:for-each>
@@ -132,7 +133,7 @@
         <xsl:otherwise>
           <div style="float: left; margin-top: 1px; margin-right: 1px">
             <a href="{func:linkImage(/formresult/album/@name, /formresult/chapter/@id - 1, 'i', '0')}">
-              <div class="viewport" style="background-image: url(/albums/{/formresult/album/@name}/{/formresult/chapter/images/image[1]/name});">
+              <div class="viewport" style="background-image: url(/albums/{/formresult/album/@name}/{str:encode-uri(/formresult/chapter/images/image[1]/name, false())});">
                 <div class="opaqueborder"/>
               </div>
             </a>
@@ -140,7 +141,7 @@
           <xsl:for-each select="/formresult/chapter/images/image[position() &gt; 1]">
             <div style="float: left">
               <a href="{func:linkImage(/formresult/album/@name, /formresult/chapter/@id - 1, 'i', position())}">
-                <img width="150" height="113" border="0" src="/albums/{/formresult/album/@name}/thumb.{name}"/>
+                <img width="150" height="113" border="0" src="/albums/{/formresult/album/@name}/thumb.{str:encode-uri(name, false())}"/>
               </a>
             </div>
           </xsl:for-each>

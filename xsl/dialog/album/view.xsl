@@ -9,6 +9,7 @@
  xmlns:exsl="http://exslt.org/common"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:func="http://exslt.org/functions"
+ xmlns:str="http://exslt.org/strings"
  xmlns:php="http://php.net/xsl"
  extension-element-prefixes="func"
  exclude-result-prefixes="exsl func php"
@@ -84,7 +85,7 @@
       <xsl:for-each select="/formresult/album/highlights/highlight">
         <div style="float: left"> 
           <a href="{func:linkImage(../../@name, 0, 'h', position()- 1)}">
-            <img width="150" height="113" border="0" src="/albums/{../../@name}/thumb.{name}"/>
+            <img width="150" height="113" border="0" src="/albums/{../../@name}/thumb.{str:encode-uri(name, false())}"/>
           </a>
         </div>
       </xsl:for-each>
@@ -121,7 +122,7 @@
         <xsl:for-each select="images/image">
           <div style="float: left"> 
             <a href="{func:linkImage(../../../../@name, $chapter, 'i', position()- 1)}">
-              <img width="150" height="113" border="0" src="/albums/{../../../../@name}/thumb.{name}"/>
+              <img width="150" height="113" border="0" src="/albums/{../../../../@name}/thumb.{str:encode-uri(name, false())}"/>
             </a>
           </div>
         </xsl:for-each>

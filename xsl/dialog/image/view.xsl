@@ -9,6 +9,7 @@
  xmlns:exsl="http://exslt.org/common"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:func="http://exslt.org/functions"
+ xmlns:str="http://exslt.org/strings"
  xmlns:php="http://php.net/xsl"
  extension-element-prefixes="func"
  exclude-result-prefixes="exsl func php"
@@ -128,7 +129,7 @@
             /formresult/selected/next/number
           )"/></xsl:attribute>
         </xsl:if>
-        <div class="display" style="background-image: url(/albums/{/formresult/album/@name}/{/formresult/selected/name}); width: {/formresult/selected/width}px; height: {/formresult/selected/height}px">
+        <div class="display" style="background-image: url(/albums/{/formresult/album/@name}/{str:encode-uri(/formresult/selected/name, false())}); width: {/formresult/selected/width}px; height: {/formresult/selected/height}px">
           <div class="opaqueborder"/>
         </div>
       </a>

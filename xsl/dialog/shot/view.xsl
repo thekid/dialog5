@@ -9,6 +9,7 @@
  xmlns:exsl="http://exslt.org/common"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:func="http://exslt.org/functions"
+ xmlns:str="http://exslt.org/strings"
  xmlns:php="http://php.net/xsl"
  extension-element-prefixes="func"
  exclude-result-prefixes="exsl func php"
@@ -82,7 +83,7 @@
     
     <!-- Selected image -->
     <div class="image">
-      <div class="display" style="background-image: url(/shots/{/formresult/selected/@mode}.{/formresult/selected/fileName}); width: {/formresult/selected/image/width}px; height: {/formresult/selected/image/height}px">
+      <div class="display" style="background-image: url(/shots/{/formresult/selected/@mode}.{str:encode-uri(/formresult/selected/fileName, false())}); width: {/formresult/selected/image/width}px; height: {/formresult/selected/image/height}px">
         <div class="opaqueborder"/>
       </div>
     </div>

@@ -9,6 +9,7 @@
  xmlns:exsl="http://exslt.org/common"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:func="http://exslt.org/functions"
+ xmlns:str="http://exslt.org/strings"
  xmlns:php="http://php.net/xsl"
  extension-element-prefixes="func"
  exclude-result-prefixes="exsl func php"
@@ -141,25 +142,25 @@
   
   <xsl:template match="entry[@type = 'de.thekid.dialog.Album']" mode="highlights">
     <a href="{func:linkImage(@name, 0, 'h', 0)}">
-      <img width="150" height="113" border="0" src="/albums/{@name}/thumb.{highlight}"/>
+      <img width="150" height="113" border="0" src="/albums/{@name}/thumb.{str:encode-uri(highlight, false())}"/>
     </a>
   </xsl:template>
 
   <xsl:template match="entry[@type = 'de.thekid.dialog.SingleShot']" mode="highlights">
     <a href="{func:linkShot(@name, 0)}">
-      <img width="150" height="113" border="0" src="/shots/thumb.color.{highlight}"/>
+      <img width="150" height="113" border="0" src="/shots/thumb.color.{str:encode-uri(highlight, false())}"/>
     </a>
   </xsl:template>
 
   <xsl:template match="entry[@type = 'de.thekid.dialog.ImageStrip']" mode="highlights">
     <a href="{func:linkImageStrip(@name)}#0">
-      <img width="150" height="113" border="0" src="/albums/{@name}/thumb.{highlight}"/>
+      <img width="150" height="113" border="0" src="/albums/{@name}/thumb.{str:encode-uri(highlight, false())}"/>
     </a>
   </xsl:template>
 
   <xsl:template match="entry[@type = 'de.thekid.dialog.EntryCollection']" mode="highlights">
     <a href="{func:linkImage(@first, 0, 'h', 0)}">
-      <img width="150" height="113" border="0" src="/albums/{@first}/thumb.{highlight}"/>
+      <img width="150" height="113" border="0" src="/albums/{@first}/thumb.{str:encode-uri(highlight, false())}"/>
     </a>
   </xsl:template>
 

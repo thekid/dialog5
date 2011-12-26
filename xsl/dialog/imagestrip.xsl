@@ -9,6 +9,7 @@
  xmlns:exsl="http://exslt.org/common"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:func="http://exslt.org/functions"
+ xmlns:str="http://exslt.org/strings"
  xmlns:php="http://php.net/xsl"
  extension-element-prefixes="func"
  exclude-result-prefixes="exsl func php"
@@ -77,7 +78,7 @@
     <div class="image">
       <xsl:for-each select="/formresult/imagestrip/images/image">
         <a name="{position() - 1}">
-          <div class="display" style="background-image: url(/albums/{/formresult/imagestrip/@name}/{name}); width: {width}px; height: {height}px">
+          <div class="display" style="background-image: url(/albums/{/formresult/imagestrip/@name}/{str:encode-uri(name, false())}); width: {width}px; height: {height}px">
             <div class="opaqueborder"/>
           </div>
         </a>

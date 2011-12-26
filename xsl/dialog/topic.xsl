@@ -9,6 +9,7 @@
  xmlns:exsl="http://exslt.org/common"
  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
  xmlns:func="http://exslt.org/functions"
+ xmlns:str="http://exslt.org/strings"
  xmlns:php="http://php.net/xsl"
  extension-element-prefixes="func"
  exclude-result-prefixes="exsl func php"
@@ -28,25 +29,25 @@
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.Album']">
     <a href="{func:linkImage(@origin-name, @origin-chapter, @origin-type, @origin-id)}">
-      <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{@name}"/>
+      <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{str:encode-uri(@name, false())}"/>
     </a>
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.EntryCollection']">
     <a href="{func:linkImage(@origin-name, @origin-chapter, @origin-type, @origin-id)}">
-      <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{@name}"/>
+      <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{str:encode-uri(@name, false())}"/>
     </a>
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.SingleShot']">
     <a href="{func:linkShot(@origin-name, @origin-id)}">
-      <img width="150" height="113" border="0" src="/shots/thumb.color.{@name}"/>
+      <img width="150" height="113" border="0" src="/shots/thumb.color.{str:encode-uri(@name, false())}"/>
     </a>
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.ImageStrip']">
     <a href="{func:linkImageStrip(@origin-name)}#{@origin-id}">
-      <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{@name}"/>
+      <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{str:encode-uri(@name, false())}"/>
     </a>
   </xsl:template>
 
