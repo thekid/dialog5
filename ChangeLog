@@ -31,7 +31,7 @@ Bugfixes
 
 Features
 ~~~~~~~~
-- Added FTP strategy for synchronization (name: ftp) - see issue #23
+- Added FTP strategy for synchronization (name: ftp) - see issue #22
   (friebe)
 - Changed chapter view to zoom in on first picture if there are more 
   than three pictures in this chapter. This gives the chapter overview a
