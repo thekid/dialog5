@@ -37,7 +37,11 @@ public class Synchronize extends util.cmd.Command {
     $this.synchronizer= $class.newInstance();
     foreach ($key, $value in $prop.readSection('sync')) {
       if ('impl'  === $key) continue;
-      $class.getMethod('set' ~ $key).invoke($this.synchronizer, [$value]);
+      try {
+        $class.getMethod('set' ~ $key).invoke($this.synchronizer, [$value]);
+      } catch (lang.reflect.TargetInvocationException $e) {
+        throw $e.getCause();
+      }
     }
   }
 
