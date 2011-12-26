@@ -23,6 +23,8 @@ Heads up!
 
 Bugfixes
 ~~~~~~~~
+- Fixed issue #19 - ByDate Exception (when years index not continuous)
+  (friebe)
 - Fixed issue #23 - Images not displaying (when their filenames include 
   characters that need encoding)
   (friebe)
