@@ -83,7 +83,6 @@ public class BytopicState extends de.thekid.dialog.scriptlet.AbstractDialogState
       $images= $t.addChild(new Node('featured'));
       $images.setAttribute('total', $topic.numImages());
       $entries= new [:IEntry] {:};
-      $m= 1;
       foreach ($origin, $image in $featured) {
         $i= $images.addChild(Node::fromObject($image, 'image'));
         $i.setAttribute('name', $image.getName());
