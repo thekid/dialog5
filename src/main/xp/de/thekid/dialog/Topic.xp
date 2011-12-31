@@ -9,6 +9,7 @@ import util.Date;
 
 import native standard.sprintf;
 import native standard.array_keys;
+import native standard.array_reverse;
 
 /**
  * Represents a topic.
@@ -157,6 +158,18 @@ public class Topic implements IEntry {
   }
 
   /**
+   * Get number of images.
+   *
+   */
+  public int numImages() {
+    $n= 0;
+    foreach ($origin in $this.origins()) {
+      $n+= ($this.images[$origin] as AlbumImage[]?).length;
+    }
+    return $n;
+  }
+
+  /**
    * Get images from a certain album
    *
    */
@@ -168,11 +181,13 @@ public class Topic implements IEntry {
   /**
    * Get featured images.
    *
+   * @param   max If passed, a maximum number of featured images is returned
    */
-  public [:AlbumImage] featuredImages() {
+  public [:AlbumImage] featuredImages(int $max= -1) {
     $r= [:];
-    foreach ($origin in $this.origins()) {
+    foreach ($i, $origin in array_reverse($this.origins())) {
       $r[$origin]= $this.images[$origin][0];
+      if (-1 !== $max && $i >= $max- 1) break;
     }
     return $r;
   }
