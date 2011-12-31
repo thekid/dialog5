@@ -233,17 +233,20 @@ public class Album implements IEntry {
    *
    */
   public var imageUrn(string $name) {
-    for ($i= 0, $s= $this.highlights.length; $i < $s; $i++) {
-      if ($name === $this.highlights[$i].getName()) {
-        return ['type' : 'h', 'chapter' : 0, 'id' : $i];
-      }
+    foreach ($i, $highlight in $this.highlights) {
+      if ($name === $highlight.getName()) return [
+        type    : 'h',
+        chapter : 0,
+        id      : $i
+      ];
     }
-
-    for ($i= 0, $s= $this.chapters.length; $i < $s; $i++) {
-      for ($j= 0, $t= $this.chapters[$i].images.length; $j < $t; $j++) {
-        if ($name === $this.chapters[$i].images[$j].getName()) {
-          return ['type' : 'i', 'chapter' : $i, 'id' : $j];
-        }
+    foreach ($i, $chapter in $this.chapters) {
+      foreach ($j, $image in $chapter.images) {
+        if ($name === $image.getName()) return [
+          type    : 'i',
+          chapter : $i,
+          id      : $j
+        ];
       }
     }
     return null;
@@ -255,12 +258,12 @@ public class Album implements IEntry {
    */
   public string toString() {
     $hs= '';
-    for ($i= 0, $s= $this.highlights.length; $i < $s; $i++) {
-      $hs ~= '  ' ~ $this.highlights[$i].toString() ~ "\n";
+    foreach ($highlight in $this.highlights) {
+      $hs ~= '  ' ~ $highlight.toString() ~ "\n";
     }
     $cs= '';
-    for ($i= 0, $s= $this.chapters.length; $i < $s; $i++) {
-      $cs ~= '  ' ~ $this.chapters[$i].toString() ~ "\n";
+    foreach ($chapter in $this.chapters) {
+      $cs ~= '  ' ~ $chapter.toString() ~ "\n";
     }
     return sprintf(
       "%s(%s)@{\n" ~
