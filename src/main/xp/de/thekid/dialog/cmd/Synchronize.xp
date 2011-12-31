@@ -23,7 +23,7 @@ public class Synchronize extends util.cmd.Command {
    *
    */
   [@inject(name= 'dialog')]
-  public void configure(util.Properties $prop) {
+  public void configure(util.Properties? $prop) {
 
     // Load synchronizer implementation
     $impl= $prop.readString('sync', 'impl', null);
