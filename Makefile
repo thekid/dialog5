@@ -6,10 +6,10 @@ test: compile
 	unittest de.thekid.dialog.unittest.**
 
 compile-main: dist/main
-	xcc -o dist/main -sp src/main/xp src/main/xp
+	xcc -p rad -o dist/main -sp src/main/xp src/main/xp
 
 compile-test: dist/test
-	xcc -o dist/test -sp src/test/xp src/test/xp
+	xcc -p rad -o dist/test -sp src/test/xp src/test/xp
 
 dist:	compile
 	cd dist/main && xar cvf ../dialog-$(VERSION).xar .
