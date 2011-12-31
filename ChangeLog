@@ -2,6 +2,16 @@ Dialog ChangeLog
 ========================================================================
 $Id$
 
+Version ?.?.?, released ????-??-??
+----------------------------------
+Git commit: 
+
+Bugfixes
+~~~~~~~~
+- Fixed issue #24 - ByTopic image count
+  (friebe)
+
+
 Version 3.0.0, released 2011-12-26
 ----------------------------------
 Git commit: 7a1c52511421229ac06e075fcaad0ae25f7891cc
