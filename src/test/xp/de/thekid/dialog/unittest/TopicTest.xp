@@ -192,4 +192,50 @@ public class TopicTest extends TestCase {
     $this.fixture.addImage($img2, 'album.2');
     $this.assertEquals(['album.1' : $img1, 'album.2' : $img2], $this.fixture.featuredImages());
   }
+
+  /**
+   * Tests featuredImages() method
+   *
+   */
+  [@test]
+  public void maxFeaturedImages() {
+    $img1= new AlbumImage('image.1');
+    $img2= new AlbumImage('image.2');
+    $img3= new AlbumImage('image.2');
+    $this.fixture.addImage($img1, 'album.1');
+    $this.fixture.addImage($img2, 'album.2');
+    $this.fixture.addImage($img3, 'album.3');
+    $this.assertEquals(['album.3' : $img3, 'album.2' : $img2], $this.fixture.featuredImages(2));
+  }
+
+  /**
+   * Tests numImages() method
+   *
+   */
+  [@test]
+  public void numImages() {
+    $this.assertEquals(0, $this.fixture.numImages());
+  }
+
+  /**
+   * Tests numImages() method
+   *
+   */
+  [@test]
+  public void numImagesWithImages() {
+    $this.fixture.addImage(new AlbumImage('image.1'), 'album.1');
+    $this.fixture.addImage(new AlbumImage('image.2'), 'album.1');
+    $this.assertEquals(2, $this.fixture.numImages());
+  }
+
+  /**
+   * Tests numImages() method
+   *
+   */
+  [@test]
+  public void numImagesWithImagesFromMultipleAlbums() {
+    $this.fixture.addImage(new AlbumImage('image.1'), 'album.1');
+    $this.fixture.addImage(new AlbumImage('image.2'), 'album.2');
+    $this.assertEquals(2, $this.fixture.numImages());
+  }
 }
