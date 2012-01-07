@@ -1,5 +1,3 @@
-Dialog
-======
 Dialog is a photo blog software written in XP. It features offline resizing 
 and sharpening of the selected images to save bandwidth and web server CPU 
 time, it's skinnable, doesn't require a database and is easy to set up. 
