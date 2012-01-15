@@ -75,7 +75,7 @@ public class AggregateImageSizes extends util.cmd.Command {
    *
    */
   [@handles('de.thekid.dialog.Album')]
-  public void processAlbum(IEntry $entry) {
+  public void processAlbum(Album $entry) {
     $albumFolder= new Folder($this.base, 'doc_root/albums/' ~ $entry.getName());
     foreach ($highlight in $entry.highlights) {
       $this.aggregateDimensions($highlight, new File($albumFolder, $highlight.getName()));
@@ -92,7 +92,7 @@ public class AggregateImageSizes extends util.cmd.Command {
    *
    */
   [@handles('de.thekid.dialog.SingleShot')]
-  public void processSingleShot(IEntry $entry) {
+  public void processSingleShot(SingleShot $entry) {
     $this.aggregateDimensions($entry.getImage(), new File(new Folder($this.base, 'doc_root/shots'), 'color.' ~ $entry.getFileName()));
   }
 
@@ -102,14 +102,14 @@ public class AggregateImageSizes extends util.cmd.Command {
    *
    */
   [@handles('de.thekid.dialog.EntryCollection')]
-  public void processEntryCollection(IEntry $entry) {
+  public void processEntryCollection(EntryCollection $entry) {
     foreach ($element in $entry.entries) {
       $this.handle($element);
     }
   }
 
   [@handles('de.thekid.dialog.ImageStrip')]
-  public void processImageStrip(IEntry $entry) {
+  public void processImageStrip(ImageStrip $entry) {
     $albumFolder= new Folder($this.base, 'doc_root/albums/' ~ $entry.getName());
     foreach ($image in $entry.images) {
       $this.aggregateDimensions($image, new File($albumFolder, $image.getName()));
@@ -121,7 +121,7 @@ public class AggregateImageSizes extends util.cmd.Command {
    *
    */
   [@handles('de.thekid.dialog.Update')]
-  public void processUpdate(IEntry $entry) { }
+  public void processUpdate(Update $entry) { }
 
   /**
    * Handles topics. Intentionally empty, all topic images belong to one of the above
