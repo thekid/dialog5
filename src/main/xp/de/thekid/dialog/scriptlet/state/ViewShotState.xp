@@ -5,6 +5,7 @@
 
 package de.thekid.dialog.scriptlet.state;
 
+import de.thekid.dialog.SingleShot;
 import scriptlet.xml.XMLScriptletRequest;
 import scriptlet.xml.XMLScriptletResponse;
 import scriptlet.xml.workflow.Context;
@@ -29,7 +30,7 @@ public class ViewShotState extends de.thekid.dialog.scriptlet.AbstractDialogStat
     $name= $request.getURL().getValue('shot');
     $mode= $request.getURL().getValue('mode');
 
-    with ($shot= $this._getEntryFor($name, de.thekid.dialog.SingleShot::class)) {
+    with ($shot= $this._getEntryFor($name, SingleShot::class) as SingleShot?) {
       $s= $response.addFormResult(Node::fromObject($shot, 'selected'));
       $s.setAttribute('mode', self::$modes[$mode]);
       $s.setAttribute('page', $this.getDisplayPageFor($name));
