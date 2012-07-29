@@ -20,11 +20,7 @@
    ! @see       ../layout.xsl
    !-->
   <xsl:template name="page-title">
-    <xsl:value-of select="concat(
-      'Shot ', /formresult/selected/name,
-      ' (', /formresult/selected/@mode, ') @ ',
-      /formresult/config/title
-    )"/>
+    <xsl:value-of select="concat(/formresult/selected/title, ' ', /formresult/selected/@mode, ' @ ', /formresult/config/title)"/>
   </xsl:template>
 
   <!--
@@ -54,7 +50,7 @@
         &#xbb;
       </xsl:if>
 
-      Featured image: <xsl:value-of select="/formresult/selected/name"/>
+      Featured image: <xsl:value-of select="/formresult/selected/title"/>
     </h3>
 
     <br clear="all"/> 
