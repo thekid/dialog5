@@ -228,30 +228,20 @@
     </p>
 
     <h4>Albums</h4>
-    <table class="collection_list" border="0">
+    <div class="highlights">
       <xsl:for-each select="entry[@type='de.thekid.dialog.Album']">
-        <tr>
-          <td width="160" valign="top">
-            <a href="{func:linkAlbum(@name)}">
-              <img width="150" height="113" border="0" src="/albums/{@name}/thumb.{str:encode-uri(./highlights/highlight[1]/name, false())}"/>
-            </a>
-          </td>
-          <td width="600" valign="top">
-            <h3>
-              <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(created/value), 'd M')"/>:
-              <a href="{func:linkAlbum(@name)}">
-                <xsl:value-of select="@title"/>
-              </a>
-              (<xsl:value-of select="@num_images"/> images in <xsl:value-of select="@num_chapters"/> chapters)
-            </h3>
-            <p align="justify">
-              <xsl:apply-templates select="description"/>
-              <br clear="all"/>
-            </p>
-          </td>
-        </tr>
+        <div style="float: left">
+          <a href="{func:linkAlbum(@name)}" title="{php:function('XSLCallback::invoke', 'xp.date', 'format', string(created/value), 'd M y')}: {@title} - {@num_images} images in {@num_chapters} chapters: {description}">
+            <img width="150" height="113" border="0" src="/albums/{@name}/thumb.{str:encode-uri(./highlights/highlight[1]/name, false())}"/>
+          </a>
+        </div>
       </xsl:for-each>
-    </table>
+      <br clear="all"/>
+    </div>
+    <p>
+      This collection contains <xsl:value-of select="sum(entry[@type='de.thekid.dialog.Album']/@num_images)"/> images in <xsl:value-of select="count(entry[@type='de.thekid.dialog.Album'])"/> albums -
+      <a href="{func:linkImageStrip(@name)}">See more</a>
+    </p>
     <br clear="all"/><hr/>
   </xsl:template>
 
