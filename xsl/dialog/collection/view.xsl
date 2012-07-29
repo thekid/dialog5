@@ -57,7 +57,7 @@
     <h4>Highlights</h4>
     <div class="highlights">
       <div style="float: left; margin-top: 1px; margin-right: 1px">
-        <a href="{func:linkImage(@name, 0, 'h', 0)}" title="{php:function('XSLCallback::invoke', 'xp.date', 'format', string(created/value), 'd M y')}: {@title} - {@num_images} images in {@num_chapters} chapters: {description}">
+        <a href="{func:linkImage(@name, 0, 'h', 0)}">
           <div class="viewport" style="background-image: url(/albums/{@name}/{str:encode-uri(./highlights/highlight[1]/name, false())});">
             <div class="opaqueborder"/>
           </div>
