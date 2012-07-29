@@ -56,8 +56,15 @@
 
     <h4>Highlights</h4>
     <div class="highlights">
-      <xsl:for-each select="highlights/highlight">
-        <div style="float: left"> 
+      <div style="float: left; margin-top: 1px; margin-right: 1px">
+        <a href="{func:linkImage(@name, 0, 'h', 0)}" title="{php:function('XSLCallback::invoke', 'xp.date', 'format', string(created/value), 'd M y')}: {@title} - {@num_images} images in {@num_chapters} chapters: {description}">
+          <div class="viewport" style="background-image: url(/albums/{@name}/{str:encode-uri(./highlights/highlight[1]/name, false())});">
+            <div class="opaqueborder"/>
+          </div>
+        </a>
+      </div>
+      <xsl:for-each select="./highlights/highlight[position() &gt; 1]">
+        <div style="float: left">
           <a href="{func:linkImage(../../@name, 0, 'h', position()- 1)}">
             <img width="150" height="113" border="0" src="/albums/{../../@name}/thumb.{str:encode-uri(name, false())}"/>
           </a>
