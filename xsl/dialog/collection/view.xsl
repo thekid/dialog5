@@ -65,7 +65,7 @@
       </div>
       <xsl:for-each select="./highlights/highlight[position() &gt; 1]">
         <div style="float: left">
-          <a href="{func:linkImage(../../@name, 0, 'h', position()- 1)}">
+          <a href="{func:linkImage(../../@name, 0, 'h', position())}">
             <img width="150" height="113" border="0" src="/albums/{../../@name}/thumb.{str:encode-uri(name, false())}"/>
           </a>
         </div>
