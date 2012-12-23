@@ -2,11 +2,6 @@ package de.thekid.dialog.api;
 
 import de.thekid.dialog.Album;
 import webservices.rest.srv.Response;
-import io.File;
-import io.FileUtil;
-
-import native standard.serialize;
-import native standard.unserialize;
 
 /**
  * Manage albums
@@ -29,6 +24,7 @@ public class AlbumHandler extends ApiHandler {
     } else {
       $name= new Name($n);
     }
+    $album.setName($name as string);
 
     // Calculate creation date
     if (null === $album.getCreatedAt()) {
@@ -36,16 +32,8 @@ public class AlbumHandler extends ApiHandler {
     }
 
     // Create album
-    $album.setName($name as string);
-    with ($storage= new File($this.dataLocation, $album.getName() ~ '.dat')) {
-      if ($storage.exists()) {
-        throw new IllegalStateException('Album ' ~ $album.getName() ~ ' already exists');
-      }
-
-      FileUtil::setContents($storage, serialize($album));
-    }
-
-    return Response::created('/albums/' ~  $album.getName());
+    $created= $this.addEntry($name, $album);
+    return Response::created('/albums/' ~  $created);
   }
 
   /**
@@ -55,14 +43,7 @@ public class AlbumHandler extends ApiHandler {
    */
   [@webmethod(verb = 'GET', path = '/{name}')]
   public Album getAlbum(Name $name) {
-    with ($storage= new File($this.dataLocation, $name ~ '.dat')) {
-      if (!$storage.exists()) {
-        throw new ElementNotFoundException('Album ' ~ $name ~ ' does not exist');
-      }
-
-      $album= unserialize(FileUtil::getContents($storage));
-    }
-    return $album;
+    return $this.getEntry($name) as Album;
   }
 
   /**
@@ -73,15 +54,12 @@ public class AlbumHandler extends ApiHandler {
    */
   [@webmethod(verb = 'PATCH', path = '/{name}')]
   public Album modifyAlbum(Name $name, [:var] $patch) {
-    with ($storage= new File($this.dataLocation, $name ~ '.dat')) {
-      if (!$storage.exists()) {
-        throw new ElementNotFoundException('Album ' ~ $name ~ ' does not exist');
-      }
-
-      $album= unserialize(FileUtil::getContents($storage));
+    with ($album= $this.getEntry($name) as Album) {
       isset($patch['title']) && $album.setTitle($patch['title']);
       isset($patch['description']) && $album.setDescription($patch['description']);
       isset($patch['created_at']) && $album.setCreatedAt($patch['created_at']);
+
+      $this.saveEntry($name, $album);
     }
     return $album;
   }
@@ -93,12 +71,6 @@ public class AlbumHandler extends ApiHandler {
    */
   [@webmethod(verb = 'DELETE', path = '/{name}')]
   public void deleteAlbum(Name $name) {
-    with ($storage= new File($this.dataLocation, $name ~ '.dat')) {
-      if (!$storage.exists()) {
-        throw new ElementNotFoundException('Album ' ~ $name ~ ' does not exist');
-      }
-
-      $storage.unlink();
-    }
+    $this.deleteEntry($name);
   }
 }

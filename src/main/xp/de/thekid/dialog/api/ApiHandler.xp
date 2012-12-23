@@ -1,6 +1,13 @@
 package de.thekid.dialog.api;
 
+import de.thekid.dialog.IEntry;
+
 import io.Folder;
+import io.File;
+import io.FileUtil;
+
+import native standard.serialize;
+import native standard.unserialize;
 
 /**
  * Base class
@@ -17,5 +24,62 @@ package abstract class ApiHandler {
   [@inject(name = 'dialog')]
   public void configure(util.Properties $prop) {
     $this.dataLocation= new Folder($prop.readString('data', 'location', '.'));
+  }
+
+  /**
+   * Check whether a given entry exists
+   */
+  protected bool hasEntry(Name $name) {
+    return new File($this.dataLocation, $name ~ '.dat').exists();
+  }
+
+  /**
+   * Add an entry
+   */
+  protected Name addEntry(Name $name, IEntry $entry) throws IllegalStateException {
+    with ($storage= new File($this.dataLocation, $name ~ '.dat')) {
+      if ($storage.exists()) {
+        throw new IllegalStateException('Entry ' ~ $name ~ ' already exists');
+      }
+
+      FileUtil::setContents($storage, serialize($entry));
+      return $name;
+    }
+  }
+
+  /**
+   * Save an entry
+   */
+  protected Name saveEntry(Name $name, IEntry $entry) {
+    with ($storage= new File($this.dataLocation, $name ~ '.dat')) {
+      FileUtil::setContents($storage, serialize($entry));
+      return $name;
+    }
+  }
+
+  /**
+   * Get an entry
+   */
+  protected IEntry getEntry(Name $name) throws ElementNotFoundException {
+    with ($storage= new File($this.dataLocation, $name ~ '.dat')) {
+      if (!$storage.exists()) {
+        throw new ElementNotFoundException('Entry ' ~ $name ~ ' does not exist');
+      }
+
+      return unserialize(FileUtil::getContents($storage));
+    }
+  }
+
+  /**
+   * Delete an entry
+   */
+  protected void deleteEntry(Name $name) throws ElementNotFoundException {
+    with ($storage= new File($this.dataLocation, $name ~ '.dat')) {
+      if (!$storage.exists()) {
+        throw new ElementNotFoundException('Entry ' ~ $name ~ ' does not exist');
+      }
+
+      $storage.unlink();
+    }
   }
 }
