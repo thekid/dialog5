@@ -1,0 +1,108 @@
+package de.thekid.dialog.api;
+
+import de.thekid.dialog.Album;
+import webservices.rest.srv.Response;
+import io.File;
+import io.FileUtil;
+import io.Folder;
+
+import native standard.serialize;
+import native standard.unserialize;
+
+
+[@webservice(path = '/albums')]
+public class AlbumHandler {
+  protected Folder $dataLocation;
+
+  [@inject(name = 'dialog')]
+  public void configure(util.Properties $prop) {
+    $this.dataLocation= new Folder($prop.readString('data', 'location', '.'));
+  }
+
+  /**
+   * Create a new and empty album
+   * 
+   * @param  album The album instance
+   */
+  [@webmethod(verb = 'POST')]
+  public Response newAlbum(Album $album) {
+
+    // Calculate album name from title if no name is given
+    if (null === ($n= $album.getName())) {
+      $name= Name::normalized($album.getTitle());
+    } else {
+      $name= new Name($n);
+    }
+
+    // Calculate creation date
+    if (null === $album.getCreatedAt()) {
+      $album.setCreatedAt(util.Date::now());
+    }
+
+    // Create album
+    $album.setName($name as string);
+    with ($storage= new File($this.dataLocation, $album.getName() ~ '.dat')) {
+      if ($storage.exists()) {
+        throw new IllegalStateException('Album ' ~ $album.getName() ~ ' already exists');
+      }
+
+      FileUtil::setContents($storage, serialize($album));
+    }
+
+    return Response::created('/albums/' ~  $album.getName());
+  }
+
+  /**
+   * Get a given album
+   * 
+   * @param  name The album's name
+   */
+  [@webmethod(verb = 'GET', path = '/{name}')]
+  public Album getAlbum(Name $name) {
+    with ($storage= new File($this.dataLocation, $name ~ '.dat')) {
+      if (!$storage.exists()) {
+        throw new ElementNotFoundException('Album ' ~ $name ~ ' does not exist');
+      }
+
+      $album= unserialize(FileUtil::getContents($storage));
+    }
+    return $album;
+  }
+
+  /**
+   * Update a given album
+   * 
+   * @param  name The album's name
+   * @param  patch
+   */
+  [@webmethod(verb = 'PATCH', path = '/{name}')]
+  public Album modifyAlbum(Name $name, [:var] $patch) {
+    with ($storage= new File($this.dataLocation, $name ~ '.dat')) {
+      if (!$storage.exists()) {
+        throw new ElementNotFoundException('Album ' ~ $name ~ ' does not exist');
+      }
+
+      $album= unserialize(FileUtil::getContents($storage));
+      isset($patch['title']) && $album.setTitle($patch['title']);
+      isset($patch['description']) && $album.setTitle($patch['description']);
+      isset($patch['created_at']) && $album.setCreatedAt($patch['created_at']);
+    }
+    return $album;
+  }
+
+  /**
+   * Delete a given album
+   * 
+   * @param  name The album's name
+   */
+  [@webmethod(verb = 'DELETE', path = '/{name}')]
+  public void deleteAlbum(Name $name) {
+    with ($storage= new File($this.dataLocation, $name ~ '.dat')) {
+      if (!$storage.exists()) {
+        throw new ElementNotFoundException('Album ' ~ $name ~ ' does not exist');
+      }
+
+      $storage.unlink();
+    }
+  }
+}

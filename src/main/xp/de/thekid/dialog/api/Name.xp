@@ -1,0 +1,44 @@
+package de.thekid.dialog.api;
+
+import text.regex.Pattern;
+
+import native standard.strtolower;
+import native pcre.preg_replace;
+
+/**
+ * Wraps an entry's name
+ * 
+ */
+package class Name {
+  protected static var $VALID = new Pattern('^[a-z0-9_-]+$', Pattern::CASE_INSENSITIVE);
+  protected string $string;
+
+  /**
+   * Creates a new name instance. Raises an exception when the given name
+   * does not adhere to the valid pattern.
+   * 
+   * @param  in the name
+   */
+  public __construct(string? $in) throws IllegalArgumentException {
+    if (!self::$VALID.matches($in)) {
+      throw new IllegalArgumentException('Name "' ~ $in ~ '" may only contain [a-z0-9_-]');
+    }
+    $this.string= $in;
+  }
+
+  /**
+   * Normalizes a given string
+   *
+   * @param  in the name to normalize
+   */
+  public self normalized(string? $in) {
+    return new self(preg_replace('/[^a-z0-9-]/', '_', strtolower($in)));
+  }
+
+  /**
+   * Creates a string representation
+   */
+  public string __toString() {
+    return $this.string;
+  }
+}
