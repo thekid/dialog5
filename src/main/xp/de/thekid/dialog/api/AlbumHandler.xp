@@ -4,7 +4,6 @@ import de.thekid.dialog.Album;
 import webservices.rest.srv.Response;
 import io.File;
 import io.FileUtil;
-import io.Folder;
 
 import native standard.serialize;
 import native standard.unserialize;
