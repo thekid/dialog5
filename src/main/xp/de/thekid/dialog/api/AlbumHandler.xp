@@ -9,15 +9,12 @@ import io.Folder;
 import native standard.serialize;
 import native standard.unserialize;
 
-
+/**
+ * Manage albums
+ * 
+ */
 [@webservice(path = '/albums')]
-public class AlbumHandler {
-  protected Folder $dataLocation;
-
-  [@inject(name = 'dialog')]
-  public void configure(util.Properties $prop) {
-    $this.dataLocation= new Folder($prop.readString('data', 'location', '.'));
-  }
+public class AlbumHandler extends ApiHandler {
 
   /**
    * Create a new and empty album

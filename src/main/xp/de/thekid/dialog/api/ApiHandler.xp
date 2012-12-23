@@ -1,0 +1,21 @@
+package de.thekid.dialog.api;
+
+import io.Folder;
+
+/**
+ * Base class
+ * 
+ */
+package abstract class ApiHandler {
+  protected Folder $dataLocation;
+
+  /**
+   * Configure
+   * 
+   * @param  prop
+   */
+  [@inject(name = 'dialog')]
+  public void configure(util.Properties $prop) {
+    $this.dataLocation= new Folder($prop.readString('data', 'location', '.'));
+  }
+}
