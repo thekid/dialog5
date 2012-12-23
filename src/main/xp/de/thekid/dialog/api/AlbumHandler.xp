@@ -80,7 +80,7 @@ public class AlbumHandler extends ApiHandler {
 
       $album= unserialize(FileUtil::getContents($storage));
       isset($patch['title']) && $album.setTitle($patch['title']);
-      isset($patch['description']) && $album.setTitle($patch['description']);
+      isset($patch['description']) && $album.setDescription($patch['description']);
       isset($patch['created_at']) && $album.setCreatedAt($patch['created_at']);
     }
     return $album;
