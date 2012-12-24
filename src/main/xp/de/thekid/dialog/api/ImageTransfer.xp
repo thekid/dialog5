@@ -36,12 +36,12 @@ class ImageTransfer {
       try {
         $img.setExifData(img.util.ExifData::fromFile($f));
       } catch (ImagingException $ignored) {
-
+        // Malformed EXIF data
       }
       try {
         $img.setIptcData(img.util.IptcData::fromFile($f));
       } catch (ImagingException $ignored) {
-
+        // Malformed IPTC data
       }
     }
 
