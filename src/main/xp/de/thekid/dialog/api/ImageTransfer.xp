@@ -1,0 +1,57 @@
+package de.thekid.dialog.api;
+
+import de.thekid.dialog.AlbumImage;
+
+import io.streams.InputStream;
+import io.streams.MemoryInputStream;
+
+import img.ImagingException;
+
+class ImageTransfer {
+  public string $name;
+  protected InputStream $bytes;
+
+  /**
+   * Set bytes
+   */
+  public void setBytes(string? $bytes) {
+    $this.bytes= new MemoryInputStream($bytes);
+  }
+
+  /**
+   * Convert the given image to an album image
+   */
+  public AlbumImage asAlbumImage() {
+    $f= new io.File($this.bytes) {
+      protected InputStream $stream;
+      public __construct(InputStream $stream) { $this.stream= $stream; }
+      public string getURI() { return io.streams.Streams::readableUri($this.stream); }
+    };
+
+    with ($img= new AlbumImage($this.name)) {
+      $info= img.util.ImageInfo::fromFile($f);
+      $img.setWidth($info.getWidth());
+      $img.setHeight($info.getHeight());
+
+      try {
+        $img.setExifData(img.util.ExifData::fromFile($f));
+      } catch (ImagingException $ignored) {
+
+      }
+      try {
+        $img.setIptcData(img.util.IptcData::fromFile($f));
+      } catch (ImagingException $ignored) {
+
+      }
+    }
+
+    return $img;
+  }
+
+  /**
+   * Creates a string representation
+   */
+  public string toString() {
+    return $this.getClassName() ~ '(name=' ~ $this.name ~ ', #bytes= ' ~ $this.bytes.available() ~ ')';
+  }
+}

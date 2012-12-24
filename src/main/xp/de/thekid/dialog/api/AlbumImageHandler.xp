@@ -1,0 +1,26 @@
+package de.thekid.dialog.api;
+
+import de.thekid.dialog.Album;
+import webservices.rest.srv.Response;
+
+/**
+ * Manage albums
+ * 
+ */
+[@webservice(path = '/albums/{name}')]
+public class AlbumImageHandler extends ApiHandler {
+
+  /**
+   * Adds an image
+   * 
+   * @param  album The album's name
+   */
+  [@webmethod(verb = 'POST', path = '/images')]
+  public Album addImage(Name $name, ImageTransfer $image) {
+    with ($album= $this.getEntry($name) as Album) {
+      util.cmd.Console::writeLine('<- ', $image);
+      util.cmd.Console::writeLine('-> ', $image.asAlbumImage());
+      $this.saveEntry($name, $album);
+    }
+  }
+}
