@@ -22,27 +22,11 @@ class ImageTransfer {
    * Convert the given image to an album image
    */
   public AlbumImage asAlbumImage() {
-    $f= new io.File($this.bytes) {
-      protected InputStream $stream;
-      public __construct(InputStream $stream) { $this.stream= $stream; }
-      public string getURI() { return io.streams.Streams::readableUri($this.stream); }
-    };
-
     with ($img= new AlbumImage($this.name)) {
-      $info= img.util.ImageInfo::fromFile($f);
+      $info= new img.util.ExifDataReader($this.bytes, $this.name).read();
       $img.setWidth($info.getWidth());
       $img.setHeight($info.getHeight());
-
-      try {
-        $img.setExifData(img.util.ExifData::fromFile($f));
-      } catch (ImagingException $ignored) {
-        // Malformed EXIF data
-      }
-      try {
-        $img.setIptcData(img.util.IptcData::fromFile($f));
-      } catch (ImagingException $ignored) {
-        // Malformed IPTC data
-      }
+      $img.setExifData($info);
     }
 
     return $img;
