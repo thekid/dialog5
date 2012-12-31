@@ -15,6 +15,7 @@ import native standard.unserialize;
  */
 package abstract class ApiHandler {
   protected Folder $dataLocation;
+  protected Folder $fileLocation;
 
   /**
    * Configure
@@ -24,6 +25,20 @@ package abstract class ApiHandler {
   [@inject(name = 'dialog')]
   public void configure(util.Properties $prop) {
     $this.dataLocation= new Folder($prop.readString('data', 'location', '.'));
+    $this.fileLocation= new Folder($prop.readString('file', 'location', 'doc_root'));
+  }
+
+  /**
+   * Gets the storage location for album images
+   */
+  protected Folder imageLocation(IEntry $entry) {
+    if ($entry instanceof de.thekid.dialog.Album) {
+      return new Folder($this.fileLocation, 'albums', $entry.getName());
+    } else if ($entry instanceof de.thekid.dialog.SingleShot) {
+      return new Folder($this.fileLocation, 'shots');
+    } else {
+      throw new IllegalArgumentException('Cannot compute image location for ' ~ $entry.getClassName());
+    }
   }
 
   /**

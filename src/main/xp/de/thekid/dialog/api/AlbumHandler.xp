@@ -33,6 +33,7 @@ public class AlbumHandler extends ApiHandler {
 
     // Create album
     $created= $this.addEntry($name, $album);
+    $this.imageLocation($album).create(0755);
     return Response::created('/albums/' ~  $created);
   }
 
@@ -72,5 +73,6 @@ public class AlbumHandler extends ApiHandler {
   [@webmethod(verb = 'DELETE', path = '/{name}')]
   public void deleteAlbum(Name $name) {
     $this.deleteEntry($name);
+    $this.imageLocation(new Album($name as string)).unlink();
   }
 }
