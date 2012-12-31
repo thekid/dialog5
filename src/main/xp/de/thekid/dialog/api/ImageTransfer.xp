@@ -5,8 +5,6 @@ import de.thekid.dialog.AlbumImage;
 import io.streams.InputStream;
 import io.streams.MemoryInputStream;
 
-import img.ImagingException;
-
 class ImageTransfer {
   public string $name;
   protected InputStream $bytes;
@@ -19,14 +17,33 @@ class ImageTransfer {
   }
 
   /**
+   * Get bytes
+   */
+  public InputStream getBytes() {
+    return $this.bytes;
+  }
+
+  /**
    * Convert the given image to an album image
    */
   public AlbumImage asAlbumImage() {
+
+    // Extract meta information
     with ($img= new AlbumImage($this.name)) {
-      $info= new img.util.ExifDataReader($this.bytes, $this.name).read();
-      $img.setWidth($info.getWidth());
-      $img.setHeight($info.getHeight());
-      $img.setExifData($info);
+      $info= new img.io.MetaDataReader().read($this.bytes, $this.name);
+
+      // Copy width & height
+      with ($dim= $info.imageDimensions()) {
+        $img.setWidth($dim[0]);
+        $img.setHeight($dim[1]);
+      }
+
+      // Extract EXIF and IPTC
+      $img.setExifData($info.exifData());
+      $img.setIptcData($info.iptcData());
+
+      // Reset input stream
+      $this.bytes.seek(0, SEEK_SET);
     }
 
     return $img;

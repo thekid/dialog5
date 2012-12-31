@@ -16,11 +16,22 @@ public class AlbumImageHandler extends ApiHandler {
    * @param  album The album's name
    */
   [@webmethod(verb = 'POST', path = '/images')]
-  public Album addImage(Name $name, ImageTransfer $image) {
+  public Response addImage(Name $name, ImageTransfer $transfer) {
     with ($album= $this.getEntry($name) as Album) {
-      util.cmd.Console::writeLine('<- ', $image);
-      util.cmd.Console::writeLine('-> ', $image.asAlbumImage());
+      $albumImage= $transfer.asAlbumImage();
+
+      // Store the image
+      $file= new io.File($this.imageLocation($album), $transfer.name);
+      try ($store= new io.streams.StreamTransfer($transfer.getBytes(), $file.getOutputStream())) {
+        $store.transferAll();
+      }
+
+      // Add the image as highlight
+      // TODO: Add to chapters!
+      $album.addHighlight($albumImage);
       $this.saveEntry($name, $album);
+
+      return Response::created();
     }
   }
 }
