@@ -23,166 +23,55 @@ public class SingleShot implements IEntry {
 
   /**
    * Constructor
-   *
    */
-  public __construct(string $name= null) {
-    $this.name= $name;
-  }
+  public __construct($this.name= null) { }
 
   /**
-   * Set name
-   *
+   * Name accessors
    */
-  public void setName(string $name) {
-    $this.name= $name;
-  }
+  public void setName($this.name) { }
+  public self withName($this.name) -> $this;
+  public string getName() -> $this.name;
 
   /**
-   * Set name
-   *
+   * FileName accessors
    */
-  public self withName(string $name) {
-    $this.name= $name;
-    return $this;
-  }
+  public void setFileName($this.fileName) { }
+  public self withFileName($this.fileName) -> $this;
+  public string getFileName() -> $this.fileName;
 
   /**
-   * Get name
-   *
+   * Title accessors
    */
-  public string getName() {
-    return $this.name;
-  }
+  public void setTitle($this.title) { }
+  public self withTitle($this.title) -> $this;
+  public string getTitle() -> $this.title;
 
   /**
-   * Set fileName
-   *
+   * Description accessors
    */
-  public void setFileName(string $fileName) {
-    $this.fileName= $fileName;
-  }
+  public void setDescription($this.description) { }
+  public self withDescription($this.description) -> $this;
+  public string getDescription() -> $this.description;
 
   /**
-   * Set fileName
-   *
+   * Date accessors
    */
-  public self withFileName(string $fileName) {
-    $this.fileName= $fileName;
-    return $this;
-  }
+  public void setDate($this.date) { }
+  public self withDate($this.date) -> $this;
+  public Date getDate() -> $this.date;
 
   /**
-   * Get fileName
-   *
+   * Image accessors
    */
-  public string getFileName() {
-    return $this.fileName;
-  }
-
-  /**
-   * Set title
-   *
-   */
-  public void setTitle(string $title) {
-    $this.title= $title;
-  }
-
-  /**
-   * Set title
-   *
-   */
-  public self withTitle(string $title) {
-    $this.title= $title;
-    return $this;
-  }
-
-  /**
-   * Get title
-   *
-   */
-  public string getTitle() {
-    return $this.title;
-  }
-
-  /**
-   * Set description
-   *
-   */
-  public void setDescription(string $description) {
-    $this.description= $description;
-  }
-
-  /**
-   * Set description
-   *
-   */
-  public self withDescription(string $description) {
-    $this.description= $description;
-    return $this;
-  }
-
-  /**
-   * Get description
-   *
-   */
-  public string getDescription() {
-    return $this.description;
-  }
-
-  /**
-   * Set date
-   *
-   */
-  public void setDate(Date $date) {
-    $this.date= $date;
-  }
-
-  /**
-   * Set date
-   *
-   */
-  public self withDate(Date $date) {
-    $this.date= $date;
-    return $this;
-  }
-
-  /**
-   * Get date
-   *
-   */
-  public Date getDate() {
-    return $this.date;
-  }
-
-  /**
-   * Set image
-   *
-   */
-  public void setImage(AlbumImage $image) {
-    $this.image= $image;
-  }
-
-  /**
-   * Set image
-   *
-   */
-  public self withImage(AlbumImage $image) {
-    $this.image= $image;
-    return $this;
-  }
-
-  /**
-   * Get image
-   *
-   */
-  public AlbumImage getImage() {
-    return $this.image;
-  }
+  public void setImage($this.image) { }
+  public self withImage($this.image) -> $this;
+  public AlbumImage getImage() -> $this.image;
 
   /**
    * Find an image
    *
-   * @return  array
+   * @return  var
    */
   public var imageUrn(string $name) {
     if ($this.image.getName() === $name) return ['id' : 0];
