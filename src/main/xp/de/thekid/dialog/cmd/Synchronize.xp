@@ -7,7 +7,6 @@ import native standard.ucfirst;
 
 /**
  * Synchronizes webspace
- *
  */
 public class Synchronize extends util.cmd.Command {
   protected Syncronizer $synchronizer;
@@ -15,7 +14,6 @@ public class Synchronize extends util.cmd.Command {
 
   /**
    * Configure synchronization
-   *
    */
   [@inject(name= 'dialog')]
   public void configure(util.Properties? $prop) {
@@ -26,9 +24,8 @@ public class Synchronize extends util.cmd.Command {
       throw new IllegalStateException('No synchronization configuration');
     }
     
-    $class= self::$implementations.loadClass(ucfirst($impl) ~ 'Impl');
-
     // Instantiate and inject configuration
+    $class= self::$implementations.loadClass(ucfirst($impl) ~ 'Impl');
     $this.synchronizer= $class.newInstance();
     foreach ($key, $value in $prop.readSection('sync')) {
       if ('impl'  === $key) continue;
@@ -42,7 +39,6 @@ public class Synchronize extends util.cmd.Command {
 
   /**
    * Sets base folder
-   *
    */
   [@arg]
   public void setBase(string $dir= '.') {
@@ -51,7 +47,6 @@ public class Synchronize extends util.cmd.Command {
 
   /**
    * Entry point method
-   *
    */
   public void run() {
     $this.out.writeLine('---> Synchronizing ', $this.synchronizer);

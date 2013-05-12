@@ -45,7 +45,6 @@ import native standard.strpos;
  * Example: When adding IMG_6100.jpg as featured image, content from a
  * file by name IMG_6100.txt (in the same directory as the image) will 
  * be used as description.
- *
  */
 public class AddSingleShot extends ImportCommand {
   protected File $origin;
@@ -65,7 +64,6 @@ public class AddSingleShot extends ImportCommand {
 
   /**
    * Set origin file
-   *
    */
   [@arg(position= 0)]
   public void setOrigin(string $file) {
@@ -78,17 +76,13 @@ public class AddSingleShot extends ImportCommand {
   /**
    * Set shots's title. If no title is given and the shot did not 
    * previously exist, uses the origin file's name.
-   *
    */
   [@arg]
-  public void setTitle(string $title= null) {
-    $this.title= $title;
-  }
+  public void setTitle($this.title= null) { }
 
   /**
    * Set shots's creation date. If no date is given and the shot did not 
    * previously exist, uses the origin file's creation date.
-   *
    */
   [@arg]
   public void setCreatedAt(string $date= null) {
@@ -97,7 +91,6 @@ public class AddSingleShot extends ImportCommand {
 
   /**
    * Import
-   *
    */
   protected void doImport() {
 

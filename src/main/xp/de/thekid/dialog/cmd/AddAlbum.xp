@@ -3,6 +3,7 @@ package de.thekid.dialog.cmd;
 import de.thekid.dialog.GroupingStrategy;
 import de.thekid.dialog.Album;
 import de.thekid.dialog.AlbumChapter;
+import lang.IllegalArgumentException;
 
 import native standard.sprintf;
 import native standard.unserialize;
@@ -71,8 +72,6 @@ import native standard.serialize;
  *     The online name is used in permalinks.
  *   </li>
  * </ul>
- *
- * @purpose  Command
  */
 public class AddAlbum extends ImportCommand {
   protected io.Folder $origin= null;
@@ -85,8 +84,6 @@ public class AddAlbum extends ImportCommand {
 
   /**
    * Set origin folder
-   *
-   * @param   string folder
    */
   [@arg(position= 0)]
   public void setOrigin(string $folder) {
@@ -99,19 +96,13 @@ public class AddAlbum extends ImportCommand {
   /**
    * Set album's title. If no title is given and the album did not 
    * previously exist, uses the origin folder's directory name.
-   *
-   * @param   string title default NULL
    */
   [@arg]
-  public void setTitle(string $title= null) {
-    $this.title= $title;
-  }
+  public void setTitle($this.title= null) { }
 
   /**
    * Set album's creation date. If no date is given and the album did not 
    * previously exist, uses the origin folder's creation date.
-   *
-   * @param   string date default NULL
    */
   [@arg]
   public void setCreatedAt(string $date= null) {
@@ -122,14 +113,13 @@ public class AddAlbum extends ImportCommand {
    * Sets how to group images into chapters (one of "hour" or "day")
    *
    * @see     xp://de.thekid.dialog.GroupingStrategy
-   * @param   string method default "hour"
    */
   [@arg]
   public void setGroupBy(string $method= 'hour') {
     try {
-      $this.groupingStrategy= lang.Enum::valueOf(lang.XPClass::forName('de.thekid.dialog.GroupingStrategy'), $method);
-    } catch (lang.IllegalArgumentException $e) {
-      throw new lang.IllegalArgumentException(sprintf(
+      $this.groupingStrategy= lang.Enum::valueOf(de.thekid.dialog.GroupingStrategy::$class, $method);
+    } catch (IllegalArgumentException $e) {
+      throw new IllegalArgumentException(sprintf(
         'Unknown grouping method "%s", supported: %s',
         $method,
         xp::stringOf(GroupingStrategy::values())
@@ -140,7 +130,6 @@ public class AddAlbum extends ImportCommand {
       
   /**
    * Import
-   *
    */
   protected void doImport() {
     $jpegs= new io.collections.iterate.AnyOfFilter([
