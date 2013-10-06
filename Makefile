@@ -5,10 +5,10 @@ compile: compile-main compile-test
 test: compile
 	unittest de.thekid.dialog.unittest.**
 
-compile-main: dist/main
+compile-main: dist/main dist/test
 	xcc -p rad -o dist/main -sp src/main/xp src/main/xp
 
-compile-test: dist/test
+compile-test: dist/main dist/test
 	xcc -p rad -o dist/test -sp src/test/xp src/test/xp
 
 dist:	compile
@@ -24,7 +24,7 @@ dist/test:
 	mkdir -p $@
 
 clean:
-	-rm -rf dialog/dist/main/* dialog/dist/test/*
+	-rm -rf dist/main/* dist/test/*
 
 release:	dist
-	scp dialog/dist/dialog-$(VERSION).zip xpdoku@xp-forge.net:/home/httpd/xp.php3.de/doc_root/downloads/projects/www/
+	scp dist/dialog-$(VERSION).zip xpdoku@xp-forge.net:/home/httpd/xp.php3.de/doc_root/downloads/projects/www/

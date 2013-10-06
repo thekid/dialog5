@@ -1,8 +1,3 @@
-/* This class is part of the XP framework
- *
- * $Id$
- */
-
 package de.thekid.dialog;
 
 import util.Date;
@@ -20,102 +15,30 @@ public class Update implements IEntry {
   public Date $date           = null;
 
   /**
-   * Set albumName
-   *
+   * Album name accessors
    */
-  public void setAlbumName(string $albumName) {
-    $this.albumName= $albumName;
-  }
+  public void setAlbumName($this.albumName) { }
+  public self withAlbumName($this.albumName) -> $this;
+  public string getAlbumName() -> $this.albumName;
 
   /**
-   * Set albumName
-   *
+   * Title accessors
    */
-  public self withAlbumName(string $albumName) {
-    $this.albumName= $albumName;
-    return $this;
-  }
+  public void setTitle($this.title) { }
+  public self withTitle($this.title) -> $this;
+  public string getTitle() -> $this.title;
 
   /**
-   * Get albumName
-   *
+   * Description accessors
    */
-  public string getAlbumName() {
-    return $this.albumName;
-  }
+  public void setDescription($this.description) { }
+  public self withDescription($this.description) -> $this;
+  public string getDescription() -> $this.description;
 
   /**
-   * Set title
-   *
+   * Date accessors
    */
-  public void setTitle(string $title) {
-    $this.title= $title;
-  }
-
-  /**
-   * Set title
-   *
-   */
-  public self withTitle(string $title) {
-    $this.title= $title;
-    return $this;
-  }
-
-  /**
-   * Get title
-   *
-   */
-  public string getTitle() {
-    return $this.title;
-  }
-
-  /**
-   * Set description
-   *
-   */
-  public void setDescription(string $description) {
-    $this.description= $description;
-  }
-
-  /**
-   * Set description
-   *
-   */
-  public self withDescription(string $description) {
-    $this.description= $description;
-    return $this;
-  }
-
-  /**
-   * Get description
-   *
-   */
-  public string getDescription() {
-    return $this.description;
-  }
-
-  /**
-   * Set date
-   *
-   */
-  public void setDate(Date $date) {
-    $this.date= $date;
-  }
-
-  /**
-   * Set date
-   *
-   */
-  public self withDate(Date $date) {
-    $this.date= $date;
-    return $this;
-  }
-
-  /**
-   * Get date
-   *
-   */
-  public Date getDate() {
-    return $this.date;
-  }
+  public void setDate($this.date) { }
+  public self withDate($this.date) -> $this;
+  public Date getDate() -> $this.date;
 } 

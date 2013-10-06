@@ -1,8 +1,3 @@
-/* This file is part of the XP framework
- *
- * $Id$
- */
-
 package de.thekid.dialog.cmd;
 
 import io.Folder;
@@ -69,7 +64,6 @@ import native core.create_function;
  *     The online name is used in permalinks.
  *   </li>
  * </ul>
- *
  */
 public class AddImageStrip extends ImportCommand {
   protected Folder $origin;
@@ -80,8 +74,6 @@ public class AddImageStrip extends ImportCommand {
 
   /**
    * Set origin folder
-   *
-   * @param   string folder
    */
   [@arg(position= 0)]
   public void setOrigin(string $folder) {
@@ -94,19 +86,13 @@ public class AddImageStrip extends ImportCommand {
   /**
    * Set image strip's title. If no title is given and the image strip did not 
    * previously exist, uses the origin folder's directory name.
-   *
-   * @param   string title default null
    */
   [@arg]
-  public void setTitle(string $title= null) {
-    $this.title= $title;
-  }
+  public void setTitle($this.title= null) { }
 
   /**
    * Set image strip's creation date. If no date is given and the image strip did not 
    * previously exist, uses the origin folder's creation date.
-   *
-   * @param   string date default null
    */
   [@arg]
   public void setCreatedAt(string $date= null) {
@@ -115,7 +101,6 @@ public class AddImageStrip extends ImportCommand {
 
   /**
    * Import
-   *
    */
   protected void doImport() {
     $jpegs= new AnyOfFilter([

@@ -1,8 +1,3 @@
-/* This class is part of the XP framework
- *
- * $Id: StaticState.class.php 11602 2009-11-01 19:32:48Z friebe $ 
- */
-
 package de.thekid.dialog.scriptlet.state;
 
 import scriptlet.xml.XMLScriptletRequest;

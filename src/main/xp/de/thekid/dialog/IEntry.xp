@@ -1,21 +1,12 @@
-/* This class is part of the XP framework
- *
- * $Id$
- */
-
 package de.thekid.dialog;
-
-import util.Date;
 
 /**
  * Interface for album entries
- *
  */
 public interface IEntry {
 
   /**
    * Get date
-   *
    */
-  public Date getDate();
+  public util.Date getDate();
 }

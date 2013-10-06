@@ -1,8 +1,3 @@
-/* This file is part of the XP framework
- *
- * $Id$
- */
-
 package de.thekid.dialog.cmd;
 
 import util.cmd.Command;
@@ -39,7 +34,6 @@ import native pcre.preg_replace;
  * @see      xp://de.thekid.dialog.cmd.AddAlbum
  * @see      xp://de.thekid.dialog.cmd.AddSingleShot
  * @see      xp://de.thekid.dialog.cmd.AddCollection
- * @purpose  Command
  */
 public abstract class ImportCommand extends Command {
   protected Folder $imageFolder       = null;
@@ -83,7 +77,6 @@ public abstract class ImportCommand extends Command {
   /**
    * Return a folder object composed of a given a base and name, ensuring
    * it exists.
-   *
    */
   protected void folder(Folder $base, string $name) throws FileNotFoundException {
     $f= new Folder($base, $name);
@@ -93,7 +86,6 @@ public abstract class ImportCommand extends Command {
 
   /**
    * Set base folder (the folder the dialog software is installed at).
-   *
    */
   [@arg]
   public void setBase(string $base= '.') {
@@ -107,7 +99,6 @@ public abstract class ImportCommand extends Command {
 
   /**
    * Returns processor
-   *
    */
   protected ImageProcessor getProcessor() {
     return new ImageProcessor();
@@ -115,7 +106,6 @@ public abstract class ImportCommand extends Command {
 
   /**
    * Normalize name to create a URL-friendly representation
-   *
    */
   protected string normalizeName(string $name) {
     return preg_replace('/[^a-z0-9-]/', '_', strtolower($name));
@@ -123,7 +113,6 @@ public abstract class ImportCommand extends Command {
 
   /**
    * Process meta data
-   *
    */
   protected void processMetaData(AlbumImage $image, IEntry $origin) {
 
@@ -160,13 +149,11 @@ public abstract class ImportCommand extends Command {
 
   /**
    * Import
-   *
    */
   protected abstract void doImport();
 
   /**
    * Main runner method
-   *
    */
   public void run() {
     $this.out.writeLine('===> Starting import at ', new Date().toString('r'));

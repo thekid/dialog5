@@ -1,8 +1,3 @@
-/* This class is part of the XP framework
- *
- * $Id$
- */
-
 package de.thekid.dialog;
 
 import img.util.ExifData;
@@ -26,136 +21,43 @@ public class AlbumImage {
 
   /**
    * Constructor
-   *
    */
-  public __construct(string $name) {
-    $this.name= $name;
-  }
+  public __construct($this.name= null) { }
 
   /**
-   * Set name
-   *
+   * Name accessors
    */
-  public void setName(string $name) {
-    $this.name= $name;
-  }
+  public void setName($this.name) { }
+  public self withName($this.name) -> $this;
+  public string getName() -> $this.name;
 
   /**
-   * Set name
-   *
+   * Width accessors
    */
-  public self withName(string $name) {
-    $this.name= $name;
-    return $this;
-  }
+  public void setWidth($this.width) { }
+  public self withWidth($this.width) -> $this;
+  public int getWidth() -> $this.width;
 
   /**
-   * Get name
-   *
+   * Height accessors
    */
-  public string getName() {
-    return $this.name;
-  }
+  public void setHeight($this.height) { }
+  public self withHeight($this.height) -> $this;
+  public int getHeight() -> $this.height;
 
   /**
-   * Set width
-   *
+   * Exif data accessors
    */
-  public void setWidth(int $width) {
-    $this.width= $width;
-  }
+  public void setExifData($this.exifData) { }
+  public self withExifData($this.exifData) -> $this;
+  public ExifData getExifData() -> $this.exifData;
 
   /**
-   * Set width
-   *
+   * Iptc data accessors
    */
-  public self withWidth(int $width) {
-    $this.width= $width;
-    return $this;
-  }
-
-  /**
-   * Get width
-   *
-   */
-  public int getWidth() {
-    return $this.width;
-  }
-
-  /**
-   * Set height
-   *
-   */
-  public void setHeight(int $height) {
-    $this.height= $height;
-  }
-
-  /**
-   * Set height
-   *
-   */
-  public self withHeight(int $height) {
-    $this.height= $height;
-    return $this;
-  }
-
-  /**
-   * Get height
-   *
-   */
-  public int getHeight() {
-    return $this.height;
-  }
-
-  /**
-   * Set exifData
-   *
-   */
-  public void setExifData(ExifData $exifData= null) {
-    $this.exifData= $exifData;
-  }
-
-  /**
-   * Set exifData
-   *
-   */
-  public self withExifData(ExifData $exifData= null) {
-    $this.exifData= $exifData;
-    return $this;
-  }
-
-  /**
-   * Get exifData
-   *
-   */
-  public ExifData getExifData() {
-    return $this.exifData;
-  }
-
-  /**
-   * Set IptcData
-   *
-   */
-  public void setIptcData(IptcData $iptcData= NULL) {
-    $this.iptcData= $iptcData;
-  }
-
-  /**
-   * Set IptcData
-   *
-   */
-  public self withIptcData(IptcData $iptcData= NULL) {
-    $this.iptcData= $iptcData;
-    return $this;
-  }
-
-  /**
-   * Get IptcData
-   *
-   */
-  public IptcData getIptcData() {
-    return $this.iptcData;
-  }
+  public void setIptcData($this.iptcData) { }
+  public self withIptcData($this.iptcData) -> $this;
+  public IptcData getIptcData() -> $this.iptcData;
 
   /**
    * Retrieve a string representation

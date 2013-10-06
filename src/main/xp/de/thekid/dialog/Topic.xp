@@ -1,8 +1,3 @@
-/* This class is part of the XP framework
- *
- * $Id$
- */
-
 package de.thekid.dialog;
 
 import util.Date;
@@ -19,126 +14,49 @@ import native standard.array_reverse;
 public class Topic implements IEntry {
   public string $name            = '';
   public string $title           = '';
-  public Date $createdAt         = null;
   public string $description     = '';
+  public Date $createdAt         = null;
   public [:AlbumImage[]] $images = [:];
 
   /**
    * Constructor
-   *
    */
-  public __construct(string $name= null) {
-    $this.name= $name;
-  }
+  public __construct($this.name= null) { }
 
   /**
-   * Set name
-   *
+   * Name accessors
    */
-  public void setName(string $name) {
-    $this.name= $name;
-  }
+  public void setName($this.name) { }
+  public self withName($this.name) -> $this;
+  public string getName() -> $this.name;
 
   /**
-   * Set name
-   *
+   * Title accessors
    */
-  public self withName(string $name) {
-    $this.name= $name;
-    return $this;
-  }
+  public void setTitle($this.title) { }
+  public self withTitle($this.title) -> $this;
+  public string getTitle() -> $this.title;
 
   /**
-   * Get name
-   *
+   * Description accessors
    */
-  public string getName() {
-    return $this.name;
-  }
+  public void setDescription($this.description) { }
+  public self withDescription($this.description) -> $this;
+  public string getDescription() -> $this.description;
 
   /**
-   * Set title
-   *
+   * CreatedAt accessors
    */
-  public void setTitle(string $title) {
-    $this.title= $title;
-  }
-
-  /**
-   * Set title
-   *
-   */
-  public self withTitle(string $title) {
-    $this.title= $title;
-    return $this;
-  }
-
-  /**
-   * Get title
-   *
-   */
-  public string getTitle() {
-    return $this.title;
-  }
-
-  /**
-   * Set createdAt
-   *
-   */
-  public void setCreatedAt(Date $createdAt) {
-    $this.createdAt= $createdAt;
-  }
-
-  /**
-   * Set createdAt
-   *
-   */
-  public self withCreatedAt(Date $createdAt) {
-    $this.createdAt= $createdAt;
-    return $this;
-  }
-
-  /**
-   * Get createdAt
-   *
-   */
-  public Date getCreatedAt() {
-    return $this.createdAt;
-  }
+  public void setCreatedAt($this.createdAt) { }
+  public self withCreatedAt($this.createdAt) -> $this;
+  public Date getCreatedAt() -> $this.createdAt;
 
   /**
    * Get date
    *
    * @see     xp://de.thekid.dialog.IEntry
    */
-  public Date getDate() {
-    return $this.createdAt;
-  }
-
-  /**
-   * Set description
-   *
-   */
-  public void setDescription(string $description) {
-    $this.description= $description;
-  }
-
-  /**
-   * Set description
-   *
-   */
-  public self withDescription(string $description) {
-    $this.description= $description;
-    return $this;
-  }
-
-  /**
-   * Get description
-   *
-   */
-  public string getDescription() {
-    return $this.description;
-  }
+  public Date getDate() -> $this.createdAt;
 
   /**
    * Add an element to images
