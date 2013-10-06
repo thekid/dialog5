@@ -14,13 +14,16 @@ import scriptlet.xml.XMLScriptletResponse;
 import scriptlet.xml.workflow.Context;
 import de.thekid.dialog.IEntry;
 import de.thekid.dialog.Album;
+import de.thekid.dialog.AlbumChapter;
+import de.thekid.dialog.AlbumImage;
 import de.thekid.dialog.EntryCollection;
 import de.thekid.dialog.ImageStrip;
 import de.thekid.dialog.SingleShot;
 import de.thekid.dialog.Update;
 import de.thekid.dialog.Topic;
+import remote.protocol.Serializer;
+import remote.protocol.SerializedData;
 
-import native standard.unserialize;
 import native standard.sprintf;
 
 /**
@@ -29,6 +32,14 @@ import native standard.sprintf;
  */
 public class AbstractDialogState extends scriptlet.xml.workflow.AbstractState {
   protected string $dataLocation = '';
+  protected var $serializer= new Serializer();
+
+  /**
+   * Unserialize a given file
+   */
+  protected var unserialize(io.File $f) {
+    return $this.serializer.valueOf(new SerializedData(FileUtil::getContents($f)));
+  }
 
   /**
    * Returns index for a given page
@@ -36,7 +47,7 @@ public class AbstractDialogState extends scriptlet.xml.workflow.AbstractState {
    * @param   i page number
    */
   public var getIndexPage(int? $i= 0) {
-    return unserialize(FileUtil::getContents(new File($this.dataLocation ~ 'page_' ~ $i ~ '.idx')));
+    return $this.unserialize(new File($this.dataLocation ~ 'page_' ~ $i ~ '.idx'));
   }
 
   /**
@@ -46,7 +57,7 @@ public class AbstractDialogState extends scriptlet.xml.workflow.AbstractState {
    * @return  A map with the years as keys and an array of strings pointing to entry names as values
    */
   public var getIndexYear(int? $y) {
-    return unserialize(FileUtil::getContents(new File($this.dataLocation ~ 'bydate_' ~ $y ~ '.idx')));
+    return $this.unserialize(new File($this.dataLocation ~ 'bydate_' ~ $y ~ '.idx'));
   }
 
   /**
@@ -55,7 +66,7 @@ public class AbstractDialogState extends scriptlet.xml.workflow.AbstractState {
    * @param   i page number
    */
   public var getIndexTopics(int? $i= 0) {
-    return unserialize(FileUtil::getContents(new File($this.dataLocation ~ 'topics_' ~ $i ~ '.idx')));
+    return $this.unserialize(new File($this.dataLocation ~ 'topics_' ~ $i ~ '.idx'));
   }
 
   /**
@@ -64,7 +75,7 @@ public class AbstractDialogState extends scriptlet.xml.workflow.AbstractState {
    * @return  int[]
    */
   public var getIndexYears() {
-    return unserialize(FileUtil::getContents(new File($this.dataLocation ~ 'bydate.idx')));
+    return $this.unserialize(new File($this.dataLocation ~ 'bydate.idx'));
   }
 
   /**
@@ -72,7 +83,7 @@ public class AbstractDialogState extends scriptlet.xml.workflow.AbstractState {
    *
    */
   public int getDisplayPageFor(string? $name) {
-    return unserialize(FileUtil::getContents(new File($this.dataLocation ~ $name ~ '.idx')));
+    return $this.unserialize(new File($this.dataLocation ~ $name ~ '.idx'));
   }
 
   /**
@@ -83,7 +94,7 @@ public class AbstractDialogState extends scriptlet.xml.workflow.AbstractState {
    * @throws  IllegalArgumentException if found entry is not of expected type
    */
   protected inline IEntry _getEntryFor(string? $name, XPClass? $expect) throws IllegalArgumentException {
-    $entry= unserialize(FileUtil::getContents(new File($this.dataLocation ~ $name ~ '.dat')));
+    $entry= $this.unserialize(new File($this.dataLocation ~ $name ~ '.ser'));
 
     // Check expectancy
     if (!$expect.isInstance($entry)) throw new IllegalArgumentException(sprintf(

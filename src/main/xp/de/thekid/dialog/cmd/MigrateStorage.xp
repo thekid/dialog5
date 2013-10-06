@@ -1,0 +1,48 @@
+package de.thekid.dialog.cmd;
+
+import io.collections.iterate.*;
+import remote.protocol.*;
+import lang.reflect.Package;
+
+import native standard.unserialize;
+import native standard.basename;
+import native core.class_alias;
+
+public class MigrateStorage extends util.cmd.Command {
+  protected FilteredIOCollectionIterator $data;
+  protected Serializer $serializer = new Serializer();
+
+  /**
+   * Maps classes for unserialize()
+   */
+  public __construct() {
+    foreach ($class in Package::forName('de.thekid.dialog').getClasses()) {
+      class_alias($class.literal(), $class.getSimpleName());
+    }
+    XPClass::forName('img.util.ExifData');
+    XPClass::forName('img.util.IptcData');
+  }
+
+  [@arg(position= 0)]
+  public void setData(string $folder= 'data') {
+    $this.data= new FilteredIOCollectionIterator(
+      new io.collections.FileCollection($folder),
+      new ExtensionEqualsFilter('.dat'),
+      true
+    );
+  }
+
+  public void run() {
+    $entry= de.thekid.dialog.IEntry::class;
+    foreach ($file in $this.data) {
+      $this.out.write($file);
+      $value= $entry.cast(unserialize(io.streams.Streams::readAll($file.getInputStream())));
+
+      try ($out= $file.getOrigin().newElement(basename($file.getURI(), '.dat') ~ '.ser').getOutputStream()) {
+        $out.write($this.serializer.representationOf($value));
+      }
+
+      $this.out.writeLine(': OK');
+    }
+  }
+}

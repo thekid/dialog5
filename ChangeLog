@@ -6,6 +6,12 @@ Version ?.?.?, released ????-??-??
 ----------------------------------
 Git commit: 
 
+Heads up!
+~~~~~~~~~
+- Changed to use XP Compiler 2.0.0. With it, all classes are now emitted
+  with PHP 5.3 namespaces. This results in the necessity to migrate the
+  the serialized data using "xpcli de.thekid.dialog.cmd.MigrateStorage"!
+
 Bugfixes
 ~~~~~~~~
 - Fixed issue #24 - ByTopic image count
