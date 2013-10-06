@@ -10,14 +10,11 @@ import de.thekid.dialog.Album;
 import de.thekid.dialog.AlbumChapter;
 
 import native standard.sprintf;
-import native standard.unserialize;
 import native standard.is_file;
 import native standard.file_get_contents;
 import native standard.usort;
 import native core.create_function;
 import native standard.sizeof;
-import native standard.serialize;
-
 
 /**
  * Adds albums to dialog. Will import a complete directory of (original) 
@@ -163,10 +160,10 @@ public class AddAlbum extends ImportCommand {
     $this.processor.setOutputFolder($this.destination);
     
     // Check if the album already exists
-    $this.albumStorage= new io.File($this.dataFolder, $albumName ~ '.dat');
+    $this.albumStorage= new io.File($this.dataFolder, $albumName ~ '.ser');
     if ($this.albumStorage.exists()) {
       $this.out.writeLine('---> Found existing album');
-      $this.album= unserialize(io.FileUtil::getContents($this.albumStorage));
+      $this.album= $this.unserialize($this.albumStorage) as Album;
 
       // Entries will be regenated from scratch    
       $this.album.highlights= $this.album.chapters= [];
@@ -258,7 +255,7 @@ public class AddAlbum extends ImportCommand {
     $this.out.writeLine('---> Created ', $this.album.getCreatedAt());
     
     // Save album and topics
-    io.FileUtil::setContents($this.albumStorage, serialize($this.album));
+    $this.serialize($this.album, $this.albumStorage);
   }
 }
 

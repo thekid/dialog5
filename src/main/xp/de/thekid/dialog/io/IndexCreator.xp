@@ -17,9 +17,9 @@ import de.thekid.dialog.Update;
 import de.thekid.dialog.SingleShot;
 import de.thekid.dialog.ImageStrip;
 import de.thekid.dialog.EntryCollection;
+import remote.protocol.Serializer;
+import remote.protocol.SerializedData;
 
-import native standard.serialize;
-import native standard.unserialize;
 import native standard.basename;
 import native standard.krsort;
 import native standard.array_keys;
@@ -37,6 +37,21 @@ public class IndexCreator implements Traceable {
   public LogCategory $cat= null;
   public Folder $folder= null;
   public int $entriesPerPage= 5;
+  protected var $serializer= new Serializer();
+
+  /**
+   * Unserialize a given file
+   */
+  protected var unserialize(io.File $f) {
+    return $this.serializer.valueOf(new SerializedData(FileUtil::getContents($f)));
+  }
+
+  /**
+   * Serialize data to a given file
+   */
+  protected void serialize(var? $value, io.File $f) {
+    FileUtil::setContents($f, $this.serializer.representationOf($value));
+  }
 
   /**
    * Set entriesPerPage
@@ -71,14 +86,14 @@ public class IndexCreator implements Traceable {
    */
   public bool regenerate() throws io.IOException {
     $entries= [:];
-    $dataFiles= new io.collections.iterate.ExtensionEqualsFilter('.dat');
+    $dataFiles= new io.collections.iterate.ExtensionEqualsFilter('.ser');
     for (
       $it= new io.collections.iterate.FilteredIOCollectionIterator(new io.collections.FileCollection($this.folder.getURI()), $dataFiles);
       $it.hasNext();
     ) {
       $entry= $it.next();
       $file= new File($entry.getURI());
-      $data= unserialize(FileUtil::getContents($file)) as IEntry;
+      $data= $this.unserialize($file) as IEntry;
 
       $date= $data.getDate();
       $this.cat && $this.cat.debugf(
@@ -87,7 +102,7 @@ public class IndexCreator implements Traceable {
         xp::stringOf($entry),
         xp::stringOf($date)
       );
-      $entries[$date.toString('YmdHis-') ~ basename($entry.getURI())]= basename($entry.getURI(), '.dat');
+      $entries[$date.toString('YmdHis-') ~ basename($entry.getURI())]= basename($entry.getURI(), '.ser');
       delete($data);
     }
     $this.folder.close();
@@ -101,13 +116,13 @@ public class IndexCreator implements Traceable {
         $i+ $this.entriesPerPage
       );
 
-      FileUtil::setContents(
-        new File($this.folder.getURI() ~ 'page_' ~ ($i / $this.entriesPerPage) ~ '.idx'), 
-        serialize([
+      $this.serialize(
+        [
           'total'   : $s, 
           'perpage' : $this.entriesPerPage,
           'entries' : array_slice($entries, $i, $this.entriesPerPage)
-        ])
+        ],
+        new File($this.folder.getURI() ~ 'page_' ~ ($i / $this.entriesPerPage) ~ '.idx')
       );
     }
 
@@ -120,10 +135,7 @@ public class IndexCreator implements Traceable {
         $page
       );
 
-      FileUtil::setContents(
-        new File($this.folder.getURI() ~ $entries[$key] ~ '.idx'), 
-        serialize($page)
-      );
+      $this.serialize($page, new File($this.folder.getURI() ~ $entries[$key] ~ '.idx'));
     }
 
     // ...by years
@@ -141,16 +153,11 @@ public class IndexCreator implements Traceable {
         $year,
         xp::stringOf($bymonth)
       );
-      FileUtil::setContents(
-        new File($this.folder.getURI() ~ 'bydate_' ~ $year ~ '.idx'), 
-        serialize($bymonth)
-      );
-    }
-    FileUtil::setContents(
-      new File($this.folder.getURI() ~ 'bydate.idx'), 
-      serialize(array_keys($bydate))
-    );
 
+      $this.serialize($bymonth, new File($this.folder.getURI() ~ 'bydate_' ~ $year ~ '.idx'));
+    }
+
+    $this.serialize(array_keys($bydate), new File($this.folder.getURI() ~ 'bydate.idx'));
     return true;
   }
 

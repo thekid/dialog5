@@ -21,8 +21,6 @@ import de.thekid.dialog.ImageStrip;
 import de.thekid.dialog.AlbumImage;
 
 import native standard.dirname;
-import native standard.serialize;
-import native standard.unserialize;
 import native standard.sprintf;
 import native standard.usort;
 import native standard.is_file;
@@ -135,10 +133,10 @@ public class AddImageStrip extends ImportCommand {
     $this.processor.setOutputFolder($this.destination);
 
     // Check if the image strip already exists
-    $this.imageStripStorage= new File($this.dataFolder, $imageStripName ~ '.dat');
+    $this.imageStripStorage= new File($this.dataFolder, $imageStripName ~ '.ser');
     if ($this.imageStripStorage.exists()) {
       $this.out.writeLine('--> Found existing image strip');
-      $imageStrip= unserialize(FileUtil::getContents($this.imageStripStorage)) as ImageStrip;
+      $imageStrip= $this.unserialize($this.imageStripStorage) as ImageStrip;
 
       // Entries will be regenated from scratch    
       $imageStrip.images= new AlbumImage[] {};
@@ -202,6 +200,6 @@ public class AddImageStrip extends ImportCommand {
     $this.out.writeLine('--> Created ', $imageStrip.getCreatedAt());
 
     // Save image strip and topics
-    FileUtil::setContents($this.imageStripStorage, serialize($imageStrip));
+    $this.serialize($imageStrip, $this.imageStripStorage);
   }
 }

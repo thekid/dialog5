@@ -22,9 +22,9 @@ import de.thekid.dialog.IEntry;
 import de.thekid.dialog.AlbumImage;
 import de.thekid.dialog.io.ImageProcessor;
 import de.thekid.dialog.io.IndexCreator;
+import remote.protocol.Serializer;
+import remote.protocol.SerializedData;
 
-import native standard.unserialize;
-import native standard.serialize;
 import native standard.ksort;
 import native standard.array_slice;
 import native standard.array_keys;
@@ -50,6 +50,7 @@ public abstract class ImportCommand extends Command {
   protected int $ENTRIES_PER_PAGE     = 5;
   protected ImageProcessor $processor = null;
   protected [:Topic] $topics          = [:];
+  protected var $serializer           = new Serializer();
 
   /**
    * Constructor - initializes image processor.
@@ -63,6 +64,20 @@ public abstract class ImportCommand extends Command {
       8,
       0
     ));
+  }
+
+  /**
+   * Unserialize a given file
+   */
+  protected var unserialize(io.File $f) {
+    return $this.serializer.valueOf(new SerializedData(FileUtil::getContents($f)));
+  }
+
+  /**
+   * Serialize data to a given file
+   */
+  protected void serialize(var? $value, io.File $f) {
+    FileUtil::setContents($f, $this.serializer.representationOf($value));
   }
 
   /**
@@ -127,9 +142,9 @@ public abstract class ImportCommand extends Command {
     foreach ($keyword in $iptc.getKeywords()) {
       $normalized= $this.normalizeName($keyword);
       if (!isset($this.topics[$normalized])) {
-        $topic= new File($this.dataFolder, 'topics/' ~ $normalized ~ '.dat');
+        $topic= new File($this.dataFolder, 'topics/' ~ $normalized ~ '.ser');
         if ($topic.exists()) {
-          $this.topics[$normalized]= unserialize(FileUtil::getContents($topic));
+          $this.topics[$normalized]= $this.unserialize($topic);
           $this.out.writeLine('     >> Found existing topic for "', $keyword, '"');
         } else {
           $this.out.writeLine('     >> Creating new topic for "', $keyword, '"');
@@ -159,7 +174,7 @@ public abstract class ImportCommand extends Command {
 
     // Save topics
     foreach ($id, $topic in $this.topics) {
-      FileUtil::setContents(new File($this.topicsFolder, $id ~ '.dat'), serialize($topic));
+      $this.serialize($topic, new File($this.topicsFolder, $id ~ '.ser'));
     }
 
     // Regenerate indexes
@@ -170,21 +185,21 @@ public abstract class ImportCommand extends Command {
     // Generate topics
     $entries= [:];
     for (
-      $it= new FilteredIOCollectionIterator(new FileCollection($this.topicsFolder.getURI()), new ExtensionEqualsFilter('.dat'));
+      $it= new FilteredIOCollectionIterator(new FileCollection($this.topicsFolder.getURI()), new ExtensionEqualsFilter('.ser'));
       $it.hasNext();
     ) {
       $entry= basename($it.next().getURI());
-      $entries[$entry]= 'topics/' ~ basename($entry, '.dat');
+      $entries[$entry]= 'topics/' ~ basename($entry, '.ser');
     }
     ksort($entries);
     for ($i= 0, $s= sizeof($entries); $i < $s; $i+= $this.ENTRIES_PER_PAGE) {
-      FileUtil::setContents(
-        new File($this.dataFolder, 'topics_' ~ ($i / $this.ENTRIES_PER_PAGE) ~ '.idx'), 
-        serialize([
+      $this.serialize(
+        [
           'total'   : $s, 
           'perpage' : $this.ENTRIES_PER_PAGE,
           'entries' : array_slice($entries, $i, $this.ENTRIES_PER_PAGE)
-        ])
+        ],
+        new File($this.dataFolder, 'topics_' ~ ($i / $this.ENTRIES_PER_PAGE) ~ '.idx')
       );
     }
 

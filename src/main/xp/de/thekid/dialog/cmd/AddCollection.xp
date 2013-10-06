@@ -23,8 +23,6 @@ import de.thekid.dialog.AlbumImage;
 import de.thekid.dialog.EntryCollection; 
 
 import native standard.dirname;
-import native standard.serialize;
-import native standard.unserialize;
 import native standard.sprintf;
 import native standard.usort;
 import native standard.is_file;
@@ -182,10 +180,10 @@ public class AddCollection extends ImportCommand {
     $this.dataDestination= new Folder($this.dataFolder.getURI()~ $collectionName);
 
     // Check if the collection already exists
-    $collectionStorage= new File($this.dataFolder, $collectionName ~ '.dat');
+    $collectionStorage= new File($this.dataFolder, $collectionName ~ '.ser');
     if ($collectionStorage.exists()) {
       $this.out.writeLine('--> Found existing collection');
-      $collection= unserialize(FileUtil::getContents($collectionStorage)) as EntryCollection;
+      $collection= $this.unserialize($collectionStorage) as EntryCollection;
 
       // Entries will be regenated from scratch    
       $collection.entries= new IEntry[] {};
@@ -307,8 +305,8 @@ public class AddCollection extends ImportCommand {
 
       // Save album
       $base= dirname($this.dataDestination.getURI()) ~ DIRECTORY_SEPARATOR ~ $album.getName();
-      FileUtil::setContents(new File($base ~ '.dat'), serialize($album));
-      FileUtil::setContents(new File($base ~ '.idx'), serialize($collection.getName()));
+      $this.serialize($album, new File($base ~ '.ser'));
+      $this.serialize($collection.getName(), new File($base ~ '.idx'));
     }
 
     // Sort entries inside collection by creation date
@@ -329,6 +327,6 @@ public class AddCollection extends ImportCommand {
     $this.out.writeLine('--> Created ', $collection.getCreatedAt());
 
     // Save collection
-    FileUtil::setContents($collectionStorage, serialize($collection));
+    $this.serialize($collection, $collectionStorage);
   }
 }

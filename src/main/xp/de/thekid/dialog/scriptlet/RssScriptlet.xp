@@ -20,10 +20,10 @@ import de.thekid.dialog.Update;
 import de.thekid.dialog.SingleShot;
 import de.thekid.dialog.ImageStrip;
 import de.thekid.dialog.EntryCollection;
+import remote.protocol.Serializer;
+import remote.protocol.SerializedData;
 
-import native standard.unserialize;
 import native standard.sprintf;
-import native core.get_class;
 import native standard.dirname;
 import native standard.array_merge;
 import native standard.current;
@@ -36,7 +36,15 @@ import native standard.current;
 public class RssScriptlet extends HttpScriptlet {
   protected string $HTTP_HOST= null;
   protected string $DATALOCATION= null;
-  
+  protected var $serializer= new Serializer();
+
+  /**
+   * Unserialize a given file
+   */
+  protected var unserialize(io.File $f) {
+    return $this.serializer.valueOf(new SerializedData(FileUtil::getContents($f)));
+  }
+
   /**
    * Constructor
    *
@@ -50,7 +58,7 @@ public class RssScriptlet extends HttpScriptlet {
    *
    */
   protected IEntry getEntryFor(string? $name) {
-    return unserialize(FileUtil::getContents(new File($this.DATALOCATION ~ $name ~ '.dat')));
+    return $this.unserialize(new File($this.DATALOCATION ~ $name ~ '.ser'));
   }
 
   /**
@@ -58,7 +66,7 @@ public class RssScriptlet extends HttpScriptlet {
    *
    */
   protected IEntry getIndexFor(int? $i= 0) {
-    return unserialize(FileUtil::getContents(new File($this.DATALOCATION ~ 'page_' ~ $i ~ '.idx')));
+    return $this.unserialize(new File($this.DATALOCATION ~ 'page_' ~ $i ~ '.idx'));
   }
 
   /**
@@ -67,7 +75,7 @@ public class RssScriptlet extends HttpScriptlet {
    */
   protected string urlFor(IEntry? $item) {
     $base= sprintf('http://%s', $this.HTTP_HOST);
-    switch (get_class($item)) {
+    switch ($item.getClass().getSimpleName()) {
       case 'Album':
         return sprintf('%s/album/%s', $base, $item.getName());
         
@@ -191,7 +199,7 @@ public class RssScriptlet extends HttpScriptlet {
     foreach ($name in $entries) {
       $entry= $this.getEntryFor($name);
 
-      switch (get_class($entry)) {
+      switch ($entry.getClass().getSimpleName()) {
         case 'Album': $this.addAlbumItem($rdf, $entry); break;
         case 'Update': $this.addUpdateItem($rdf, $entry); break;
         case 'SingleShot': $this.addSingleShotItem($rdf, $entry); break;

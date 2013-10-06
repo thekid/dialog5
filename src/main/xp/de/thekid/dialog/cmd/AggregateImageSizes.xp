@@ -20,9 +20,8 @@ import de.thekid.dialog.Topic;
 import de.thekid.dialog.AlbumImage;
 import img.util.ImageInfo;
 import util.collections.HashTable;
-
-import native standard.unserialize;
-import native standard.serialize;
+import remote.protocol.Serializer;
+import remote.protocol.SerializedData;
 
 /**
  * Aggregates image sizes
@@ -49,7 +48,7 @@ public class AggregateImageSizes extends util.cmd.Command {
     $this.base= new Folder($dir);
     $this.albumDataFiles= new FilteredIOCollectionIterator(
       new FileCollection(new Folder($this.base, 'data')),
-      new ExtensionEqualsFilter('.dat'),
+      new ExtensionEqualsFilter('.ser'),
       true
     );
   }
@@ -148,14 +147,16 @@ public class AggregateImageSizes extends util.cmd.Command {
       $this.out.writeLine('- ', $dataFile);
       
       // Read
-      $entry= unserialize(Streams::readAll($dataFile.getInputStream())) as IEntry;
+      $entry= $this.serializer.valueOf(new SerializedData(Streams::readAll($f))) as IEntry;
       $this.out.write('  ', $entry.getClassName(), ' [');
       
       // Process
       $this.handle($entry);
       
       // Write
-      $dataFile.getOutputStream().write(serialize($entry));
+      try ($out= $dataFile.getOutputStream()) {
+        $out.write($this.serializer.representationOf($entry));
+      }
       
       $this.out.writeLine(']');
     }

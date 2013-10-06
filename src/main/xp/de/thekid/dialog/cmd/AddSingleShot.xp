@@ -13,8 +13,6 @@ import util.Date;
 
 import de.thekid.dialog.SingleShot;
 
-import native standard.serialize;
-import native standard.unserialize;
 import native standard.is_file;
 import native standard.file_get_contents;
 import native standard.substr;
@@ -114,10 +112,10 @@ public class AddSingleShot extends ImportCommand {
     $this.processor.setOutputFolder($this.shotsFolder);
 
     // Check if the shot already exists
-    $this.shotStorage= new File($this.dataFolder, $shotName ~ '.dat');
+    $this.shotStorage= new File($this.dataFolder, $shotName ~ '.ser');
     if ($this.shotStorage.exists()) {
       $this.out.writeLine('--> Found existing shot');
-      $shot= unserialize(FileUtil::getContents($this.shotStorage)) as SingleShot;
+      $shot= $this.unserialize($this.shotStorage) as SingleShot;
     } else {
       $this.out.writeLine('--> Creating new shot');
       $shot= new SingleShot();
@@ -151,6 +149,6 @@ public class AddSingleShot extends ImportCommand {
     $shot.setImage($image);
 
     // Save shot
-    FileUtil::setContents($this.shotStorage, serialize($shot));
+    $this.serialize($shot, $this.shotStorage);
   }
 }
