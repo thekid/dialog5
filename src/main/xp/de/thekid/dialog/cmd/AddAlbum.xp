@@ -114,7 +114,7 @@ public class AddAlbum extends ImportCommand {
   [@arg]
   public void setGroupBy(string $method= 'hour') {
     try {
-      $this.groupingStrategy= lang.Enum::valueOf(de.thekid.dialog.GroupingStrategy::$class, $method);
+      $this.groupingStrategy= lang.Enum::valueOf(de.thekid.dialog.GroupingStrategy::class, $method);
     } catch (IllegalArgumentException $e) {
       throw new IllegalArgumentException(sprintf(
         'Unknown grouping method "%s", supported: %s',
