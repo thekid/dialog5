@@ -106,15 +106,16 @@ public class TopicState extends AbstractDialogState {
         }
         $origins[$y].addChild($child).setAttribute('type', $entry.getClassName());
 
-        foreach ($image in $topic.imagesFrom($name)) {
-          $i= $origins[$y].addChild(new Node('image', null, [
+        foreach ($id, $image in $topic.imagesFrom($name)) {
+          $n= $origins[$y].addChild(new Node('image', null, [
             'name'          : $image.getName(),
+            'id'            : $id,
             'origin-name'   : $name,
             'origin-class'  : $entry.getClassName()
           ]));
 
           foreach ($key, $value in $entry.imageUrn($image.getName()) as [:string]?) {
-            $i.setAttribute('origin-' ~ $key, $value);
+            $n.setAttribute('origin-' ~ $key, $value);
           }
         }
       }

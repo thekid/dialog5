@@ -169,10 +169,18 @@ public class WebsiteScriptletURLTest extends TestCase {
    * View topic
    *
    */
-  [@test] public void viewtopic() {
+  [@test] public void viewTopic() {
     $this.assertState('/topic/someTopic', 'topic', [ 'topic' : 'someTopic']);
   }
-  
+
+  /**
+   * View topic
+   *
+   */
+  [@test] public void browseTopic() {
+    $this.assertState('/topic/someTopic/someOrigin,0', 'topic/browse', [ 'topic' : 'someTopic', 'origin' : 'someOrigin', 'index' : 0]);
+  }
+
   /**
    * Old-style URLs (/xml/...) are still supported
    *

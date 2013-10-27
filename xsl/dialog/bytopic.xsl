@@ -50,59 +50,43 @@
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.Album']">
-    <a href="{func:linkImage(@origin-name, @origin-chapter, @origin-type, @origin-id)}">
-      <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{str:encode-uri(@name, false())}"/>
-    </a>
+    <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{str:encode-uri(@name, false())}"/>
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.Album']" mode="full">
-    <a href="{func:linkImage(@origin-name, @origin-chapter, @origin-type, @origin-id)}">
-      <div class="viewport" style="background-image: url(/albums/{@origin-name}/{str:encode-uri(@name, false())});">
-        <div class="opaqueborder"/>
-      </div>
-    </a>
+    <div class="viewport" style="background-image: url(/albums/{@origin-name}/{str:encode-uri(@name, false())});">
+      <div class="opaqueborder"/>
+    </div>
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.EntryCollection']">
-    <a href="{func:linkImage(@origin-name, @origin-chapter, @origin-type, @origin-id)}">
-      <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{str:encode-uri(@name, false())}"/>
-    </a>
+    <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{str:encode-uri(@name, false())}"/>
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.EntryCollection']" mode="full">
-    <a href="{func:linkImage(@origin-name, @origin-chapter, @origin-type, @origin-id)}">
-      <div class="viewport" style="background-image: url(/albums/{@origin-name}/{str:encode-uri(@name, false())});">
-        <div class="opaqueborder"/>
-      </div>
-    </a>
+    <div class="viewport" style="background-image: url(/albums/{@origin-name}/{str:encode-uri(@name, false())});">
+      <div class="opaqueborder"/>
+    </div>
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.SingleShot']">
-    <a href="{func:linkShot(@origin-name, @origin-id)}">
-      <img width="150" height="113" border="0" src="/shots/thumb.color.{str:encode-uri(@name, false())}"/>
-    </a>
+    <img width="150" height="113" border="0" src="/shots/thumb.color.{str:encode-uri(@name, false())}"/>
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.SingleShot']" mode="full">
-    <a href="{func:linkShot(@origin-name, @origin-id)}">
-      <div class="viewport" style="background-image: url(/shots/detail.{str:encode-uri(@name, false())});">
-        <div class="opaqueborder"/>
-      </div>
-    </a>
+    <div class="viewport" style="background-image: url(/shots/detail.{str:encode-uri(@name, false())});">
+      <div class="opaqueborder"/>
+    </div>
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.ImageStrip']">
-    <a href="{func:linkImageStrip(@origin-name)}#{@origin-id}">
-      <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{str:encode-uri(@name, false())}"/>
-    </a>
+    <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{str:encode-uri(@name, false())}"/>
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.ImageStrip']" mode="full">
-    <a href="{func:linkImageStrip(@origin-name)}#{@origin-id}">
-      <div class="viewport" style="background-image: url(/albums/{@origin-name}/{str:encode-uri(@name, false())});">
-        <div class="opaqueborder"/>
-      </div>
-    </a>
+    <div class="viewport" style="background-image: url(/albums/{@origin-name}/{str:encode-uri(@name, false())});">
+      <div class="opaqueborder"/>
+    </div>
   </xsl:template>
 
   <!--
@@ -133,12 +117,16 @@
       <h2><a href="{func:linkTopic(@name)}"><xsl:value-of select="@title"/></a></h2>
       <div class="highlights">
         <div style="float: left; margin-top: 1px; margin-right: 1px">
-          <xsl:apply-templates select="featured/image[1]" mode="full"/>
+          <a href="{func:linkTopic(@name)}/{featured/image[1]/@origin-name},0">
+            <xsl:apply-templates select="featured/image[1]" mode="full"/>
+          </a>
         </div>
         <xsl:for-each select="featured/image[position() &gt; 1]">
-          <div style="float: left">
-            <xsl:apply-templates select="."/>
-          </div>
+          <a href="{func:linkTopic(@name)}/{@origin-name},{position()}">
+            <div style="float: left">
+              <xsl:apply-templates select="."/>
+            </div>
+          </a>
         </xsl:for-each>
         <br clear="all"/>
       </div>

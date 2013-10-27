@@ -1,0 +1,100 @@
+package de.thekid.dialog.scriptlet.state;
+
+import de.thekid.dialog.scriptlet.AbstractDialogState;
+import de.thekid.dialog.Topic;
+import de.thekid.dialog.IEntry;
+import de.thekid.dialog.SingleShot;
+import xml.Node;
+
+import native standard.krsort;
+import native standard.array_keys;
+import native standard.array_search;
+
+/**
+ * Handles /topic/{name}/{index}
+ *
+ */
+public class BrowseTopicState extends AbstractDialogState {
+
+  /**
+   * Orders origins just like TopicState
+   */
+  protected string[] orderedOrigins(string[]? $input) {
+    $origins= [:];
+    foreach ($origin in $input) {
+      $entry= $this.getEntryFor($origin) as IEntry;
+      $y= $entry.getDate().toString('Y');
+      if (!isset($origins[$y])) {
+        $origins[$y]= [$origin];
+      } else {
+        $origins[$y][]= $origin;
+      }
+    }
+
+    krsort($origins);
+    $return= [];
+    foreach ($year, $list in $origins) {
+      foreach ($origin in $list) {
+        $return[]= $origin;
+      }
+    }
+    return $return;
+  }
+
+  /**
+   * Process this state.
+   *
+   */
+  public void process(scriptlet.xml.workflow.WorkflowScriptletRequest? $request, scriptlet.xml.XMLScriptletResponse? $response, scriptlet.xml.workflow.Context? $context) {
+    $url= $request.getURL();
+    $topic= $this.getEntryFor('topics/' ~ $url.getValue('topic')) as Topic;
+    $origin= $url.getValue('origin');
+    $index= $url.getValue('index');
+
+    // Add topic
+    $t= $response.addFormResult(new Node('topic', null, [
+      'name'  : $topic.getName(),
+      'title' : $topic.getTitle()
+    ]));
+    $t.addChild(Node::fromObject($topic.getCreatedAt(), 'created'));
+
+    // Fetch origin
+    $entry= $this.getEntryFor($origin) as IEntry;
+
+    // Add image
+    $images= $topic.images[$origin] as AlbumImage[]?;
+    $n= $response.addFormResult(Node::fromObject($images[$index], 'selected'));
+    $n.setAttribute('origin-name', $entry.getName());
+    $n.setAttribute('origin-title', $entry.getTitle());
+    $n.setAttribute('origin-class', $entry.getClassName());
+    if ($entry instanceof SingleShot) {
+      $n.setAttribute('origin-file', $entry.getFileName());  
+    }
+    foreach ($key, $value in $entry.imageUrn($images[$index].getName()) as [:string]?) {
+      $n.setAttribute('origin-' ~ $key, $value);
+    }
+
+    // Calculate previous link
+    if ($index > 0) {
+      $n.setAttribute('prev', $origin ~ ',' ~ ($index - 1));
+    } else {
+      $origins= $this.orderedOrigins($topic.origins());
+      $pos= array_search($origin, $origins);
+      if ($pos > 0) {
+        $next= $topic.images[$origins[$pos - 1]] as AlbumImage[]?;
+        $n.setAttribute('prev', $origins[$pos - 1] ~ ',' ~ ($next.length - 1));
+      }
+    }
+
+    // Calculate next link
+    if ($index < $images.length - 1) {
+      $n.setAttribute('next', $origin ~ ',' ~ ($index + 1));
+    } else {
+      $origins= $this.orderedOrigins($topic.origins());
+      $pos= array_search($origin, $origins);
+      if ($pos < $origins.length - 1) {
+        $n.setAttribute('next', $origins[$pos + 1] ~ ',0');
+      }
+    }
+  }
+}

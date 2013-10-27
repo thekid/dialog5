@@ -65,6 +65,14 @@ class WebsiteScriptletURL extends XMLScriptletURL {
       return;
     }
 
+    if (3 == sscanf($this.getPath(), '/topic/%[^/]/%[^,],%d', $topic, $origin, $index)) {
+      $this.setStateName('topic/browse');
+      $this.setValue('topic', $topic);
+      $this.setValue('origin', $origin);
+      $this.setValue('index', $index);
+      return;
+    }
+
     if (1 == sscanf($this.getPath(), '/topic/%[^/]', $topic)) {
       $this.setStateName('topic');
       $this.setValue('topic', $topic);

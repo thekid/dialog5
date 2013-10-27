@@ -12,6 +12,11 @@ Heads up!
   with PHP 5.3 namespaces. This results in the necessity to migrate the
   the serialized data using "xpcli de.thekid.dialog.cmd.MigrateStorage"!
 
+Features
+~~~~~~~~
+- Implemented feature request #16 - Browser for /bytopic
+  (friebe)
+
 Bugfixes
 ~~~~~~~~
 - Fixed issue #24 - ByTopic image count

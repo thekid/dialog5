@@ -28,25 +28,25 @@
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.Album']">
-    <a href="{func:linkImage(@origin-name, @origin-chapter, @origin-type, @origin-id)}">
+    <a href="{func:linkTopic(/formresult/topic/@name)}/{@origin-name},{@id}">
       <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{str:encode-uri(@name, false())}"/>
     </a>
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.EntryCollection']">
-    <a href="{func:linkImage(@origin-name, @origin-chapter, @origin-type, @origin-id)}">
+    <a href="{func:linkTopic(/formresult/topic/@name)}/{@origin-name},{@id}">
       <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{str:encode-uri(@name, false())}"/>
     </a>
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.SingleShot']">
-    <a href="{func:linkShot(@origin-name, @origin-id)}">
+    <a href="{func:linkTopic(/formresult/topic/@name)}/{@origin-name},{@id}">
       <img width="150" height="113" border="0" src="/shots/thumb.color.{str:encode-uri(@name, false())}"/>
     </a>
   </xsl:template>
 
   <xsl:template match="image[@origin-class = 'de.thekid.dialog.ImageStrip']">
-    <a href="{func:linkImageStrip(@origin-name)}#{@origin-id}">
+    <a href="{func:linkTopic(/formresult/topic/@name)}/{@origin-name},{@id}">
       <img width="150" height="113" border="0" src="/albums/{@origin-name}/thumb.{str:encode-uri(@name, false())}"/>
     </a>
   </xsl:template>
