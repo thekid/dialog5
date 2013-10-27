@@ -41,12 +41,13 @@ public class FtpImpl extends Syncronizer {
     Console::$out.write('[');
     foreach ($file in $this.filesNewerThan($this.lastSync())) {
       $name= $this.relativePathOf($file.getURI());
+      $dir= $this.target.dir(dirname($name));
 
       if ($file instanceof io.collections.IOCollection) {
-        $this.target.dir(dirname($name)).dir(basename($name));
+        $dir.dir(basename($name));
         Console::$out.write('D');
       } else {
-        $remote= $this.target.dir(dirname($name)).file(basename($name));
+        $remote= $dir.file(basename($name));
         $remote.uploadFrom($file.getInputStream(), FtpTransfer::BINARY);
         Console::$out.write('.');
       }
