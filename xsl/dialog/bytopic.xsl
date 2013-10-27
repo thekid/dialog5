@@ -122,11 +122,11 @@
           </a>
         </div>
         <xsl:for-each select="featured/image[position() &gt; 1]">
-          <a href="{func:linkTopic(@name)}/{@origin-name},{position()}">
-            <div style="float: left">
+          <div style="float: left">
+            <a href="{func:linkTopic(../../@name)}/{@origin-name},0">
               <xsl:apply-templates select="."/>
-            </div>
-          </a>
+            </a>
+          </div>
         </xsl:for-each>
         <br clear="all"/>
       </div>
