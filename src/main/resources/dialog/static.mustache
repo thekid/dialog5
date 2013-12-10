@@ -1,0 +1,54 @@
+<html xmlns:og="http://ogp.me/ns#">
+  <head>
+    <title>
+      PAGE - TITLE 
+
+    </title>
+    <link rel="stylesheet" href="/{{config.style}}.css"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS - {{config.title}} href="/rss/"/>
+  </head>
+  <body onKeyUp="handleKey(event)">
+    <center>
+      <!-- main content -->
+      <table border="0" cellspacing="0" class="main">
+        <tr id="header">
+          <xsl:call-template name="gutter"/>
+          <td width="690" class="gutter" id="menu">
+            <a id="active" href="{func:linkPage(0)}">
+              Home
+            </a><a href="{func:linkByDate()}">
+              By Date
+            </a><a href="{func:linkByTopic()}">
+              By Topic
+            </a><a id="rss" href="/rss">
+              RSS
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <div class="content">
+              
+              CONTENT
+
+            </div>
+          </td>
+        </tr>
+      </table>
+      
+      <!-- footer -->
+      <table border="0" cellspacing="0" cellpadding="2" class="footer">
+        <tr>
+          <td><small>&#169; <xsl:value-of select="/formresult/config/copyright"/></small></td>
+          <td align="right">
+            <xsl:for-each select="/formresult/links/link">
+              <a href="{@href}">
+                <img border="0" src="/image/{@id}.png" hspace="1" width="80" height="15" alt="{@id}"/>
+              </a>
+            </xsl:for-each>
+          </td>
+        </tr>
+      </table>
+    </center>
+  </body>
+</html>

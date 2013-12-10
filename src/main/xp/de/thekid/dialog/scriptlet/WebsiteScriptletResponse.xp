@@ -1,0 +1,41 @@
+package de.thekid.dialog.scriptlet;
+
+import com.github.mustache.MustacheEngine;
+import com.github.mustache.Context;
+import com.github.mustache.TemplateLoader;
+
+/**
+ * Website scriptlet for the Dialog album
+ *
+ * @see   http://dialog.friebes.info/
+ */
+public class WebsiteScriptletResponse extends scriptlet.xml.XMLScriptletResponse {
+  protected var $engine= new MustacheEngine().withTemplates(new ResourcesIn(ClassLoader::getDefault()));
+
+  /**
+   * Process this response and run transformation
+   */
+  public bool process() {
+    if (!$this._processed) return false;
+
+    $this.content= $this.engine.transform($this._stylesheet[1], new Context($this.document.root()) {
+      protected var pointer(var $ptr, string? $segment) {
+        util.cmd.Console::writeLine('L<', $segment, '> @ ', $ptr);
+        foreach ($child in $ptr.children) {
+          if ($segment === $child.getName()) return $child;
+        }
+        return null;
+      }
+
+      public var lookup(string? $name) {
+        $result= parent::lookup($name);
+        if ($result instanceof xml.Node) {
+          return $result.getContent();
+        } else {
+          return $result;
+        }
+      }
+    });
+    return true;
+  }
+}
