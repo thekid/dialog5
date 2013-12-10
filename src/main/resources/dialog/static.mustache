@@ -5,7 +5,7 @@
 
     </title>
     <link rel="stylesheet" href="/{{config.style}}.css"/>
-    <link rel="alternate" type="application/rss+xml" title="RSS - {{config.title}} href="/rss/"/>
+    <link rel="alternate" type="application/rss+xml" title="RSS - {{config.title}}" href="/rss/"/>
   </head>
   <body onKeyUp="handleKey(event)">
     <center>
@@ -39,13 +39,13 @@
       <!-- footer -->
       <table border="0" cellspacing="0" cellpadding="2" class="footer">
         <tr>
-          <td><small>&#169; <xsl:value-of select="/formresult/config/copyright"/></small></td>
+          <td><small>&#169; {{config.copyright}}</small></td>
           <td align="right">
-            <xsl:for-each select="/formresult/links/link">
-              <a href="{@href}">
-                <img border="0" src="/image/{@id}.png" hspace="1" width="80" height="15" alt="{@id}"/>
+            {{#links}}
+              <a href="{{@href}}">
+                <img border="0" src="/image/{{@id}}.png" hspace="1" width="80" height="15" alt="{{@id}}"/>
               </a>
-            </xsl:for-each>
+            {{/links}}
           </td>
         </tr>
       </table>
