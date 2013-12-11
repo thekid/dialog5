@@ -5,6 +5,7 @@ import com.github.mustache.Context;
 import com.github.mustache.ResourcesIn;
 
 import native standard.substr;
+import native standard.sscanf;
 
 /**
  * Website scriptlet for the Dialog album
@@ -21,11 +22,11 @@ public class WebsiteScriptletResponse extends scriptlet.xml.XMLScriptletResponse
     if (!$this._processed) return false;
 
     // Debug
-    util.log.Logger::getInstance().getCategory().debug($this._stylesheet[1], '@', $this.document.root());
+    // util.log.Logger::getInstance().getCategory().debug($this._stylesheet[1], '@', $this.document.root());
 
     // Transform
     $this.content= $this.engine.transform($this._stylesheet[1], new Context($this.document.root()) {
-      protected var pointer(var $ptr, string? $segment) {
+      protected var pointer(var $ptr, string? $segment, string[]? $params) {
         if ('@' === $segment[0]) {
           return $ptr.getAttribute(substr($segment, 1));
         } else {

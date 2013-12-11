@@ -28,9 +28,38 @@
         <tr>
           <td colspan="4">
             <div class="content">
-              
-              CONTENT
+              {{#entries}}
+                <div class="datebox">
+                  <h2>{{date}}</h2> 
+                  <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(date/value), 'M Y')"/>
+                </div>
+                <h2>
+                  <a href="{func:linkImageStrip(@name)}">
+                    {{@title}}
+                  </a>
+                </h2>
+                <p align="justify">
+                  {{description}}
+                  <br clear="all"/>
+                </p>
 
+                <h4>Images</h4>
+                <div class="highlights">
+                  {{#images}}
+                    <div style="float: left"> 
+                      <a href="{func:linkImageStrip(../../@name)}#{position() - 1}">
+                        <img width="150" height="113" border="0" src="/albums/__TODO__/thumb.{{name}}"/>
+                      </a>
+                    </div>
+                  {{/images}}
+                  <br clear="all"/>
+                </div>
+                <p>
+                  This image strip contains {{@num_images}} images -
+                  <a href="{func:linkImageStrip(@name)}">See more</a>
+                </p>
+                <br clear="all"/><hr/>
+              {{/entries}}
             </div>
           </td>
         </tr>
