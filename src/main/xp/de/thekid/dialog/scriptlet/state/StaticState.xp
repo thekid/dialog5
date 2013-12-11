@@ -90,8 +90,7 @@ public class StaticState extends de.thekid.dialog.scriptlet.AbstractDialogState 
         throw new FormatException('Index contains unknown element "' ~ $entry.getClassName() ~ '"');
       }
 
-      $child= $node.addChild(self::$nodeHandlers[$entry.getClassName()].nodeFor($entry, self::$nodeHandlers));
-      $child.setAttribute('type', $entry.getClassName());
+      $node.addChild(new Node('entry')).addChild(self::$nodeHandlers[$entry.getClassName()].nodeFor($entry, self::$nodeHandlers));
     }
   }
 }

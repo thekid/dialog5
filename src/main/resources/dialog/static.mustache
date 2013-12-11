@@ -29,35 +29,68 @@
           <td colspan="4">
             <div class="content">
               {{#entries}}
-                <div class="datebox">
-                  <h2>{{date}}</h2> 
-                  <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(date/value), 'M Y')"/>
-                </div>
-                <h2>
-                  <a href="{func:linkImageStrip(@name)}">
-                    {{@title}}
-                  </a>
-                </h2>
-                <p align="justify">
-                  {{description}}
-                  <br clear="all"/>
-                </p>
+                {{#album}}
+                  <div class="datebox">
+                    <h2><xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(created/value), 'd')"/></h2> 
+                    <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(created/value), 'M Y')"/>
+                  </div>
+                  <h2>
+                    <a href="{func:linkAlbum(@name)}">
+                      {{@title}}
+                    </a>
+                  </h2>
+                  <p align="justify">
+                    {{description}}
+                    <br clear="all"/>
+                  </p>
 
-                <h4>Images</h4>
-                <div class="highlights">
-                  {{#images}}
-                    <div style="float: left"> 
-                      <a href="{func:linkImageStrip(../../@name)}#{position() - 1}">
-                        <img width="150" height="113" border="0" src="/albums/__TODO__/thumb.{{name}}"/>
-                      </a>
-                    </div>
-                  {{/images}}
-                  <br clear="all"/>
-                </div>
-                <p>
-                  This image strip contains {{@num_images}} images -
-                  <a href="{func:linkImageStrip(@name)}">See more</a>
-                </p>
+                  <h4>Highlights</h4>
+                  <div class="highlights">
+                    {{#highlights}}
+                      <div style="float: left">
+                        <a href="{func:linkImage(../../@name, 0, 'h', position()- 1)}">
+                          <img width="150" height="113" border="0" src="/albums/__TODO__/thumb.{{name}}"/>
+                        </a>
+                      </div>
+                    {{/highlights}}
+                    <br clear="all"/>
+                  </div>
+                  <p>
+                    This album contains {{@num_images}} images in {{@num_chapters}} chapters -
+                    <a href="{func:linkAlbum(@name)}">See more</a>
+                  </p>
+                {{/album}}
+                {{#imagestrip}}
+                  <div class="datebox">
+                    <h2>{{date}}</h2> 
+                    <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(date/value), 'M Y')"/>
+                  </div>
+                  <h2>
+                    <a href="{func:linkImageStrip(@name)}">
+                      {{@title}}
+                    </a>
+                  </h2>
+                  <p align="justify">
+                    {{description}}
+                    <br clear="all"/>
+                  </p>
+
+                  <h4>Images</h4>
+                  <div class="highlights">
+                    {{#images}}
+                      <div style="float: left"> 
+                        <a href="{func:linkImageStrip(../../@name)}#{position() - 1}">
+                          <img width="150" height="113" border="0" src="/albums/__TODO__/thumb.{{name}}"/>
+                        </a>
+                      </div>
+                    {{/images}}
+                    <br clear="all"/>
+                  </div>
+                  <p>
+                    This image strip contains {{@num_images}} images -
+                    <a href="{func:linkImageStrip(@name)}">See more</a>
+                  </p>
+                {{/imagestrip}}
                 <br clear="all"/><hr/>
               {{/entries}}
             </div>

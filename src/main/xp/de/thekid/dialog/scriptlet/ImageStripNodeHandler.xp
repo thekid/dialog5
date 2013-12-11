@@ -26,7 +26,7 @@ public class ImageStripNodeHandler implements NodeHandler {
    */
   public Node nodeFor(IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
     with ($imageStrip= $entry as ImageStrip?) {
-      $child= new Node('entry', null, [
+      $child= new Node('imagestrip', null, [
         name       : $imageStrip.getName(),
         title      : $imageStrip.getTitle(),
         num_images : $imageStrip.numImages(),

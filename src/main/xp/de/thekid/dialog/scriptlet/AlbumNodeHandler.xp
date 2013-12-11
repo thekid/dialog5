@@ -26,7 +26,7 @@ public class AlbumNodeHandler implements NodeHandler {
    */
   public Node nodeFor(IEntry? $entry, [:NodeHandler]? $nodeHandlers) {
     with ($album= $entry as Album?) {
-      $child= new Node('entry', null, [
+      $child= new Node('album', null, [
         name         : $album.getName(),
         title        : $album.getTitle(),
         num_images   : $album.numImages(),
