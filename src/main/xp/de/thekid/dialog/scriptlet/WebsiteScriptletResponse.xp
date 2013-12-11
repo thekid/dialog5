@@ -28,16 +28,16 @@ public class WebsiteScriptletResponse extends scriptlet.xml.XMLScriptletResponse
     $this.content= $this.engine.transform($this._stylesheet[1], new Context($this.document.root()) {
       protected var pointer(var $ptr, string? $segment, string[]? $params) {
         if ('@' === $segment[0]) {
-          util.log.Logger::getInstance().getCategory().debug($segment, '@', $ptr.getName(), ' -> ', $ptr.getAttribute(substr($segment, 1)));
+          // util.log.Logger::getInstance().getCategory().debug($segment, '@', $ptr.getName(), ' -> ', $ptr.getAttribute(substr($segment, 1)));
           return $ptr.getAttribute(substr($segment, 1));
         } else {
           foreach ($child in $ptr.children) {
             if ($segment === $child.getName()) {
-              util.log.Logger::getInstance().getCategory().debug($segment, '@', $ptr.getName(), ' -> ', $child);
+              // util.log.Logger::getInstance().getCategory().debug($segment, '@', $ptr.getName(), ' -> ', $child);
               return $child;
             }
           }
-          util.log.Logger::getInstance().getCategory().warn($segment, '@', $ptr.getName());
+          // util.log.Logger::getInstance().getCategory().warn($segment, '@', $ptr.getName());
           return null;
         }
       }
