@@ -26,7 +26,7 @@ public class WebsiteScriptletResponse extends scriptlet.xml.XMLScriptletResponse
 
     // Transform
     $this.content= $this.engine.transform($this._stylesheet[1], new Context($this.document.root()) {
-      protected var pointer(var $ptr, string? $segment, string[]? $params) {
+      protected var pointer(var $ptr, string? $segment) {
         if ('@' === $segment[0]) {
           // util.log.Logger::getInstance().getCategory().debug($segment, '@', $ptr.getName(), ' -> ', $ptr.getAttribute(substr($segment, 1)));
           return $ptr.getAttribute(substr($segment, 1));
