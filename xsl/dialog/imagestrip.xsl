@@ -81,7 +81,7 @@
           </div>
         </a>
         <p>
-          Originally taken on <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(exifData/dateTime/value), 'D, d M H:i')"/>
+          Originally taken on <xsl:value-of select="php:function('XSLCallback::invoke', 'xp.date', 'format', string(exifData/dateTime/value), 'D, d M Y, H:i')"/>
           with <xsl:value-of select="exifData/make"/>'s
           <xsl:value-of select="exifData/model"/>.
 
