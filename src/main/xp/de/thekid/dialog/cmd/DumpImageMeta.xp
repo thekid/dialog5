@@ -32,7 +32,7 @@ public class DumpImageMeta extends util.cmd.Command {
   protected void dump(string? $what, var $block) {
     $this.out.write($what, ': ');
     try {
-      $this.out.writeLine($block.($this.image));
+      $this.out.writeLine($block($this.image));
     } catch (Throwable $e) {
       $this.out.writeLine('*** ', $e.compoundMessage());
     }
@@ -43,7 +43,7 @@ public class DumpImageMeta extends util.cmd.Command {
    *
    */
   public void run() {
-    $this.dump('EXIF', #{ File $image -> ExifData::fromFile($image) });
-    $this.dump('IPTC', #{ File $image -> IptcData::fromFile($image) });
+    $this.dump('EXIF', $image -> ExifData::fromFile($image));
+    $this.dump('IPTC', $image -> IptcData::fromFile($image));
   }
 }
