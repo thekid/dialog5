@@ -5,36 +5,36 @@ import unittest.AssertionFailedError;
 import unittest.PrerequisitesNotMetError;
 import de.thekid.dialog.AlbumImage;
 import de.thekid.dialog.GroupingStrategy;
+import img.util.ExifData;
+import util.Date;
 
 public class GroupingStrategyTest extends TestCase {
-  private AlbumImage $image;
 
-  /** Create image taken at my birth date */
-  public void setUp() throws AssertionFailedError, PrerequisitesNotMetError {
-    $this.image= new AlbumImage($this.name).withExifData(new img.util.ExifData()
-      .withDateTime(new util.Date('1977-12-14 11:45:00'))
-    );
+  /**
+   * Creates a image with a specified date in its EXIF data
+   *
+   * @param  $date Any date format parseable by util.Date's constructor
+   * @return An album image
+   */
+  private AlbumImage imageTakenAt(string $date) {
+    return new AlbumImage($this.name).withExifData(new ExifData().withDateTime(new Date($date)));
   }
 
   [@test]
-  public void byHour() {
-    $this.assertEquals('1977-12-14 11', GroupingStrategy::$hour.groupFor($this.image));
+  public void group_by_hour() {
+    $this.assertEquals('1977-12-14 11', GroupingStrategy::$hour.groupFor($this.imageTakenAt('1977-12-14 11:45:00')));
   }
 
   [@test]
-  public void byDay() {
-    $this.assertEquals('1977-12-14', GroupingStrategy::$day.groupFor($this.image));
+  public void group_by_day() {
+    $this.assertEquals('1977-12-14', GroupingStrategy::$day.groupFor($this.imageTakenAt('1977-12-14 11:45:00')));
   }
 
-  [@test, @expect('lang.IllegalArgumentException')]
-  public void byHourWithoutExif() {
-    $this.image.setExifData(null);
-    GroupingStrategy::$hour.groupFor($this.image);
-  }
-
-  [@test, @expect('lang.IllegalArgumentException')]
-  public void byDayWithoutExif() {
-    $this.image.setExifData(null);
-    GroupingStrategy::$day.groupFor($this.image);
+  [@test, @expect('lang.IllegalArgumentException'), @values([
+    GroupingStrategy::$hour,
+    GroupingStrategy::$day
+  ])]
+  public void raises_exceptions_when_no_exifdata_is_available($grouping) {
+    $grouping.groupFor(new AlbumImage($this.name));
   }
 }
