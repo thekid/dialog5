@@ -12,17 +12,12 @@ import de.thekid.dialog.AlbumChapter;
 import native standard.implode;
 import native standard.array_keys;
 
-/**
- * Unittest for importer output
- *
- */
 public class TopicGenerationTest extends ImportTest {
 
   /**
    * Creates a new import command
-   *
    */
-  protected ImportCommand newImporter(Album $album) {
+  private ImportCommand newImporter(Album $album) {
     return new ImportCommand($album) {
       protected Album $album;
       
@@ -54,10 +49,6 @@ public class TopicGenerationTest extends ImportTest {
     };
   }
 
-  /**
-   * Tests topics are automatically generated
-   *
-   */
   [@test]
   public void topicsAreAutomaticallyGenerated() {
     $date= Date::now();
@@ -75,13 +66,13 @@ public class TopicGenerationTest extends ImportTest {
     
     // Verify the topic itself
     $topic= $cmd.getTopic('colors__green');
-    $this.assertClass($topic, 'de.thekid.dialog.Topic');
+    $this.assertInstanceOf(Topic::class, $topic);
     $this.assertEquals('colors__green', $topic.getName());
     $this.assertEquals('Colors: Green', $topic.getTitle());
     $this.assertEquals($date, $topic.getCreatedAt());
     
     // Verify the image is in the topic and originates from the album
-    $this.assertClass($topic.featuredImages()['album.1'], 'de.thekid.dialog.AlbumImage');
+    $this.assertInstanceOf(AlbumImage::class, $topic.featuredImages()['album.1']);
     $this.assertEquals('image.1', $topic.featuredImages()['album.1'].getName());
     $this.assertEquals('album.1', $topic.origins()[0]);
   }

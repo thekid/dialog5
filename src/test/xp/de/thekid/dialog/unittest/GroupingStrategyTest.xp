@@ -6,58 +6,32 @@ import unittest.PrerequisitesNotMetError;
 import de.thekid.dialog.AlbumImage;
 import de.thekid.dialog.GroupingStrategy;
 
-/**
- * Tests grouping strategies
- *
- * @see      xp://de.thekid.dialog.GroupingStrategy
- */
 public class GroupingStrategyTest extends TestCase {
-  protected AlbumImage $image;
+  private AlbumImage $image;
 
-  /**
-   * Sets up this test case
-   *
-   */
+  /** Create image taken at my birth date */
   public void setUp() throws AssertionFailedError, PrerequisitesNotMetError {
     $this.image= new AlbumImage($this.name).withExifData(new img.util.ExifData()
       .withDateTime(new util.Date('1977-12-14 11:45:00'))
     );
   }
 
-  /**
-   * Test hourly grouping strategy
-   *
-   */
   [@test]
   public void byHour() {
     $this.assertEquals('1977-12-14 11', GroupingStrategy::$hour.groupFor($this.image));
   }
 
-  /**
-   * Test groupFor() method raises an IllegalArgumentException if image
-   * does not contain exif data
-   *
-   */
+  [@test]
+  public void byDay() {
+    $this.assertEquals('1977-12-14', GroupingStrategy::$day.groupFor($this.image));
+  }
+
   [@test, @expect('lang.IllegalArgumentException')]
   public void byHourWithoutExif() {
     $this.image.setExifData(null);
     GroupingStrategy::$hour.groupFor($this.image);
   }
 
-  /**
-   * Test daily grouping strategy
-   *
-   */
-  [@test]
-  public void byDay() {
-    $this.assertEquals('1977-12-14', GroupingStrategy::$day.groupFor($this.image));
-  }
-
-  /**
-   * Test groupFor() method raises an IllegalArgumentException if image
-   * does not contain exif data
-   *
-   */
   [@test, @expect('lang.IllegalArgumentException')]
   public void byDayWithoutExif() {
     $this.image.setExifData(null);
