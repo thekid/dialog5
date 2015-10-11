@@ -3,6 +3,9 @@ package de.thekid.dialog;
 /**
  * Grouping strategy enumeration
  *
+ * - By day - Group images by day
+ * - By period - By day and *N*ight, *M*orning, *A*fternoon, *E*vening.
+ * - By hour - By day and hour
  */
 abstract enum GroupingStrategy {
   hour {
@@ -19,6 +22,27 @@ abstract enum GroupingStrategy {
         throw new IllegalArgumentException('Cannot determine group for ' ~ $image.toString());
       }
       return $image.exifData.dateTime.toString('Y-m-d');
+    }
+  },
+  period {
+    public string groupFor(AlbumImage $image) {
+      if (null === $image.exifData) {
+        throw new IllegalArgumentException('Cannot determine group for ' ~ $image.toString());
+      }
+
+      $time= $image.exifData.dateTime.toString('H:m:s');
+      if ($time < '06:00:00') {
+        $period= ' N';
+      } else if ($time < '12:00:00') {
+        $period= ' M';
+      } else if ($time < '17:00:00') {
+        $period= ' A';
+      } else if ($time < '21:00:00') {
+        $period= ' E';
+      } else {
+        $period= ' N';
+      }
+      return $image.exifData.dateTime.toString('Y-m-d') ~ $period;
     }
   };
 

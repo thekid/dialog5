@@ -30,9 +30,21 @@ public class GroupingStrategyTest extends TestCase {
     $this.assertEquals('1977-12-14', GroupingStrategy::$day.groupFor($this.imageTakenAt('1977-12-14 11:45:00')));
   }
 
+  [@test, @values([
+    ['1977-12-14 00:00:00', '1977-12-14 N'],
+    ['1977-12-14 06:00:00', '1977-12-14 M'],
+    ['1977-12-14 12:00:00', '1977-12-14 A'],
+    ['1977-12-14 17:00:00', '1977-12-14 E'],
+    ['1977-12-14 21:00:00', '1977-12-14 N']
+  ])]
+  public void group_by_period(string $date, string $expected) {
+    $this.assertEquals($expected, GroupingStrategy::$period.groupFor($this.imageTakenAt($date)));
+  }
+
   [@test, @expect('lang.IllegalArgumentException'), @values([
-    GroupingStrategy::$hour,
-    GroupingStrategy::$day
+    GroupingStrategy::$day,
+    GroupingStrategy::$period,
+    GroupingStrategy::$hour
   ])]
   public void raises_exceptions_when_no_exifdata_is_available($grouping) {
     $grouping.groupFor(new AlbumImage($this.name));
