@@ -1,5 +1,7 @@
 package de.thekid.dialog;
 
+import util.Date;
+
 /**
  * Grouping strategy enumeration
  *
@@ -8,29 +10,12 @@ package de.thekid.dialog;
  * - By hour - By day and hour
  */
 abstract enum GroupingStrategy {
-  hour {
-    public string groupFor(AlbumImage $image) {
-      if (null === $image.exifData) {
-        throw new IllegalArgumentException('Cannot determine group for ' ~ $image.toString());
-      }
-      return $image.exifData.dateTime.toString('Y-m-d H');
-    }
-  },
   day {
-    public string groupFor(AlbumImage $image) {
-      if (null === $image.exifData) {
-        throw new IllegalArgumentException('Cannot determine group for ' ~ $image.toString());
-      }
-      return $image.exifData.dateTime.toString('Y-m-d');
-    }
+    protected string groupBy(Date $date) -> $date.toString('Y-m-d');
   },
   period {
-    public string groupFor(AlbumImage $image) {
-      if (null === $image.exifData) {
-        throw new IllegalArgumentException('Cannot determine group for ' ~ $image.toString());
-      }
-
-      $time= $image.exifData.dateTime.toString('H:m:s');
+    protected string groupBy(Date $date) {
+      $time= $date.toString('H:m:s');
       if ($time < '06:00:00') {
         $period= ' N';
       } else if ($time < '12:00:00') {
@@ -42,14 +27,29 @@ abstract enum GroupingStrategy {
       } else {
         $period= ' N';
       }
-      return $image.exifData.dateTime.toString('Y-m-d') ~ $period;
+      return $date.toString('Y-m-d') ~ $period;
     }
+  },
+  hour {
+    protected string groupBy(Date $date) -> $date.toString('Y-m-d H');
   };
+
+  /**
+   * Returns group for a given date.
+   *
+   * @return  string unique group identifier
+   */
+  protected abstract string groupBy(Date $date);
 
   /**
    * Returns group for a given album image.
    *
    * @return  string unique group identifier
    */
-  public abstract string groupFor(AlbumImage $image);
+  public string groupFor(AlbumImage $image) throws IllegalArgumentException {
+    if (null === $image.exifData) {
+      throw new IllegalArgumentException('Cannot determine group for ' ~ $image.toString());
+    }
+    return $this.groupBy($image.exifData.dateTime);
+  }
 }
