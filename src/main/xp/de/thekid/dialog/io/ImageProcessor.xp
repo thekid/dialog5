@@ -274,16 +274,16 @@ public class ImageProcessor extends Object implements Traceable {
           $transformed.saveTo(new JpegStreamWriter($destination, $this.quality));
         } catch (img.ImagingException $e) {
           $this.cat && $this.cat.error($e);
-          delete($transformed);
-          delete($origin);
+          unset($transformed);
+          unset($origin);
           throw $e;
         }
 
-        delete($transformed);
+        unset($transformed);
       }
       
       // Clean up
-      delete($origin);
+      unset($origin);
     }
     
     return $image;

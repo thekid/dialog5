@@ -98,7 +98,7 @@ public class IndexCreator implements Traceable {
         xp::stringOf($date)
       );
       $entries[$date.toString('YmdHis-') ~ basename($entry.getURI())]= basename($entry.getURI(), '.ser');
-      delete($data);
+      unset($data);
     }
     $this.folder.close();
     krsort($entries);
