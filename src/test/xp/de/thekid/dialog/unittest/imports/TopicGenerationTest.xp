@@ -19,11 +19,9 @@ public class TopicGenerationTest extends ImportTest {
    */
   private ImportCommand newImporter(Album $album) {
     return new ImportCommand($album) {
-      protected Album $album;
+      private Album $album;
       
-      public __construct(Album $album) {
-        $this.album= $album;
-      }
+      public __construct($this.album) { }
     
       protected void doImport() {
         foreach ($chapter in $this.album.chapters) {
