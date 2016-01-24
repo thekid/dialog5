@@ -99,7 +99,7 @@ class WebsiteScriptletURL extends XMLScriptletURL {
    *
    */
   protected void setValue(string $key, var $value) {
-    $this.values.put('dialog.' ~ $key, $value);
+    $this.values['dialog.' ~ $key]= $value;
   }
 
   /**
@@ -107,6 +107,6 @@ class WebsiteScriptletURL extends XMLScriptletURL {
    *
    */
   public var getValue(string $key) {
-    return $this.values.get('dialog.' ~ $key);
+    return isset($this.values['dialog.' ~ $key]) ? $this.values['dialog.' ~ $key] : null;
   }
 }
