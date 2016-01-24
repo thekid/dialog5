@@ -23,8 +23,8 @@ import native standard.strtr;
 public abstract class Syncronizer implements Runnable {
   protected string[] $originFiles = [ 'project.pth' ];
   protected string[] $originFolders = [ 'xsl', 'etc', 'doc_root', 'data', 'dist' ];
-  protected Folder $base= xp::null();
-  protected File $lastSync= xp::null();
+  protected Folder $base;
+  protected File $lastSync;
 
   /**
    * Sets base folder
