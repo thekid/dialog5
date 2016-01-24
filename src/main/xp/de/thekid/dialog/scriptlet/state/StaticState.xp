@@ -56,12 +56,13 @@ public class StaticState extends de.thekid.dialog.scriptlet.AbstractDialogState 
         $child.addChild(new Node('description', new PCData($collection.getDescription())));
         for ($i= 0; $i < $collection.numEntries(); $i++) {
           $entry= $collection.entryAt($i);
-          if (!isset($nodeHandlers[$entry.getClassName()])) {
-            throw new FormatException('Collection index contains unknown element "' ~ $entry.getClassName() ~ '"');
+          $type= typeof($entry).getName();
+          if (!isset($nodeHandlers[$type])) {
+            throw new FormatException('Collection index contains unknown element "' ~ $type ~ '"');
           }
 
-          $node= $child.addChild($nodeHandlers[$entry.getClassName()].nodeFor($entry, $nodeHandlers));
-          $node.setAttribute('type', $entry.getClassName());
+          $node= $child.addChild($nodeHandlers[$type].nodeFor($entry, $nodeHandlers));
+          $node.setAttribute('type', $type);
         }
       }
     };
@@ -86,12 +87,13 @@ public class StaticState extends de.thekid.dialog.scriptlet.AbstractDialogState 
     $node= $response.addFormResult(new Node('entries'));
     foreach ($name in $index['entries'] as string[]?) {
       $entry= $this.getEntryFor($name);
-      if (!isset(self::$nodeHandlers[$entry.getClassName()])) {
-        throw new FormatException('Index contains unknown element "' ~ $entry.getClassName() ~ '"');
+      $type= typeof($entry).getName();
+      if (!isset(self::$nodeHandlers[$type])) {
+        throw new FormatException('Index contains unknown element "' ~ $type ~ '"');
       }
 
-      $child= $node.addChild(self::$nodeHandlers[$entry.getClassName()].nodeFor($entry, self::$nodeHandlers));
-      $child.setAttribute('type', $entry.getClassName());
+      $child= $node.addChild(self::$nodeHandlers[$type].nodeFor($entry, self::$nodeHandlers));
+      $child.setAttribute('type', $type);
     }
   }
 }
