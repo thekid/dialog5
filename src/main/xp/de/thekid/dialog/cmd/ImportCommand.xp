@@ -128,7 +128,7 @@ public abstract class ImportCommand extends Command {
     // Extract topics form IPTC keywords if available
     if (!($iptc= $image.getIptcData())) return;
 
-    foreach ($keyword in $iptc.getKeywords()) {
+    foreach ($keyword in $iptc.getKeywords() as string[]) {
       $normalized= $this.normalizeName($keyword);
       if (!isset($this.topics[$normalized])) {
         $topic= new File($this.dataFolder, 'topics/' ~ $normalized ~ '.ser');
