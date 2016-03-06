@@ -58,12 +58,13 @@ public class ViewCollectionState extends de.thekid.dialog.scriptlet.AbstractDial
       // Add entries from collection 
       $node= $response.addFormResult(new Node('entries'));
       foreach ($entry in $collection.entries) {
-        if (!isset(self::$nodeHandlers[$entry.getClassName()])) {
-          throw new FormatException('Index contains unknown element "' ~ $entry.getClassName() ~ '"');
+        $name= nameof($entry);
+        if (!isset(self::$nodeHandlers[$name])) {
+          throw new FormatException('Index contains unknown element "' ~ $name ~ '"');
         }
 
-        $child= $node.addChild(self::$nodeHandlers[$entry.getClassName()].nodeFor($entry, self::$nodeHandlers));
-        $child.setAttribute('type', $entry.getClassName());
+        $child= $node.addChild(self::$nodeHandlers[$name].nodeFor($entry, self::$nodeHandlers));
+        $child.setAttribute('type', $name);
       }
     }
   }

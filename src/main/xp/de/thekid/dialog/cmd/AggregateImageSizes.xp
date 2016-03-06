@@ -143,7 +143,7 @@ public class AggregateImageSizes extends util.cmd.Command {
       
       // Read
       $entry= $this.serializer.valueOf(new Serialized(Streams::readAll($f))) as IEntry;
-      $this.out.write('  ', $entry.getClassName(), ' [');
+      $this.out.write('  ', nameof($entry), ' [');
       
       // Process
       $this.handle($entry);

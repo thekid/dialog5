@@ -94,12 +94,12 @@ public class BydateState extends de.thekid.dialog.scriptlet.AbstractDialogState 
       $m= $node.addChild(new Node('month', null, [ num : $month, year : $year ]));
       foreach ($name in $entries) {
         $entry= $this.getEntryFor($name);
-        if (!isset(self::$nodeHandlers[$entry.getClassName()])) {
-          throw new FormatException('Index contains unknown element "' ~ $entry.getClassName() ~ '"');
+        if (!isset(self::$nodeHandlers[nameof($entry)])) {
+          throw new FormatException('Index contains unknown element "' ~ nameof($entry) ~ '"');
         }
 
-        $child= $m.addChild(self::$nodeHandlers[$entry.getClassName()].nodeFor($entry, self::$nodeHandlers));
-        $child.setAttribute('type', $entry.getClassName());
+        $child= $m.addChild(self::$nodeHandlers[nameof($entry)].nodeFor($entry, self::$nodeHandlers));
+        $child.setAttribute('type', nameof($entry));
       }
     }
   }

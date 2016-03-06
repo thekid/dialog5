@@ -85,7 +85,7 @@ public class BytopicState extends de.thekid.dialog.scriptlet.AbstractDialogState
         if (!isset($entries[$origin])) {
           $entries[$origin]= $this.getEntryFor($origin);
         }
-        $i.setAttribute('origin-class', $entries[$origin].getClassName());
+        $i.setAttribute('origin-class', nameof($entries[$origin]));
         foreach ($key, $value in $entries[$origin].imageUrn($image.getName()) as [:string]?) {
           $i.setAttribute('origin-' ~ $key, $value);
         }
