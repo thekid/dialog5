@@ -15,8 +15,8 @@ import de.thekid.dialog.Update;
 import de.thekid.dialog.SingleShot;
 import de.thekid.dialog.ImageStrip;
 import de.thekid.dialog.EntryCollection;
-import remote.protocol.Serializer;
-import remote.protocol.SerializedData;
+import de.thekid.dialog.io.Serializer;
+import de.thekid.dialog.io.Serialized;
 
 import native standard.sprintf;
 import native standard.dirname;
@@ -37,7 +37,7 @@ public class RssScriptlet extends HttpScriptlet {
    * Unserialize a given file
    */
   protected var unserialize(io.File $f) {
-    return $this.serializer.valueOf(new SerializedData(FileUtil::getContents($f)));
+    return $this.serializer.valueOf(new Serialized(FileUtil::getContents($f)));
   }
 
   /**

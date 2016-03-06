@@ -1,7 +1,7 @@
 package de.thekid.dialog.cmd;
 
 import io.collections.iterate.*;
-import remote.protocol.*;
+import de.thekid.dialog.io.*;
 import lang.reflect.Package;
 
 import native standard.unserialize;

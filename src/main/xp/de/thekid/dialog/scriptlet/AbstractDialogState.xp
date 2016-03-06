@@ -16,8 +16,8 @@ import de.thekid.dialog.ImageStrip;
 import de.thekid.dialog.SingleShot;
 import de.thekid.dialog.Update;
 import de.thekid.dialog.Topic;
-import remote.protocol.Serializer;
-import remote.protocol.SerializedData;
+import de.thekid.dialog.io.Serializer;
+import de.thekid.dialog.io.Serialized;
 
 import native standard.sprintf;
 
@@ -33,7 +33,7 @@ public class AbstractDialogState extends scriptlet.xml.workflow.AbstractState {
    * Unserialize a given file
    */
   protected var unserialize(io.File $f) {
-    return $this.serializer.valueOf(new SerializedData(FileUtil::getContents($f)));
+    return $this.serializer.valueOf(new Serialized(FileUtil::getContents($f)));
   }
 
   /**

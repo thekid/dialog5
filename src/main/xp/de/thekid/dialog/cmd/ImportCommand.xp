@@ -17,8 +17,8 @@ import de.thekid.dialog.IEntry;
 import de.thekid.dialog.AlbumImage;
 import de.thekid.dialog.io.ImageProcessor;
 import de.thekid.dialog.io.IndexCreator;
-import remote.protocol.Serializer;
-import remote.protocol.SerializedData;
+import de.thekid.dialog.io.Serializer;
+import de.thekid.dialog.io.Serialized;
 
 import native standard.ksort;
 import native standard.array_slice;
@@ -64,14 +64,14 @@ public abstract class ImportCommand extends Command {
    * Unserialize a given file
    */
   protected var unserialize(io.File $f) {
-    return $this.serializer.valueOf(new SerializedData(FileUtil::getContents($f)));
+    return $this.serializer.valueOf(new Serialized(FileUtil::getContents($f)));
   }
 
   /**
    * Serialize data to a given file
    */
   protected void serialize(var? $value, io.File $f) {
-    FileUtil::setContents($f, $this.serializer.representationOf($value));
+    FileUtil::setContents($f, $this.serializer.representationOf($value).bytes());
   }
 
   /**

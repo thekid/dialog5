@@ -15,8 +15,8 @@ import de.thekid.dialog.Topic;
 import de.thekid.dialog.AlbumImage;
 import img.util.ImageInfo;
 import util.collections.HashTable;
-import remote.protocol.Serializer;
-import remote.protocol.SerializedData;
+import de.thekid.dialog.io.Serializer;
+import de.thekid.dialog.io.Serialized;
 
 /**
  * Aggregates image sizes
@@ -142,7 +142,7 @@ public class AggregateImageSizes extends util.cmd.Command {
       $this.out.writeLine('- ', $dataFile);
       
       // Read
-      $entry= $this.serializer.valueOf(new SerializedData(Streams::readAll($f))) as IEntry;
+      $entry= $this.serializer.valueOf(new Serialized(Streams::readAll($f))) as IEntry;
       $this.out.write('  ', $entry.getClassName(), ' [');
       
       // Process
