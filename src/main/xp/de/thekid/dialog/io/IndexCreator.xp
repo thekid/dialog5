@@ -45,7 +45,7 @@ public class IndexCreator implements Traceable {
    * Serialize data to a given file
    */
   protected void serialize(var? $value, io.File $f) {
-    FileUtil::setContents($f, $this.serializer.representationOf($value));
+    FileUtil::setContents($f, $this.serializer.representationOf($value).bytes());
   }
 
   /**
