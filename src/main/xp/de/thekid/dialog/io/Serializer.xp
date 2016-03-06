@@ -1,0 +1,91 @@
+package de.thekid.dialog.io;
+
+import lang.Type;
+import util.Date;
+
+import native standard.gettype;
+import native core.get_object_vars;
+import native core.strlen;
+
+public class Serializer {
+  private static [:var] $mapping;
+  private static [:var] $representation;
+  private static [:var] $value;
+
+  static {
+    self::$mapping= [
+      'util.Date' : ($self, $value) -> new Serialized('T:' ~ $value.getTime() ~ ';')
+    ];
+
+    self::$representation= [
+      'NULL'    : ($self, $value) -> new Serialized('N;'),
+      'boolean' : ($self, $value) -> new Serialized('b:' ~ ($value ? 1 : 0) ~ ';'),
+      'integer' : ($self, $value) -> new Serialized('i:' ~ $value ~ ';'),
+      'double'  : ($self, $value) -> new Serialized('d:' ~ $value ~ ';'),
+      'string'  : ($self, $value) -> new Serialized('s:' ~ strlen($value) ~ ':"' ~ $value ~ '";'),
+      'array'   : ($self, $value) -> {
+        $s= new Serialized('a:' ~ ($value as var[]).length ~ ':{');
+        foreach ($key, $element in $value) {
+          $s.append($self.representationOf($key).bytes()).append($self.representationOf($element).bytes());
+        }
+        return $s.append('}');
+      },
+      'object'  : ($self, $value) -> {
+        foreach ($mapping, $handler in self::$mapping) {
+          if (Type::forName($mapping).isInstance($value)) return $handler($self, $value);
+        }
+
+        $type= nameof($value);
+        $props= get_object_vars($value);
+        unset($props['__id']);
+        $s= new Serialized('O:' ~ strlen($type) ~ ':"' ~ $type ~ '":' ~ ($props as var[]).length ~ ':{');
+        foreach ($key, $element in $props) {
+          $s.append($self.representationOf($key).bytes()).append($self.representationOf($element).bytes());
+        }
+        return $s.append('}');
+      }
+    ];
+
+    self::$value= [
+      'N' : ($self, $data) -> null,
+      'b' : ($self, $data) -> $data.consumeWord() as bool,
+      'i' : ($self, $data) -> $data.consumeWord() as int,
+      'd' : ($self, $data) -> $data.consumeWord() as double,
+      's' : ($self, $data) -> $data.consumeString(),
+      'a' : ($self, $data) -> {
+        $size= $data.consumeSize();
+        $data.forward();
+
+        $value= [];
+        for ($i= 0; $i < $size; $i++) {
+          $key= $self.valueOf($data);
+          $value[$key]= $self.valueOf($data);
+        }
+        $data.forward();
+        return $value;
+      },
+      'O' : ($self, $data) -> {
+        $type= Type::forName($data.consumeString());
+        $size= $data.consumeSize();
+        $data.forward();
+
+        $value= $type.newInstance();
+        for ($i= 0; $i < $size; $i++) {
+          $key= $self.valueOf($data);
+          $type.getField($key).setAccessible(true).set($value, $self.valueOf($data));
+        }
+        $data.forward();
+        return $value;
+      },
+      'T' : ($self, $data) -> new Date($data.consumeWord() as int)
+    ];
+  }
+
+  public Serialized representationOf(var $value) {
+    return self::$representation[gettype($value)]($this, $value);
+  }
+
+  public var valueOf(Serialized $data) {
+    return self::$value[$data.consumeToken()]($this, $data);
+  }
+}
