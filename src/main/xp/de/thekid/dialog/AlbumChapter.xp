@@ -72,7 +72,7 @@ public class AlbumChapter {
     }
     return sprintf(
       "%s(%s) {\n%s  }",
-      $this.getClassName(),
+      nameof($this),
       $this.name,
       $is
     );

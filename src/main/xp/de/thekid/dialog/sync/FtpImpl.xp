@@ -30,7 +30,7 @@ public class FtpImpl extends Syncronizer {
    *
    */
   public string toString() {
-    return $this.getClassName() ~ '(-> ' ~  xp::stringOf($this.target) ~ ')';
+    return nameof($this) ~ '(-> ' ~  xp::stringOf($this.target) ~ ')';
   }
 
   /**

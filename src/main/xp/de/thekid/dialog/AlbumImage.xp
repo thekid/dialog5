@@ -67,7 +67,7 @@ public class AlbumImage {
   public string toString() {
     return sprintf(
       '%s(%d x %d %s) <%s/%s>',
-      $this.getClassName(),
+      nameof($this),
       $this.width,
       $this.height,
       $this.name,

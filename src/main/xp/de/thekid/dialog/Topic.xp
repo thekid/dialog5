@@ -130,7 +130,7 @@ public class Topic implements IEntry {
       "  [createdAt    ] %s\n" ~ 
       "  [images       ] {\n%s  }\n" ~
       "}",
-      $this.getClassName(),
+      nameof($this),
       $this.name,
       $this.title,
       $this.description,

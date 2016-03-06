@@ -190,7 +190,7 @@ public class Album implements IEntry {
       "  [highlights   ] {\n%s  }\n" ~
       "  [chapters     ] {\n%s  }\n" ~
       "}",
-      $this.getClassName(),
+      nameof($this),
       $this.name,
       $this.title,
       $this.description,
