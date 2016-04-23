@@ -72,7 +72,11 @@ public class Serializer {
         $value= $type.newInstance();
         for ($i= 0; $i < $size; $i++) {
           $key= $self.valueOf($data);
-          $type.getField($key).setAccessible(true).set($value, $self.valueOf($data));
+          if ($type.hasField($key)) {
+            $type.getField($key).setAccessible(true).set($value, $self.valueOf($data));
+          } else {
+            $self.valueOf($data);  // Ignore
+          }
         }
         $data.forward();
         return $value;
